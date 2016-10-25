@@ -1,0 +1,14 @@
+@keyframes load-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+
+}
+
+.load-fade {
+  animation: load-fade 1s;
+}
+

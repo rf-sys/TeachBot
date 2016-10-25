@@ -1,0 +1,14 @@
+.profile_delimiter {
+  background: gray;
+  width: 2px;
+  position: relative;
+  margin-left: 15px;
+  margin-right: 15px;
+}
+
+
+@media (max-width: 543px) {
+  .responsive_profile_util {
+    width: 100%;
+  }
+}

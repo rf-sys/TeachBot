@@ -1,0 +1,89 @@
+<%= content_for :head do%>
+<style>
+  @keyframes type {
+    from {
+      width: 0
+    }
+  }
+  .typing {
+    white-space: nowrap;
+    border-right: 2px solid;
+    overflow: hidden;
+    width: 8ch;
+    animation: type 1s steps(8), brand-blinker .5s step-end infinite alternate;
+  }
+</style>
+<% end %>
+
+<section class="jumbotron text-xs-center">
+  <div class="container">
+    <h1 class="jumbotron-heading typing" style="width: 170px;
+        margin: 0 auto;">TeachBot</h1>
+    <p class="lead text-muted">Something short and leading about the collection below—its contents, the creator, etc.
+      Make it short and sweet, but not too short so folks don't simply skip over it entirely.</p>
+    <p>
+      <a href="#" class="btn btn-primary">Main call to action</a>
+      <a href="#" class="btn btn-secondary">Secondary action</a>
+    </p>
+  </div>
+</section>
+
+<div class="container">
+  <div class="row">
+    <div class="col-xs-4 flex-xs-middle">
+      <h1 style="text-align: center">Recent lessons</h1>
+    </div>
+
+    <div class="col-xs-8 flex-xs-middle">
+
+      <% @lessons.each_with_index do |lesson, index| %>
+          Title: <%= lesson[:title] %>
+          Body: <%= lesson[:body] %>
+          <% if index % 2 != 0 %>
+              <br>
+          <% end %>
+      <% end %>
+
+      <div class="row">
+        <div class="col-md">
+          <div class="card card-block">
+            <h4 class="card-title">Card title</h4>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
+              content.</p>
+            <a href="#" class="card-link">Card link</a>
+            <a href="#" class="card-link">Another link</a>
+          </div>
+        </div>
+        <div class="col-md">
+          <div class="card card-block">
+            <h4 class="card-title">Card title</h4>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
+              content.</p>
+            <a href="#" class="card-link">Card link</a>
+            <a href="#" class="card-link">Another link</a>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md">
+          <div class="card card-block">
+            <h4 class="card-title">Card title</h4>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
+              content.</p>
+            <a href="#" class="card-link">Card link</a>
+            <a href="#" class="card-link">Another link</a>
+          </div>
+        </div>
+        <div class="col-md">
+          <div class="card card-block">
+            <h4 class="card-title">Card title</h4>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
+              content.</p>
+            <a href="#" class="card-link">Card link</a>
+            <a href="#" class="card-link">Another link</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,12 @@
+.brand-blink {
+
+  animation: brand-blinker 1s infinite alternate;
+  border-right: 2px solid;
+  padding-right: 2px;
+}
+
+@keyframes brand-blinker {
+  50% {
+    border-color: transparent;
+  }
+}

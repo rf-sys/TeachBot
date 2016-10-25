@@ -1,0 +1,41 @@
+<div class="container">
+  <div class="row flex-items-xs-center" style="margin-top: 15px;">
+    <h1>Sign up</h1>
+  </div>
+  <div class="row flex-items-xs-center load-fade">
+    <div class="col-md-6">
+
+      <%= react_component('ErrorsBlock') %>
+      <%= form_for(@user, remote: true) do |f| %>
+          <div class="form-group">
+            <%= f.label :username %>
+            <%= f.text_field :username, class: 'form-control', placeholder: 'Type your username', required: 'true' %>
+            <small>Your username will be your public nickname</small>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :email %>
+            <%= f.email_field :email, class: 'form-control', placeholder: 'Type your email', required: 'true' %>
+            <small>Your email need to restore password</small>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :password %>
+            <%= f.password_field :password, class: 'form-control', placeholder: 'Password', required: 'true' %>
+            <small>Your password</small>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :password_confirmation %>
+            <%= f.password_field :password_confirmation,
+                                 class: 'form-control', placeholder: 'Password conrfirmation', required: 'true' %>
+            <small>Type your password again to be sure it is right</small>
+          </div>
+
+
+          <%= f.submit class: 'btn btn-outline-primary pull-xs-right', id: 'create_user_btn' %>
+
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Firstapp</title>
+  <%= csrf_meta_tags %>
+
+  <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+
+  <%= yield :head %>
+
+</head>
+
+<body>
+
+
+<%= render 'shared/header' %>
+
+<%= render 'shared/notices' %>
+
+<%= yield %>
+
+<%= render 'shared/footer', cached: true %>
+
+<%= yield :bottom %>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<% content_for :head do %>
+    <meta name="turbolinks-cache-control" content="no-cache">
+<% end %>
+<div class="container center-content" style="text-align: center;">
+
+  <div class="row">
+
+    <div class="row flex-items-xs-middle responsive_profile_util">
+      <div class="col-xs">
+        <div class="row flex-items-xs-center">
+          <div class="col-xs flex-items-xs-center">
+            <h1 id="user_username"><%= @user.username %></h1>
+          </div>
+        </div>
+
+        <div class="row flex-items-xs-center">
+          <div class="col-xs flex-items-xs-center" id="user_email">
+            <%= @user.email %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="profile_delimiter hidden-xs-down"></div>
+
+    <div class="col-xs flex-items-xs-middle" style="padding-left: 0;">
+      <div class="row">
+        <div class="col-xs flex-items-xs-center">
+          <% if @user.avatar.nil? %>
+              <%= image_tag 'default_avatar.jpeg', height: '200px', width: '200px', id: 'user_avatar' %>
+          <% else %>
+              <%= image_tag @user.avatar, height: '200px', width: '200px', id: 'user_avatar' %>
+          <% end %>
+
+        </div>
+      </div>
+      <% if it_is_current_user(@user) %>
+          <div class="row" style="margin-top: 5px;">
+            <div class="col-xs flex-items-xs-center">
+              <%= react_component('Profile', {user: @user}) %>
+            </div>
+          </div>
+      <% end %>
+
+
+    </div>
+  </div>
+
+</div>
