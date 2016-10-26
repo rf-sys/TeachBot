@@ -42,8 +42,8 @@ class UsersController < ApplicationController
         return render :json => {:error => ['File is too large (Maximum size: 500 kb)']}, status: 422
       end
 
-      if uploader.make_dir.save
-        params[:avatar] = "/assets/avatars/#{params[:id]}/avatar.jpg"
+      if uploader.save
+        params[:avatar] = "/assets/images/avatars/#{params[:id]}.jpg"
       else
         params[:avatar] = nil
       end

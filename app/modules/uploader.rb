@@ -5,18 +5,11 @@ module Uploader
 
       @avatar = avatar
       @user = user
-      @dir = Rails.root.join('app', 'assets/images/avatars/' + @user.id.to_s)
-    end
 
-    def make_dir
-      unless File.exist? @dir
-        Dir.mkdir @dir
-      end
-      self
     end
 
     def save
-      File.open(Rails.root.join('app', 'assets/images/avatars/' + @user.id.to_s, 'avatar.jpg'), 'wb') do |file|
+      File.open(Rails.root.join('public', 'assets/images/avatars', "#{@user.id}.jpg"), 'wb') do |file|
         file.write(@avatar.read)
       end
 
