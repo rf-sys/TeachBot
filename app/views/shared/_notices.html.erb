@@ -6,6 +6,6 @@
     <%= react_component('RightBottomNotice', {message: flash[:info_notice], type: 'info'}) %>
 <% end %>
 
-<% if flash[:info_danger] %>
-    <%= react_component('RightBottomNotice', {message: flash[:info_danger], type: 'danger'}) %>
+<% if flash[:danger_notice] %>
+    <%= react_component('RightBottomNotice', {message: flash[:danger_notice], type: 'danger'}) %>
 <% end %>

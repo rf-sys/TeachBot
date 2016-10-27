@@ -51,9 +51,6 @@ class Modal extends React.Component {
 
         console.log('/users/' + this.props.user.id);
 
-
-        // request.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
-
         $.ajax({
             url: "/users/" + this.props.user.id,
             type: "PATCH",
@@ -62,15 +59,16 @@ class Modal extends React.Component {
             processData: false,
             success: function (response) {
                 this.setState({responseData: []});
-                this.setState({responseData: [response.message], responseSuccess: true});
+                if (response.data) {
+                    this.setState({responseData: [response.message], responseSuccess: true});
 
-                $("#user_username").text(response.data.username);
-                $("#header_user_link").text(response.data.username);
-                $("#user_email").text(response.data.email);
+                    $("#user_username").text(response.data.username);
+                    $("#header_user_link").text(response.data.username);
+                    $("#user_email").text(response.data.email);
 
-                if (response.data.avatar) {
-                    console.log(response.data.avatar + '?' + Math.random());
-                    $("#user_avatar").attr('src', response.data.avatar + '?' + Math.random());
+                    if (response.data.avatar) {
+                        $("#user_avatar").attr('src', response.data.avatar + '?' + Math.random());
+                    }
                 }
 
             }.bind(this),

@@ -1,6 +1,6 @@
 /*
 Components entry point
  */
-global.ErrorsBlock = require('components/Errors/SignErrors/Block.jsx').default;
+global.ResponseMessagesBlock = require('components/Blocks/ResponseMessagesBlock/Block.jsx').default;
 global.RightBottomNotice = require('components/global/right-bottom-notice.jsx').default;
-global.Profile = require('components/Profile/Profile.jsx').default;
+global.ProfileSettings = require('components/Profile/ProfileSettings.jsx').default;

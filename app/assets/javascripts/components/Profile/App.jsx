@@ -1,14 +1,6 @@
 import Modal from './Modal.jsx'
 
 const App = React.createClass({
-
-    getInitialState() {
-        return {show: false}
-    },
-
-    toggleModal() {
-        this.setState({show: !this.state.show});
-    },
     render() {
         return (
             <div>

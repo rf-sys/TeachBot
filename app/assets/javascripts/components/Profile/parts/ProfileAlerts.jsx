@@ -11,6 +11,10 @@ class ProfileAlerts extends React.Component {
         this.props.resetResponseData();
     }
 
+    componentDidMount() {
+        setTimeout(() => this.resetList(), 5000);
+    }
+
     render() {
         var type;
         if (this.state.success == true)

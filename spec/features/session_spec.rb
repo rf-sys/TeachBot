@@ -24,4 +24,8 @@ describe 'the signin process', :type => :feature do
     click_button 'Sign in'
     expect(page).to have_content 'User with this credentials not found'
   end
+
+  it 'asserts true' do
+    assert false
+  end
 end

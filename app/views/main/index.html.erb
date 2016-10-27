@@ -1,18 +1,19 @@
-<%= content_for :head do%>
-<style>
-  @keyframes type {
-    from {
-      width: 0
-    }
-  }
-  .typing {
-    white-space: nowrap;
-    border-right: 2px solid;
-    overflow: hidden;
-    width: 8ch;
-    animation: type 1s steps(8), brand-blinker .5s step-end infinite alternate;
-  }
-</style>
+<%= content_for :head do %>
+    <style>
+      @keyframes type {
+        from {
+          width: 0
+        }
+      }
+
+      .typing {
+        white-space: nowrap;
+        border-right: 2px solid;
+        overflow: hidden;
+        width: 8ch;
+        animation: type 1s steps(8), brand-blinker .5s step-end infinite alternate;
+      }
+    </style>
 <% end %>
 
 <section class="jumbotron text-xs-center">
@@ -35,14 +36,6 @@
     </div>
 
     <div class="col-xs-8 flex-xs-middle">
-
-      <% @lessons.each_with_index do |lesson, index| %>
-          Title: <%= lesson[:title] %>
-          Body: <%= lesson[:body] %>
-          <% if index % 2 != 0 %>
-              <br>
-          <% end %>
-      <% end %>
 
       <div class="row">
         <div class="col-md">
