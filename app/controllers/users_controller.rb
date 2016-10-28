@@ -19,6 +19,7 @@ class UsersController < ApplicationController
   def create
     @user = User.new(user_params)
     if @user.save
+      UserMailer.signup_mail(@user).deliver_now
       session[:user_id] = @user.id
       flash[:success_notice] = 'User has been created. You are logged in.'
       redirect_to '/'
