@@ -31,9 +31,9 @@ class UsersController < ApplicationController
   def update
     @user = User.find(params[:id])
 
-    if params[:avatar]
+    if params[:user][:avatar]
 
-      uploader = Uploader::AvatarUploader.new(@user, params[:avatar])
+      uploader = Uploader::AvatarUploader.new(@user, params[:user][:avatar])
 
       unless uploader.check_type
         return render :json => {:error => ['File has no valid type (image required)']}, status: 422
@@ -44,9 +44,9 @@ class UsersController < ApplicationController
       end
 
       if uploader.save
-        params[:avatar] = "/assets/images/avatars/#{params[:id]}.jpg"
+        params[:user][:avatar] = "/assets/images/avatars/#{params[:id]}.jpg"
       else
-        params[:avatar] = nil
+        params[:user][:avatar] = nil
       end
 
     end
@@ -59,7 +59,7 @@ class UsersController < ApplicationController
           data: {
               :username => @user.username,
               :email => @user.email,
-              :avatar => params[:avatar]
+              :avatar => params[:user][:avatar]
           }
       }
 
@@ -73,10 +73,11 @@ class UsersController < ApplicationController
   private
   def user_params
     params.require(:user).permit(:username, :email, :password, :password_confirmation)
+
   end
 
   def update_params
-    params.permit(:username, :email, :avatar)
+    params.require(:user).permit(:username, :email, :avatar)
   end
 
 end

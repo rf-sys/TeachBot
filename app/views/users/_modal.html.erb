@@ -1,0 +1,39 @@
+<button type="button" class="btn btn-outline-primary btn-block" data-toggle="modal" data-target="#myModal"
+        style="margin-top: 5px">
+  Settings <i class="fa fa-cog" aria-hidden="true"></i>
+</button>
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+      </div>
+      <%= form_for @user, remote: true, authenticity_token: true, html: {id: 'edit_user_form'} do |f| %>
+          <div class="modal-body">
+            <%= react_component('ResponseMessagesBlock') %>
+            <div class="form-group">
+              <%= f.label :username %>
+              <%= f.text_field :username, class: 'form-control', required: 'true' %>
+            </div>
+            <div class="form-group">
+              <%= f.label :email %>
+              <%= f.text_field :email, class: 'form-control', required: 'true' %>
+            </div>
+
+            <div class="form-group">
+              <%= f.label :avatar %>
+              <%= f.file_field :avatar, class: 'form-control-file' %>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <%= f.submit class: 'btn btn-primary', data: { disable_with: "Loading..." } %>
+          </div>
+      <% end %>
+    </div>
+  </div>
+</div>

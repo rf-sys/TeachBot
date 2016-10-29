@@ -52,7 +52,7 @@ var ErrorsBlock = React.createClass({
                 <button type="button" className="close" onClick={this.clearErrors}>
                     <span>&times;</span>
                 </button>
-                <ErrorsList errors={this.state.list}/>
+                <List messages={this.state.list}/>
             </div>
         );
     },

@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
   def require_user
     unless current_user
       flash[:danger_notice] = 'You need login to go there'
-      redirect_to root_path, status: :forbidden
+      redirect_to root_url
     end
 
   end
@@ -18,7 +18,7 @@ class ApplicationController < ActionController::Base
   def require_guest
     if current_user
       flash[:danger_notice] = 'Authorized user cannot be there'
-      redirect_to root_path, status: :forbidden
+      redirect_to root_url
     end
   end
 
@@ -32,12 +32,11 @@ class ApplicationController < ActionController::Base
 
   def profile_owner
      unless current_user.id == params[:id].to_i
-      flash[:danger_notice] = 'Access denied'
-
       if request.xhr?
         render :json => {:error => ['Access denied']}, status: 403
       else
-        redirect_to root_path, status: :forbidden
+        flash[:danger_notice] = 'Access denied'
+        redirect_to root_url
       end
 
     end

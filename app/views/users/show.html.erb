@@ -1,6 +1,3 @@
-<% content_for :head do %>
-    <meta name="turbolinks-cache-control" content="no-cache">
-<% end %>
 <%= cache(@user.cache_key) do %>
     <div class="container center-content" style="text-align: center;">
 
@@ -37,10 +34,8 @@
             </div>
           </div>
           <% if it_is_current_user(@user) %>
-              <div class="row" style="margin-top: 5px;">
-                <div class="col-xs flex-items-xs-center">
-                  <%= react_component('ProfileSettings', {user: @user}) %>
-                </div>
+              <div style="text-align: left">
+                <%= render 'modal' %>
               </div>
           <% end %>
 
