@@ -20,10 +20,14 @@ $(document).on("turbolinks:load", () => {
             data: Form,
             contentType: false,
             processData: false,
-            success: function ({data}) {
-                if (data.avatar) {
-                    $("#user_avatar").attr('src', data.avatar + '?' + Math.random());
+            success: function (response) {
+                if (response.data.avatar) {
+                    $("#user_avatar").attr('src', response.data.avatar + '?' + Math.random());
                 }
+                $('#edit_user_form').trigger('ajax:success', response);
+            },
+            error: function (response) {
+                $('#edit_user_form').trigger('ajax:error', response);
             }
         });
 
