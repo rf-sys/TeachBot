@@ -8,7 +8,13 @@ var RightBottomNotice = React.createClass({
     componentDidMount() {
         this.setState({mounted: true});
 
-        setTimeout(() => this.setState({mounted: false}), 4000);
+        // to prevent error in the console if we go to another page before time is up
+        var hide = setTimeout(() => this.setState({mounted: false}), 4000);
+
+        $(document).on("turbolinks:before-visit", () => {
+            clearTimeout(hide);
+        });
+
     },
     render() {
         var child;
