@@ -10,7 +10,7 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
-        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+        <h4 class="modal-title" id="myModalLabel">Settings</h4>
       </div>
       <%= form_for @user, remote: true, authenticity_token: true, html: {id: 'edit_user_form'} do |f| %>
           <div class="modal-body">
@@ -30,6 +30,8 @@
             </div>
           </div>
           <div class="modal-footer">
+            <%= link_to 'Delete', @user, class: 'btn btn-outline-danger float-xs-left', method: 'delete',
+                        data: { confirm: "Are you sure? You will not be able to recover your account" } %>
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             <%= f.submit class: 'btn btn-primary', data: { disable_with: 'Loading...'} %>
           </div>

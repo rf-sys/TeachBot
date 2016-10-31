@@ -16,11 +16,9 @@ Rails.application.routes.draw do
 
   root 'main#index'
 
-
-
   # resources
 
-  resources :users, only: [:create, :show, :update]
+  resources :users, except: [:edit]
 
 
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html

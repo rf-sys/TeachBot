@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
 
   before_action :require_guest, only: [:new, :create]
-  before_action :require_user, :profile_owner, only: [:update]
+  before_action :require_user, :profile_owner, only: [:update, :destroy]
   before_action Throttle::Interval::SignUp, only: [:create]
 
   def show
@@ -30,54 +30,55 @@ class UsersController < ApplicationController
 
   def update
     @user = User.find(params[:id])
-
-    if params[:user][:avatar]
-
-      uploader = Uploader::AvatarUploader.new(@user, params[:user][:avatar])
-
-      unless uploader.check_type
-        return render :json => {:error => ['File has no valid type (image required)']}, status: 422
-      end
-
-      unless uploader.check_size
-        return render :json => {:error => ['File is too large (Maximum size: 500 kb)']}, status: 422
-      end
-
-      if uploader.save
-        params[:user][:avatar] = "/assets/images/avatars/#{params[:id]}.jpg"
+    file = FileHelper::Uploader::AvatarUploader.new(@user, params[:user][:avatar])
+    unless params[:user][:avatar].nil?
+      if file.valid?
+        params[:user][:avatar] = file.path
       else
-        params[:user][:avatar] = nil
+        return render :json => {:error => [file.error]}, status: 422
       end
-
     end
 
-    if @user.update(update_params)
+    if @user.update(update_params) && file.save
       Rails.cache.delete("/user/#{params[:id]}/info")
-
-      render :json => {
-          :message => 'User has been updated successfully',
-          data: {
-              :username => @user.username,
-              :email => @user.email,
-              :avatar => params[:user][:avatar]
-          }
-      }
-
-
+      success_update
     else
-      render :json => {:error => @user.errors.full_messages}, status: 422
+      fail_update
     end
+
+  end
+
+  def destroy
+    @user = User.find(params[:id])
+    @user.destroy
+    session[:user_id] = nil
+    flash[:success_notice] = 'User has been deleted.'
+    redirect_to '/'
   end
 
 
   private
+
   def user_params
     params.require(:user).permit(:username, :email, :password, :password_confirmation)
-
   end
 
   def update_params
     params.require(:user).permit(:username, :email, :avatar)
   end
 
+  def success_update
+    render :json => {
+        :message => 'User has been updated successfully',
+        data: {
+            :username => @user.username,
+            :email => @user.email,
+            :avatar => params[:user][:avatar]
+        }
+    }
+  end
+
+  def fail_update
+    render :json => {:error => @user.errors.full_messages}, status: 422
+  end
 end

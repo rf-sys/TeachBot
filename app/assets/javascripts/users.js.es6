@@ -4,6 +4,10 @@ $(document).on("turbolinks:load", () => {
         $("#header_user_link").text(data.username);
         $("#user_email").text(data.email);
 
+        if (data.avatar) {
+            $("#user_avatar").attr('src', data.avatar + '?' + Math.random());
+        }
+
     }).bind('ajax:aborted:file', function(event, elements) {
 
         var Form = new FormData();
@@ -21,9 +25,6 @@ $(document).on("turbolinks:load", () => {
             contentType: false,
             processData: false,
             success: function (response) {
-                if (response.data.avatar) {
-                    $("#user_avatar").attr('src', response.data.avatar + '?' + Math.random());
-                }
                 $('#edit_user_form').trigger('ajax:success', response);
             },
             error: function (response) {

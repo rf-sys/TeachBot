@@ -33,7 +33,10 @@
           </div>
 
 
-          <%= f.submit class: 'btn btn-outline-primary pull-xs-right', id: 'create_user_btn' %>
+          <%= f.submit class: 'btn btn-outline-primary pull-xs-right',
+                       id: 'create_user_btn',
+                       data: {disable_with: 'Loading...'}
+          %>
 
       <% end %>
     </div>
