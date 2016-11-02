@@ -8,11 +8,11 @@ class SessionsController < ApplicationController
   end
 
   def create
-    @user = User.find_by_email(params[:session][:email])
-
-    if @user && @user.authenticate(params[:session][:password])
-      session[:user_id] = @user.id
-      flash[:info_notice] = 'You have been logged in as: ' + @user.username
+    user = User.find_by_email(params[:session][:email])
+    if user && user.authenticate(params[:session][:password])
+      log_in user
+      params[:session][:remember_me] == '1' ? remember(user) : forget(user)
+      remember user
       redirect_to '/'
     else
       render :json => 'User with this credentials not found', status: 404
@@ -20,9 +20,7 @@ class SessionsController < ApplicationController
   end
 
   def destroy
-    session[:user_id] = nil
+    log_out if logged_in?
     redirect_to '/'
   end
-
-
 end

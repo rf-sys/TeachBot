@@ -1,15 +1,14 @@
 class UsersController < ApplicationController
+  include UsersHelper
 
   before_action :require_guest, only: [:new, :create]
   before_action :require_user, :profile_owner, only: [:update, :destroy]
   before_action Throttle::Interval::SignUp, only: [:create]
 
   def show
-
     @user = Rails.cache.fetch("/user/#{params[:id]}/info") do
       User.select(:id, :username, :email, :avatar, :updated_at).find(params[:id])
     end
-
   end
 
   def new
@@ -67,18 +66,4 @@ class UsersController < ApplicationController
     params.require(:user).permit(:username, :email, :avatar)
   end
 
-  def success_update
-    render :json => {
-        :message => 'User has been updated successfully',
-        data: {
-            :username => @user.username,
-            :email => @user.email,
-            :avatar => params[:user][:avatar]
-        }
-    }
-  end
-
-  def fail_update
-    render :json => {:error => @user.errors.full_messages}, status: 422
-  end
 end
