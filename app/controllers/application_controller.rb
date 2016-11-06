@@ -11,7 +11,7 @@ class ApplicationController < ActionController::Base
       @current_user ||= User.find_by(id: user_id)
     elsif (user_id = cookies.signed[:user_id])
       user = User.find_by(id: user_id)
-      if user && user.authenticated?(cookies[:remember_token])
+      if user && user.authenticated?(:remember, cookies[:remember_token])
         log_in user
         @current_user = user
       end
@@ -42,7 +42,7 @@ class ApplicationController < ActionController::Base
   end
 
   def profile_owner
-     unless current_user.id == params[:id].to_i
+    unless current_user.id == params[:id].to_i
       if request.xhr?
         render :json => {:error => ['Access denied']}, status: 403
       else

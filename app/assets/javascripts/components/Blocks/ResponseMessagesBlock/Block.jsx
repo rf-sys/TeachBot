@@ -33,6 +33,8 @@ var ErrorsBlock = React.createClass({
             this.setState({list: [], success: false});
             if (data.status == 422)
                 this.setState({list: data.responseJSON.error});
+            if (data.status == 403)
+                this.setState({list: [data.responseText]})
         });
     },
     clearErrors() {
@@ -48,7 +50,7 @@ var ErrorsBlock = React.createClass({
 
 
         return (
-            <div className={type}>
+            <div className={type} id="ResponseMessagesBlock">
                 <button type="button" className="close" onClick={this.clearErrors}>
                     <span>&times;</span>
                 </button>

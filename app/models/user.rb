@@ -1,13 +1,15 @@
 class User < ApplicationRecord
   require 'validators/EmailValidator'
 
-  attr_accessor :remember_token
+  attr_accessor :remember_token, :activation_token
 
   validates :username, :email, presence: true, uniqueness: true
   validates :username, length: {maximum: 50}
 
   validates :email, email: true, length: {maximum: 255}
 
+  before_save :downcase_email
+  before_create :create_activation_digest
   before_destroy :delete_avatar
 
   has_secure_password
@@ -27,9 +29,10 @@ class User < ApplicationRecord
   end
 
   # Returns true if the given token matches the digest.
-  def authenticated?(remember_token)
-    return false if remember_digest.nil?
-    BCrypt::Password.new(remember_digest).is_password?(remember_token)
+  def authenticated?(attribute, token)
+    digest = self.send("#{attribute}_digest")
+    return false if digest.nil?
+    BCrypt::Password.new(digest).is_password?(token)
   end
 
   # Forgets a user.
@@ -38,7 +41,27 @@ class User < ApplicationRecord
   end
 
 
+  # Activates an account.
+  def activate
+    update_columns(activated: true, activated_at: Time.zone.now)
+  end
+
+  # Sends activation email.
+  def send_activation_email
+    UserMailer.account_activation(self).deliver_now
+  end
+
+
   private
+
+  def downcase_email
+    self.email = email.downcase
+  end
+
+  def create_activation_digest
+    self.activation_token = User.new_token
+    self.activation_digest = User.digest(activation_token)
+  end
 
   class << self
     # create a hash of the token

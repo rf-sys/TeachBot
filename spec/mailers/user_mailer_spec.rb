@@ -1,15 +1,15 @@
 require "rails_helper"
 
 RSpec.describe UserMailer, type: :mailer do
-  describe 'instructions' do
+  describe 'account_activation_mail' do
     before :each do
       @user = User.create(username: 'Oka', email: 'user@test.com', password: 'password')
     end
 
-    let(:mail) { UserMailer.signup_mail(@user).deliver_now }
+    let(:mail) { UserMailer.account_activation(@user).deliver_now }
 
     it 'renders the subject' do
-      expect(mail.subject).to eq('Thank you for signup')
+      expect(mail.subject).to eq('Account activation')
     end
 
     it 'renders the receiver email' do

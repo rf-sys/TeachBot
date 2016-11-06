@@ -8,12 +8,15 @@ class SessionsController < ApplicationController
   end
 
   def create
-    user = User.find_by_email(params[:session][:email])
+    user = User.find_by(email: params[:session][:email].downcase)
     if user && user.authenticate(params[:session][:password])
-      log_in user
-      params[:session][:remember_me] == '1' ? remember(user) : forget(user)
-      remember user
-      redirect_to '/'
+      if user.activated?
+        log_in user
+        params[:session][:remember_me] == '1' ? remember(user) : forget(user)
+        redirect_to root_url
+      else
+        render :json => 'Account not activated. Check your email and confirm it', status: 404
+      end
     else
       render :json => 'User with this credentials not found', status: 404
     end

@@ -5,14 +5,13 @@ module Throttle
   module Interval
 
     # use when we register (create) new user
-    class SignUp
+    class RequestInterval
 
       SIGNUP_INTERVAL = 2 # seconds
 
       def self.before(controller)
 
         remote_ip = controller.request.remote_ip
-
         if too_many_attempts?(remote_ip)
           mark_ip(remote_ip)
           send_denied_response(controller)

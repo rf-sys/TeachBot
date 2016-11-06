@@ -1,9 +1,8 @@
 class UsersController < ApplicationController
   include UsersHelper
-
   before_action :require_guest, only: [:new, :create]
   before_action :require_user, :profile_owner, only: [:update, :destroy]
-  before_action Throttle::Interval::SignUp, only: [:create]
+  before_action Throttle::Interval::RequestInterval, only: [:create, :update]
 
   def show
     @user = Rails.cache.fetch("/user/#{params[:id]}/info") do
@@ -17,10 +16,9 @@ class UsersController < ApplicationController
 
   def create
     @user = User.new(user_params)
-    if @user.save
-      UserMailer.signup_mail(@user).deliver_now
-      session[:user_id] = @user.id
-      flash[:success_notice] = 'User has been created. You are logged in.'
+    if verify_recaptcha(model: @user) && @user.save
+      @user.send_activation_email
+      flash[:super_info_notice] = 'Please check your email to activate your account.'
       redirect_to '/'
     else
       render :json => {:error => @user.errors.full_messages}, status: 422

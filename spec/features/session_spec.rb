@@ -1,21 +1,21 @@
 require 'rails_helper'
-describe 'the signin process', :type => :feature do
+describe 'sign_in process', :type => :feature do
   before :each do
     User.create(:username => 'Oki', :email => 'user@test.com', :password => 'password')
   end
 
-  it 'sign in with correct credits' do
+  it 'sign_in show no activated account error' do
     visit '/login'
     within('#login_form') do
       fill_in 'session_email', :with => 'user@test.com'
       fill_in 'session_password', :with => 'password'
     end
     click_button 'Sign in'
-    expect(page).to have_content 'TeachBot'
+    expect(page).to have_content 'Account not activated'
   end
 
 
-  it 'sign in with wrong credits' do
+  it 'sign_in with wrong credits shows errors' do
     visit '/login'
     within('#login_form') do
       fill_in 'session_email', :with => 'user123@test.com'
@@ -23,9 +23,5 @@ describe 'the signin process', :type => :feature do
     end
     click_button 'Sign in'
     expect(page).to have_content 'User with this credentials not found'
-  end
-
-  it 'asserts true' do
-    assert false
   end
 end
