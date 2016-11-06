@@ -34,4 +34,8 @@ $(document).on("turbolinks:load", () => {
 
         return false
     });
+
+    $('#new_user').bind('ajax:error', (xhr, data) => {
+        grecaptcha.reset();
+    });
 });
