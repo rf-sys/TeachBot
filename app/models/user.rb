@@ -1,5 +1,7 @@
 class User < ApplicationRecord
   require 'validators/EmailValidator'
+  require 'sendgrid-ruby'
+  include SendGrid
 
   attr_accessor :remember_token, :activation_token
 

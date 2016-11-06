@@ -78,6 +78,7 @@ end
 gem 'font-awesome-sass'
 
 gem 'recaptcha'
+gem 'sendgrid-ruby'
 
 
 ruby '2.3.1'
