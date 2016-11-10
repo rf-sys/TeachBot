@@ -8,7 +8,7 @@ $(document).on("turbolinks:load", () => {
             $("#user_avatar").attr('src', data.avatar + '?' + Math.random());
         }
 
-    }).bind('ajax:aborted:file', function(event, elements) {
+    }).bind('ajax:aborted:file', (event, elements) => {
 
         var Form = new FormData();
 
@@ -35,7 +35,8 @@ $(document).on("turbolinks:load", () => {
         return false
     });
 
-    $('#new_user').bind('ajax:error', (xhr, data) => {
+    // reset recaptcha state after failed ajax request
+    $('#new_user').bind('ajax:error', () => {
         grecaptcha.reset();
     });
 });

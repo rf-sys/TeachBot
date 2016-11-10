@@ -13,6 +13,7 @@ module Firstapp
     config.cache_store = :file_store, "cache"
     config.react.addons = true
     config.browserify_rails.commandline_options = '-t [ babelify --presets [ es2015 react ] --extensions .jsx ]'
+    config.active_job.queue_adapter = :resque
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
