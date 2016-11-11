@@ -18,7 +18,7 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
     if verify_recaptcha(model: @user) && @user.save
       @user.send_activation_email
-      flash[:super_info_notice] = 'Please check your email to activate your account.'
+      flash[:super_info_notice] = "Please check your email (#{user_params[:email]}) to activate your account. Email must come during several minutes."
       redirect_to '/'
     else
       render :json => {:error => @user.errors.full_messages}, status: 422
