@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
   include UsersHelper
+
   before_action :require_guest, only: [:new, :create]
   before_action :require_user, :profile_owner, only: [:update, :destroy]
   before_action Throttle::Interval::RequestInterval, only: [:create, :update]

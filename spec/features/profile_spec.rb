@@ -1,8 +1,9 @@
 require 'rails_helper'
 
 describe 'profile settings process', :type => :feature do
+
   before :each do
-    @user = User.create!(:username => 'Oki', :email => 'user@test.com', :password => 'password')
+    @user = User.create(username: 'Kari', email: 'rodion2014@inbx.ru', password_digest: User.digest('pass'))
   end
 
   it "i see user's profile" do
@@ -22,10 +23,10 @@ describe 'profile settings process', :type => :feature do
   end
 
   it 'i see my Settings button' do
-   puts @user.activated?
-   visit edit_account_activation_path(@user.activation_token, email: @user.email, host: 'localhost:3000')
-   @user.reload
-   puts @user.activated?
+    assert !@user.activated?
+    visit edit_account_activation_path(@user.activation_token, email: @user.email, host: 'localhost:3000')
+    @user.reload
+    assert @user.activated?
 
 
   end

@@ -13,15 +13,4 @@ describe 'sign_in process', :type => :feature do
     click_button 'Sign in'
     expect(page).to have_content 'Account not activated'
   end
-
-
-  it 'sign_in with wrong credits shows errors' do
-    visit '/login'
-    within('#login_form') do
-      fill_in 'session_email', :with => 'user123@test.com'
-      fill_in 'session_password', :with => 'password'
-    end
-    click_button 'Sign in'
-    expect(page).to have_content 'User with this credentials not found'
-  end
 end

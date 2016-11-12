@@ -36,10 +36,12 @@ group :development, :test do
   gem 'rspec-rails', '~> 3.5'
   gem 'capybara'
   gem 'rails-controller-testing'
+  gem 'capybara-webkit'
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platform: :mri
   gem 'meta_request'
   gem 'faker'
+  gem 'database_cleaner'
 end
 
 group :development do

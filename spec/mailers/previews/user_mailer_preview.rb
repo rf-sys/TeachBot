@@ -9,7 +9,7 @@ class UserMailerPreview < ActionMailer::Preview
   def account_activation
     user = User.first
     user.activation_token = User.new_token
-    UserMailer.account_activation(user)
+    UserMailer.account_activation(user, user.activation_token)
   end
 
   # Preview this email at
