@@ -12,8 +12,9 @@ class User < ApplicationRecord
 
   before_save :downcase_email
   before_create :create_activation_digest
-  before_destroy :delete_avatar
+  before_destroy :delete_avatar, :cache_cleaner
 
+  after_update_commit :cache_cleaner
   has_secure_password
 
 
@@ -77,6 +78,10 @@ class User < ApplicationRecord
       SecureRandom.urlsafe_base64
     end
 
+  end
+
+  def cache_cleaner
+    Rails.cache.delete("/user/#{self.id}/info")
   end
 
 

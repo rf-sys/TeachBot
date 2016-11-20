@@ -1,6 +1,6 @@
 module Throttle
 
-  CACHE = Rails.cache
+  REDIS = Redis.new
 
   module Interval
 
@@ -22,7 +22,10 @@ module Throttle
 
       # return: bool
       def self.too_many_attempts?(remote_ip)
-        CACHE.exist?('throttle_' + remote_ip.to_s)
+        if REDIS.exists("throttle[signup_interval][#{remote_ip}]")
+          return true
+        end
+        false
       end
 
       def self.send_denied_response(controller)
@@ -31,7 +34,7 @@ module Throttle
 
       # create a new cache of the ip
       def self.mark_ip(remote_ip)
-        CACHE.write('throttle_' + remote_ip.to_s, remote_ip, expires_in: SIGNUP_INTERVAL.seconds)
+        REDIS.set("throttle[signup_interval][#{remote_ip}]", true, ex: SIGNUP_INTERVAL)
       end
 
     end
@@ -54,11 +57,12 @@ module Throttle
 
       def self.too_many_attempts?(remote_ip)
 
-        unless CACHE.exist?('locker_throttle_' + remote_ip)
-          CACHE.write('locker_throttle_' + remote_ip, 0, expires_in: SESSION_LOCKER_INTERVAL.minutes)
+
+        unless REDIS.exists("throttle[login_locker][#{remote_ip}]")
+          REDIS.set("throttle[login_locker][#{remote_ip}]", 0, ex: SESSION_LOCKER_INTERVAL.minutes)
         end
 
-        return CACHE.read('locker_throttle_' + remote_ip) >= MAX_ATTEMPTS
+        return REDIS.get("throttle[login_locker][#{remote_ip}]").to_i >= MAX_ATTEMPTS
       end
 
       def self.send_denied_response(controller)
@@ -70,9 +74,7 @@ module Throttle
 
         # 'increment' resets expire time in cache...Cache simple doesn't delete after expire time
 
-       i = CACHE.read('locker_throttle_' + remote_ip)+1
-
-       CACHE.write('locker_throttle_' + remote_ip, i, expires_in: SESSION_LOCKER_INTERVAL.minutes)
+        REDIS.incr("throttle[login_locker][#{remote_ip}]")
       end
 
     end

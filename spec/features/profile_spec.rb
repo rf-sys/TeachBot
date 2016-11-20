@@ -16,7 +16,7 @@ describe 'profile settings process', :type => :feature do
 
   end
 
-  it 'i cannot see foreign Settings' do
+  it 'if i not login, i cannot see Settings button' do
     visit user_path @user
     expect(page).to have_content(@user.username)
     page.has_no_text?('Settings')

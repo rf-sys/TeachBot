@@ -38,7 +38,6 @@ class UsersController < ApplicationController
     end
 
     if @user.update(update_params) && file.save
-      Rails.cache.delete("/user/#{params[:id]}/info")
       success_update
     else
       fail_update

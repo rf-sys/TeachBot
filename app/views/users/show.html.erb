@@ -26,9 +26,11 @@
             <div class="col-xs flex-items-xs-center">
 
               <% if @user.avatar.nil? %>
-                  <%= image_tag '/assets/images/default_avatar.jpeg', height: '200px', width: '200px', id: 'user_avatar' %>
+                  <%= image_tag '/assets/images/default_avatar.jpeg',
+                                height: '200px', width: '200px', id: 'user_avatar' %>
               <% else %>
-                  <%= image_tag @user.avatar, height: '200px', width: '200px', id: 'user_avatar' %>
+                  <%= image_tag @user.avatar + '?updated=' + @user.updated_at.usec.to_s,
+                                height: '200px', width: '200px', id: 'user_avatar' %>
               <% end %>
 
             </div>

@@ -1,4 +1,4 @@
-var ErrorsBlock = React.createClass({
+var Block = React.createClass({
     getInitialState() {
         return {
             list: [],
@@ -66,4 +66,4 @@ var ErrorsBlock = React.createClass({
     }
 });
 
-export default ErrorsBlock
+export default Block
