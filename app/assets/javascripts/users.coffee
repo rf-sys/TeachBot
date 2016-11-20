@@ -31,14 +31,12 @@ class EditProfile
 $(document).on 'turbolinks:load', ->
 	$('#edit_user_form').on('ajax:success', (e, response) ->
 		EditProfile.update_profile_info(e, response)
-	).on 'ajax:aborted:file', (event, elements) ->
+	).on('ajax:aborted:file', (event, elements) ->
 		EditProfile.file_prepare(event, elements)
 		false
-
-# reset recaptcha state after failed ajax request
-$('#new_user').bind 'ajax:error', ->
-	grecaptcha.reset()
-	return
+	)
+	$('#new_user').bind 'ajax:error', ->
+		grecaptcha.reset()
 
 
 
