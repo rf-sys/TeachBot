@@ -2,6 +2,7 @@ module Throttle
 
   REDIS = Redis.new
 
+
   module Interval
 
     # use when we register (create) new user
