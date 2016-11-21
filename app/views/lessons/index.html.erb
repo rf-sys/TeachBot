@@ -1,2 +1,11 @@
 <h1>Lessons#index</h1>
 <p>Find me in app/views/lessons/index.html.erb</p>
+<% @lessons.each do |lesson| %>
+    <%= lesson.title %>
+<% end %>
+<br>
+
+
+<div id="lessons_index_pagination">
+    <%= will_paginate @lessons %>
+</div>

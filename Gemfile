@@ -83,5 +83,7 @@ gem 'font-awesome-sass'
 gem 'recaptcha'
 gem 'sendgrid-ruby'
 
+gem 'will_paginate', '~> 3.1.0'
+
 
 ruby '2.3.1'

@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
 
+  get 'lessons/index'
+
   get 'bot/help'
 
   get 'account_activations/edit'
@@ -16,9 +18,6 @@ Rails.application.routes.draw do
   delete 'logout' => 'sessions#destroy'
 
 
-  get 'lessons', to: 'lessons#index', as: 'lessons_index'
-
-
   get 'bot', to: 'api#bot'
 
   root 'main#index'
@@ -26,6 +25,7 @@ Rails.application.routes.draw do
   # resources
 
   resources :users, except: [:edit]
+  resources :lessons
   resources :account_activations, only: [:edit]
 
 

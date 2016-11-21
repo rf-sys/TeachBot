@@ -36,47 +36,11 @@
     </div>
 
     <div class="col-xs-8 flex-xs-middle">
-
-      <div class="row">
-        <div class="col-md">
-          <div class="card card-block">
-            <h4 class="card-title">Card title</h4>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
-              content.</p>
-            <a href="#" class="card-link">Card link</a>
-            <a href="#" class="card-link">Another link</a>
-          </div>
+      <% @lessons.in_groups_of(2, false) do |group| %>
+        <div class="row">
+          <%= render partial: 'lesson', collection: group, cached: true %>
         </div>
-        <div class="col-md">
-          <div class="card card-block">
-            <h4 class="card-title">Card title</h4>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
-              content.</p>
-            <a href="#" class="card-link">Card link</a>
-            <a href="#" class="card-link">Another link</a>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md">
-          <div class="card card-block">
-            <h4 class="card-title">Card title</h4>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
-              content.</p>
-            <a href="#" class="card-link">Card link</a>
-            <a href="#" class="card-link">Another link</a>
-          </div>
-        </div>
-        <div class="col-md">
-          <div class="card card-block">
-            <h4 class="card-title">Card title</h4>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
-              content.</p>
-            <a href="#" class="card-link">Card link</a>
-            <a href="#" class="card-link">Another link</a>
-          </div>
-        </div>
-      </div>
+      <% end %>
     </div>
   </div>
 </div>

@@ -1,3 +1,11 @@
-// Place all the styles related to the Lessons controller here.
-// They will automatically be included in application.css.
-// You can use Sass (SCSS) here: http://sass-lang.com/
+#lessons_index_pagination {
+  .pagination > * {
+    @extend .page-link
+  }
+
+  em.current {
+    color: white !important;
+    background: #0275d8 !important;
+    border-color: #0275d8 !important;
+  }
+}
