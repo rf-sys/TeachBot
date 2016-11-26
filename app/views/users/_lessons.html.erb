@@ -1,0 +1,11 @@
+<% if recent_lessons.any? %>
+    <% recent_lessons.each do |lesson| %>
+        <blockquote class="blockquote">
+          <p class="mb-0"><%= lesson.title %></p>
+          <footer class="blockquote-footer">Created: <cite title="Source Title"><%= lesson.created_at %></cite></footer>
+        </blockquote>
+    <% end %>
+<% else %>
+    <h2>Lessons not found</h2>
+<% end %>
+

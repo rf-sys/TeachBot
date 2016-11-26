@@ -39,5 +39,5 @@ $(document).on 'turbolinks:load', ->
 		grecaptcha.reset()
 
 
-
-
+$(document).bind 'googleMaps', ->
+	new google.maps.places.Autocomplete document.getElementById 'user_profile_attributes_location'

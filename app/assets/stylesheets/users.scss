@@ -5,10 +5,19 @@
   margin-left: 15px;
   margin-right: 15px;
 }
+#profile_settings_map {
+  width: 400px;
+  height: 400px;
+}
 
 
 @media (max-width: 543px) {
   .responsive_profile_util {
     width: 100%;
   }
+}
+
+.profile_icon {
+  height: 15px;
+  width: 15px;
 }

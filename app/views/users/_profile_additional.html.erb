@@ -1,0 +1,24 @@
+<% if @user.profile.facebook.present? %>
+    <p><i class="fa fa-facebook profile_icon" aria-hidden="true"></i>
+      <%= link_to @user.profile.facebook,
+                  'https://www.facebook.com/' + @user.profile.facebook,
+                  target: '_blank' %>
+    </p>
+<% end %>
+<% if @user.profile.twitter.present? %>
+    <p><i class="fa fa-twitter profile_icon" aria-hidden="true"></i>
+      <%= link_to @user.profile.twitter,
+                  'https://twitter.com/' + @user.profile.twitter,
+                  target: '_blank' %>
+    </p>
+<% end %>
+<% if @user.profile.website.present? %>
+    <p><i class="fa fa-link profile_icon" aria-hidden="true"></i>
+      <%= link_to @user.profile.website, @user.profile.website, target: '_blank' %></p>
+<% end %>
+
+<% if @user.profile.about.present? %>
+    <p class="lead">
+      <%= @user.profile.about %>
+    </p>
+<% end %>
