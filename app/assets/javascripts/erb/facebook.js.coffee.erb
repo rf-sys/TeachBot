@@ -1,20 +1,4 @@
 # Facebook API and related logic
-
-$(document).on 'turbolinks:load', ->
-  if $("#body_sessions_new").length
-
-    $('#facebook_login_btn').unbind().bind 'click', ->
-      FB.login (response) ->
-        FB.getLoginStatus (response) ->
-          sendFacebookAuthRequest(response)
-
-    sendFacebookAuthRequest = (response) ->
-      console.log response
-      console.log 'connected' if response.status == 'connected'
-
-    window.fbAsyncInit = ->
-      FB.init
-        appId: <%= ENV['FACEBOOK_APP_ID'] %>
-        cookie: true
-        xfbml: true
-        version: 'v2.8'
+$(document).bind 'initFacebook', ->
+  $('#facebook_login_btn').click ->
+    window.location = "https://www.facebook.com/v2.8/dialog/oauth?client_id=#{<%= ENV['FACEBOOK_APP_ID'] %>}&redirect_uri=http://localhost:3000/oauth/facebook"

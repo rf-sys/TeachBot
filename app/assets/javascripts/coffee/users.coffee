@@ -40,4 +40,5 @@ $(document).on 'turbolinks:load', ->
 
 
 $(document).bind 'googleMaps', ->
-	new google.maps.places.Autocomplete document.getElementById 'user_profile_attributes_location'
+	if $("#user_profile_attributes_location").length
+		new google.maps.places.Autocomplete document.getElementById 'user_profile_attributes_location'
