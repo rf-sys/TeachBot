@@ -28,7 +28,7 @@ class ApplicationController < ActionController::Base
 
   def require_guest
     if current_user
-      flash[:danger_notice] = 'Authorized user cannot be there'
+      flash[:danger_notice] = 'Access denied for authorized user'
       redirect_to root_url
     end
   end

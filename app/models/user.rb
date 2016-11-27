@@ -2,20 +2,30 @@ class User < ApplicationRecord
   require 'validators/EmailValidator'
   require 'sendgrid-ruby'
   include SendGrid
+  include BCrypt
+  # to get 'authenticate method' and 'password='.
+  # 'password=' generates password_digest
+  include ActiveModel::SecurePassword::InstanceMethodsOnActivation
+
+  has_one :profile, dependent: :destroy, inverse_of: :user
+  has_many :lessons
+  has_many :recent_lessons, -> { order('created_at DESC').limit(2) }, class_name: 'Lesson'
+
+  scope :select_profile_attr, -> { select(:id, :username, :email, :avatar, :updated_at) }
 
   attr_accessor :remember_token, :activation_token
+  accepts_nested_attributes_for :profile, reject_if: :all_blank
 
   validates :username, :email, presence: true, uniqueness: true
   validates :username, length: {maximum: 50}
-
   validates :email, email: true, length: {maximum: 255}
+  validates :password, length: (6..32), confirmation: true, if: :setting_password?
 
   before_save :downcase_email
   before_create :create_activation_digest
   before_destroy :delete_avatar, :cache_cleaner
-
   after_update_commit :cache_cleaner
-  has_secure_password
+  after_create :generate_profile
 
 
   # delete avatar before delete user
@@ -57,6 +67,10 @@ class User < ApplicationRecord
 
   private
 
+  def setting_password?
+    password || password_confirmation
+  end
+
   def downcase_email
     self.email = email.downcase
   end
@@ -65,6 +79,15 @@ class User < ApplicationRecord
     self.activation_token = User.new_token
     self.activation_digest = User.digest(activation_token)
   end
+
+  def cache_cleaner
+    Rails.cache.delete("/user/#{self.id}/info")
+  end
+
+  def generate_profile
+    self.create_profile
+  end
+
 
   class << self
     # create a hash of the token
@@ -79,10 +102,5 @@ class User < ApplicationRecord
     end
 
   end
-
-  def cache_cleaner
-    Rails.cache.delete("/user/#{self.id}/info")
-  end
-
 
 end

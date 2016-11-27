@@ -7,7 +7,7 @@ class UsersController < ApplicationController
 
   def show
     @user = Rails.cache.fetch("/user/#{params[:id]}/info") do
-      User.select(:id, :username, :email, :avatar, :updated_at).find(params[:id])
+      User.left_outer_joins(:recent_lessons, :profile).select_profile_attr.find(params[:id])
     end
   end
 
@@ -61,7 +61,8 @@ class UsersController < ApplicationController
   end
 
   def update_params
-    params.require(:user).permit(:username, :email, :avatar)
+    params.require(:user).permit(:username, :email, :avatar,
+                                 profile_attributes: [:facebook, :twitter, :website, :location, :about])
   end
 
 end

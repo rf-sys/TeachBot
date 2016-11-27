@@ -1,0 +1,33 @@
+# config
+config =
+  googleMaps:
+    page: '#body_users_show',
+    trigger: 'googleMaps',
+    source: "https://maps.googleapis.com/maps/api/js?key=<%= Rails.application.config.api_keys[:google_api_key] %>&signed_in=true&libraries=places",
+    loaded: false
+  facebook:
+    page: '#body_sessions_new',
+    trigger: 'initFacebook',
+    source: '//connect.facebook.net/en_US/sdk.js',
+    loaded: false
+
+# helpers
+loader = (status, source, trigger = null) ->
+  if (!status)
+    loadExternalScript(source, trigger)
+  else
+    if trigger
+      $(document).trigger trigger
+
+loadExternalScript = (source, trigger = null) ->
+  $.getScript(source).done ->
+    if trigger
+      $(document).trigger trigger
+
+
+# handler
+$(document).on 'turbolinks:load', ->
+  for key, value of config
+    if $(value.page).length
+      loader(value.loaded, value.source, value.trigger)
+      value.loaded = true

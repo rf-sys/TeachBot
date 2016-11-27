@@ -1,50 +1,32 @@
-<%= cache(@user.cache_key) do %>
-    <div class="container center-content" style="text-align: center;">
+ <ul class="nav nav-tabs" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link active" data-toggle="tab" href="#profile" role="tab">Profile</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#lessons" role="tab">Lessons</a>
+      </li>
+      <% if it_is_current_user(@user) %>
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#settings" role="tab">Settings</a>
+          </li>
+      <% end %>
+    </ul>
 
-      <div class="row">
-
-        <div class="row flex-items-xs-middle responsive_profile_util">
-          <div class="col-xs">
-            <div class="row flex-items-xs-center">
-              <div class="col-xs flex-items-xs-center">
-                <h1 id="user_username"><%= @user.username %></h1>
-              </div>
-            </div>
-
-            <div class="row flex-items-xs-center">
-              <div class="col-xs flex-items-xs-center" id="user_email">
-                <%= @user.email %>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="profile_delimiter hidden-xs-down"></div>
-
-        <div class="col-xs flex-items-xs-middle" style="padding-left: 0;">
-          <div class="row">
-            <div class="col-xs flex-items-xs-center">
-
-              <% if @user.avatar.nil? %>
-                  <%= image_tag '/assets/images/default_avatar.jpeg',
-                                height: '200px', width: '200px', id: 'user_avatar' %>
-              <% else %>
-                  <%= image_tag @user.avatar + '?updated=' + @user.updated_at.usec.to_s,
-                                height: '200px', width: '200px', id: 'user_avatar' %>
-              <% end %>
-
-            </div>
-          </div>
-
-          <% if it_is_current_user(@user) %>
-              <div style="text-align: left">
-                <%= render 'modal' %>
-              </div>
-          <% end %>
-
-
-        </div>
+    <!-- Tab panes -->
+    <div class="tab-content">
+      <div class="tab-pane active" id="profile" role="tabpanel">
+        <%= render 'profile' %>
       </div>
-
+      <div class="tab-pane" id="lessons" role="tabpanel">
+        <%= render partial: 'lessons', locals: {recent_lessons: @user.recent_lessons} %>
+      </div>
+      <% if it_is_current_user(@user) %>
+          <div class="tab-pane" id="settings" role="tabpanel">
+            <div class="row">
+              <div class="col-xs">
+                <%= render 'settings' %>
+              </div>
+            </div>
+          </div>
+      <% end %>
     </div>
-<% end %>
