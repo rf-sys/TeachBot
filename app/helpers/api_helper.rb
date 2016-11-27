@@ -60,7 +60,7 @@ module ApiHelper
       User.where(facebook_id: user['id']).first_or_create(
           username: user['name'],
           email: user['email'],
-          avatar: "http://graph.facebook.com/#{user['id']}/picture?height=200&width=200",
+          avatar: "https://graph.facebook.com/#{user['id']}/picture?height=200&width=200",
           activated: true,
           facebook_id: user['id']
       )
