@@ -2,12 +2,12 @@ class UsersController < ApplicationController
   include UsersHelper
 
   before_action :require_guest, only: [:new, :create]
-  before_action :require_user, :profile_owner, only: [:update, :destroy]
+  before_action :require_user, :profile_owner, only: [:edit, :update, :destroy]
   before_action Throttle::Interval::RequestInterval, only: [:create, :update]
 
   def show
     @user = Rails.cache.fetch("/user/#{params[:id]}/info") do
-      User.left_outer_joins(:recent_lessons, :profile).select_profile_attr.find(params[:id])
+      User.find(params[:id])
     end
   end
 
@@ -26,12 +26,18 @@ class UsersController < ApplicationController
     end
   end
 
+  def edit
+    @user = Rails.cache.fetch("/user/#{params[:id]}/info") do
+      User.find(params[:id])
+    end
+  end
+
   def update
     @user = User.find(params[:id])
     file = FileHelper::Uploader::AvatarUploader.new(@user, params[:user][:avatar])
     unless params[:user][:avatar].nil?
       if file.valid?
-        params[:user][:avatar] = file.path
+        params[:user][:avatar] = file.path + '?updated=' + Time.now.to_i.to_s
       else
         return render :json => {:error => [file.error]}, status: 422
       end

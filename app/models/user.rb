@@ -12,6 +12,7 @@ class User < ApplicationRecord
   has_many :recent_lessons, -> { order('created_at DESC').limit(2) }, class_name: 'Lesson'
 
   scope :select_profile_attr, -> { select(:id, :username, :email, :avatar, :updated_at) }
+  scope :find_with_profile, -> (id) { includes(:profile).find(id) }
 
   attr_accessor :remember_token, :activation_token
   accepts_nested_attributes_for :profile, reject_if: :all_blank

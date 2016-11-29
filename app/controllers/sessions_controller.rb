@@ -9,6 +9,9 @@ class SessionsController < ApplicationController
 
   def create
     user = User.find_by(email: params[:session][:email].downcase)
+    if user.facebook_id
+      return render :json => 'You can access Facebook account only with facebook login button', status: 403
+    end
     if user && user.authenticate(params[:session][:password])
       if user.activated?
         log_in user

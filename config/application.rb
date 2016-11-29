@@ -15,6 +15,11 @@ module Firstapp
     config.browserify_rails.commandline_options = '-t [ babelify --presets [ es2015 react ] --extensions .jsx ]'
     config.active_job.queue_adapter = :resque
 
+    config.api_keys = {
+        :google_api_key => 'AIzaSyAl3hIWaCvf2w4jFNa5lyRcfHggb7dcFvQ',
+        :facebook_api_key => '371444199855931'
+    }
+
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.

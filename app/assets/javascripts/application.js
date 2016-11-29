@@ -20,7 +20,6 @@
 //= require components
 //= require_tree .
 
-
 /*
 npm install *
 Here type: window.* = require('*') to get global access

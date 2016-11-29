@@ -24,7 +24,7 @@ Rails.application.routes.draw do
 
   # resources
 
-  resources :users, except: [:edit]
+  resources :users
   resources :lessons
   resources :account_activations, only: [:edit]
 

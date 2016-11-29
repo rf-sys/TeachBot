@@ -1,0 +1,13 @@
+<ul class="nav nav-tabs" role="tablist">
+  <li class="nav-item">
+    <%= link_to 'Profile', user_path(@user), class: 'nav-link ' + (action_name == 'show' ? 'active' : '') %>
+  </li>
+  <li class="nav-item">
+    <%= link_to 'Lessons', lessons_path, class: 'nav-link ' + (action_name == 'index' ? 'active' : '') %>
+  </li>
+  <% if it_is_current_user @user %>
+    <li class="nav-item">
+      <%= link_to 'Settings', edit_user_path(@user), class: 'nav-link ' + (action_name == 'edit' ? 'active' : '') %>
+    </li>
+  <% end %>
+</ul>

@@ -1,38 +1,34 @@
-class EditProfile
+update_header = (e, response) ->
+	$('#header_user_link').text response.data.username
 
-	@update_profile_info: (e, response) ->
-		$('#user_username').text response.data.username
-		$('#header_user_link').text response.data.username
-		$('#user_email').text response.data.email
+request_with_avatar = (event, elements) ->
+	Form = new FormData(document.getElementById('edit_user_form'))
+	$.ajax
+		url: event.currentTarget.action
+		type: 'PATCH'
+		data: Form
+		contentType: false
+		processData: false
+		success: (response) ->
+			$('#edit_user_form').trigger 'ajax:success', response
 
-		$('#user_avatar').attr 'src', response.data.avatar + '?' + Math.random() if response.data.avatar
+		error: (response) ->
+			$('#edit_user_form').trigger 'ajax:error', response
 
-	@file_prepare: (event, elements) ->
-		Form = new FormData
-		Form.append 'user[username]', $("input[name='user[username]']").val().trim()
-		Form.append 'user[email]', $("input[name='user[email]']").val().trim()
-		Form.append 'user[avatar]', elements[0].files[0]
-
-		$.ajax
-			url: event.currentTarget.action
-			type: 'PATCH'
-			data: Form
-			contentType: false
-			processData: false
-			success: (response) ->
-				$('#edit_user_form').trigger 'ajax:success', response
-
-			error: (response) ->
-				$('#edit_user_form').trigger 'ajax:error', response
-
-		false
-
+	false
 
 $(document).on 'turbolinks:load', ->
+	$("#user_avatar").change ->
+		if this.files && this.files[0]
+			reader = new FileReader();
+			reader.onload = (e) ->
+				$("#uploaded_avatar").attr 'src', e.target.result
+			reader.readAsDataURL(this.files[0]);
+
 	$('#edit_user_form').on('ajax:success', (e, response) ->
-		EditProfile.update_profile_info(e, response)
+		update_header(e, response)
 	).on('ajax:aborted:file', (event, elements) ->
-		EditProfile.file_prepare(event, elements)
+		request_with_avatar(event, elements)
 		false
 	)
 	$('#new_user').bind 'ajax:error', ->

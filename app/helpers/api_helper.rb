@@ -9,12 +9,12 @@ module ApiHelper
       true
     end
 
-    def valid_access_token(access_token)
+    def valid_access_token?(access_token)
       unless access_token
         return false
       end
 
-      uri = URI("https://graph.facebook.com/debug_token?input_token=#{access_token}&access_token={app-token-or-admin-token}")
+      uri = URI("https://graph.facebook.com/debug_token")
       params = {
           :input_token => access_token,
           :access_token => access_token,
@@ -36,15 +36,15 @@ module ApiHelper
       uri = URI('https://graph.facebook.com/v2.8/oauth/access_token')
       params = {
           :client_id => '371444199855931',
-          :redirect_uri => 'http://localhost:3000/oauth/facebook',
-          :client_secret => '424883b75def0718d11eb68fc83f9b8d',
+          :redirect_uri => "#{Rails.application.config.development_host}oauth/facebook",
+          :client_secret => ENV['FACEBOOK_APP_SECRET'],
           :code => code
       }
       uri.query = URI.encode_www_form(params)
 
       response = Net::HTTP.get_response(uri)
 
-      JSON.parse(response.body)
+      JSON.parse response.body
     end
 
     def get_user_data(access_token)
@@ -52,18 +52,24 @@ module ApiHelper
 
       response = Net::HTTP.get_response(request)
 
-      JSON.parse(response.body)
+      JSON.parse response.body
     end
 
 
     def create_or_initialize_user(user)
-      User.where(facebook_id: user['id']).first_or_create(
+      raise StandardError, 'Something went wrong. Try login with facebook again' unless user
+
+      user = User.where(facebook_id: user['id']).first_or_initialize(
           username: user['name'],
           email: user['email'],
-          avatar: "http://graph.facebook.com/#{user['id']}/picture?height=200&width=200",
+          avatar: "https://graph.facebook.com/#{user['id']}/picture?height=200&width=200",
           activated: true,
           facebook_id: user['id']
       )
+      if user.new_record?
+        raise StandardError, user.errors.full_messages[0] unless user.save
+      end
+      user
     end
   end
 end
