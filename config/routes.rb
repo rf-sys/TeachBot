@@ -1,5 +1,17 @@
 Rails.application.routes.draw do
 
+  namespace :user do
+    get 'lessons/index'
+  end
+
+  namespace :user do
+    get 'courses/index'
+  end
+
+  get 'courses/index'
+
+  get 'cources/index'
+
   get 'lessons/index'
 
   get 'bot/help'
@@ -24,8 +36,16 @@ Rails.application.routes.draw do
 
   # resources
 
-  resources :users
-  resources :lessons
+  resources :users do
+    resources :courses, except: [:show], controller: 'user/courses' do
+      resources :lessons, except: [:show], controller: 'user/lessons'
+    end
+  end
+
+  resources :courses, only: [:index, :show] do
+    resources :lessons, only: [:index, :show]
+  end
+
   resources :account_activations, only: [:edit]
 
 

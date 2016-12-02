@@ -1,0 +1,5 @@
+Test User:
+  username: Test User
+  email: testemail@gmail.com
+  password_digest: password
+  activated: true

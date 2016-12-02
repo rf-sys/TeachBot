@@ -6,9 +6,7 @@ class UsersController < ApplicationController
   before_action Throttle::Interval::RequestInterval, only: [:create, :update]
 
   def show
-    @user = Rails.cache.fetch("/user/#{params[:id]}/info") do
-      User.find(params[:id])
-    end
+    @user = CustomHelpers::Cache.new.get_from_cache(User, params[:id])
   end
 
   def new
@@ -27,9 +25,7 @@ class UsersController < ApplicationController
   end
 
   def edit
-    @user = Rails.cache.fetch("/user/#{params[:id]}/info") do
-      User.find(params[:id])
-    end
+    @user = CustomHelpers::Cache.new.get_from_cache(User, params[:id])
   end
 
   def update
@@ -46,7 +42,7 @@ class UsersController < ApplicationController
     if @user.update(update_params) && file.save
       success_update
     else
-      fail_update
+      CustomHelpers::Responses.new.send_fail_json(@user.errors.full_messages)
     end
 
   end

@@ -7,8 +7,4 @@ module UsersHelper
         }
     }
   end
-
-  def fail_update
-    render :json => {:error => @user.errors.full_messages}, status: 422
-  end
 end

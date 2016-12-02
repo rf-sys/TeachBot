@@ -42,14 +42,25 @@ class ApplicationController < ActionController::Base
   end
 
   def profile_owner
-    unless current_user.id == params[:id].to_i
-      if request.xhr?
-        render :json => {:error => ['Access denied']}, status: 403
-      else
-        flash[:danger_notice] = 'Access denied'
-        redirect_to root_url
-      end
+    unless current_user.id === params[:id].to_i
+      access_denied_message
+    end
+  end
 
+  def courses_owner
+    unless current_user.id === params[:user_id].to_i
+      access_denied_message
+    end
+  end
+
+  private
+
+  def access_denied_message
+    if request.xhr?
+      render :json => {:error => ['Access denied']}, status: 403
+    else
+      flash[:danger_notice] = 'Access denied'
+      redirect_to root_url
     end
   end
 

@@ -1,0 +1,46 @@
+<%= render 'users/nav' %>
+
+<!-- Tab panes -->
+<div class="tab-content">
+  <div class="tab-pane active" id="profile" role="tabpanel">
+    <div class="container load-fade">
+      <div class="row flex-items-xs-center" style="margin-top: 15px;">
+        <h1>Create a course</h1>
+      </div>
+      <div class="row flex-items-xs-center">
+        <div class="col-md-6">
+          <%= react_component('ResponseMessagesBlock') %>
+          <%= form_for(@course, url: user_courses_path, remote: true) do |f| %>
+            <div class="form-group">
+              <%= f.label :title %>
+              <%= f.text_field :title, class: 'form-control', placeholder: 'Type the title of the course', required: 'true' %>
+              <small>Title of your course</small>
+            </div>
+            <div class="form-group">
+              <%= f.label :description %>
+              <%= f.text_field :description, class: 'form-control', placeholder: 'Type the description of the course', required: 'true' %>
+              <small>Description of your course</small>
+            </div>
+
+            <div class="form-group">
+              <div class="form-check">
+                <label class="form-check-label">
+                  <%= f.check_box :public, {class: 'form-check-input', checked: true} %>
+                  Public course
+                </label>
+              </div>
+              <small>
+                Remove the check flag if you want to create a private course
+                (Only you and course's subscribers can view a content of this course)
+              </small>
+            </div>
+            <%= f.submit class: 'btn btn-outline-primary pull-xs-right',
+                         id: 'create_user_btn',
+                         data: {disable_with: 'Loading...'}
+            %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,4 +1,4 @@
-<div class="container" style="text-align: center; max-width: 600px">
+<div class="container load-fade" style="text-align: center; max-width: 600px">
 
   <div class="row" style="box-shadow: 0 0 5px; padding: 15px; margin-top: 30px">
     <div class="col-sm flex-xs-middle">
@@ -7,12 +7,7 @@
       </div>
     </div>
     <div class="col-sm">
-      <% if @user.avatar.nil? %>
-          <%= image_tag '/assets/images/default_avatar.jpeg',
-                        height: '200px', width: '200px', id: 'user_avatar' %>
-      <% else %>
-          <%= image_tag @user.avatar, height: '200px', width: '200px', id: 'user_avatar' %>
-      <% end %>
+      <%= image_tag @user.avatar, height: '200px', width: '200px', id: 'user_avatar' %>
     </div>
   </div>
 

@@ -10,10 +10,29 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161125155841) do
+ActiveRecord::Schema.define(version: 20161202145129) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "courses", force: :cascade do |t|
+    t.integer  "author_id"
+    t.string   "title"
+    t.string   "description"
+    t.boolean  "public"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.index ["author_id"], name: "index_courses_on_author_id", using: :btree
+  end
+
+  create_table "courses_users", force: :cascade do |t|
+    t.integer  "course_id"
+    t.integer  "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["course_id"], name: "index_courses_users_on_course_id", using: :btree
+    t.index ["user_id"], name: "index_courses_users_on_user_id", using: :btree
+  end
 
   create_table "lessons", force: :cascade do |t|
     t.integer  "user_id"
@@ -21,6 +40,8 @@ ActiveRecord::Schema.define(version: 20161125155841) do
     t.text     "text"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer  "course_id"
+    t.index ["course_id"], name: "index_lessons_on_course_id", using: :btree
     t.index ["user_id"], name: "index_lessons_on_user_id", using: :btree
   end
 
@@ -40,9 +61,9 @@ ActiveRecord::Schema.define(version: 20161125155841) do
     t.string   "username"
     t.string   "email"
     t.string   "password_digest"
-    t.string   "avatar"
-    t.datetime "created_at",        null: false
-    t.datetime "updated_at",        null: false
+    t.string   "avatar",            default: "/assets/images/default_avatar.jpeg"
+    t.datetime "created_at",                                                       null: false
+    t.datetime "updated_at",                                                       null: false
     t.string   "remember_digest"
     t.string   "activation_digest"
     t.boolean  "activated"
@@ -50,4 +71,5 @@ ActiveRecord::Schema.define(version: 20161125155841) do
     t.string   "facebook_id"
   end
 
+  add_foreign_key "lessons", "courses"
 end

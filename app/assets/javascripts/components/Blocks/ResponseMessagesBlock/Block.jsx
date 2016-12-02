@@ -27,15 +27,27 @@ var Block = React.createClass({
         });
 
         $('#edit_user_form').bind('ajax:success', (xhr, data) => {
-            this.setState({list: [], success: true});
-            this.setState({list: [data.message]});
+            this.handleSuccessAjax(xhr, data);
         }).bind('ajax:error', (xhr, data) => {
-            this.setState({list: [], success: false});
-            if (data.status == 422)
-                this.setState({list: data.responseJSON.error});
-            if (data.status == 403)
-                this.setState({list: [data.responseText]})
+            this.handleErrorAjax(xhr, data);
         });
+
+        $('#new_course').bind('ajax:success', (xhr, data) => {
+            this.handleSuccessAjax(xhr, data);
+        }).bind('ajax:error', (xhr, data) => {
+            this.handleErrorAjax(xhr, data);
+        });
+    },
+    handleSuccessAjax(xhr, data) {
+        this.setState({list: [], success: true});
+        this.setState({list: [data.message]});
+    },
+    handleErrorAjax(xhr, data) {
+        this.setState({list: [], success: false});
+        if (data.status == 422)
+            this.setState({list: data.responseJSON.error});
+        if (data.status == 403)
+            this.setState({list: [data.responseText]})
     },
     clearErrors() {
         this.setState({list: []})

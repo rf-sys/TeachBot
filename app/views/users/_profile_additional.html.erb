@@ -26,7 +26,7 @@
 
 <% if @user.profile.location %>
   <p><i class="fa fa-map-marker" aria-hidden="true"></i>
-    <%= link_to @user.profile.location, @user.profile.location,
+    <%= link_to @user.profile.location, 'https://www.google.com.ua/maps/place/' + @user.profile.location,
                 target: '_blank', id: 'user_location' %>
   </p>
 <% end %>
