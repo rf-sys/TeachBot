@@ -10,18 +10,37 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161125155841) do
+ActiveRecord::Schema.define(version: 20161203154311) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "lessons", force: :cascade do |t|
-    t.integer  "user_id"
+  create_table "courses", force: :cascade do |t|
+    t.integer  "author_id"
     t.string   "title"
-    t.text     "text"
+    t.string   "description"
+    t.boolean  "public"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.index ["author_id"], name: "index_courses_on_author_id", using: :btree
+  end
+
+  create_table "courses_users", force: :cascade do |t|
+    t.integer  "course_id"
+    t.integer  "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_lessons_on_user_id", using: :btree
+    t.index ["course_id"], name: "index_courses_users_on_course_id", using: :btree
+    t.index ["user_id"], name: "index_courses_users_on_user_id", using: :btree
+  end
+
+  create_table "lessons", force: :cascade do |t|
+    t.integer  "course_id"
+    t.string   "title"
+    t.text     "description"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.index ["course_id"], name: "index_lessons_on_course_id", using: :btree
   end
 
   create_table "profiles", force: :cascade do |t|
@@ -40,9 +59,9 @@ ActiveRecord::Schema.define(version: 20161125155841) do
     t.string   "username"
     t.string   "email"
     t.string   "password_digest"
-    t.string   "avatar"
-    t.datetime "created_at",        null: false
-    t.datetime "updated_at",        null: false
+    t.string   "avatar",            default: "/assets/images/default_avatar.jpeg"
+    t.datetime "created_at",                                                       null: false
+    t.datetime "updated_at",                                                       null: false
     t.string   "remember_digest"
     t.string   "activation_digest"
     t.boolean  "activated"

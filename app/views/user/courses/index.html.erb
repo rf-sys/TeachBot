@@ -1,0 +1,28 @@
+<%= render 'users/nav' %>
+
+<!-- Tab panes -->
+<div class="tab-content">
+  <div class="tab-pane active load-fade" id="profile" role="tabpanel">
+
+    <% if @user.courses.present? %>
+      <div class="container-fluid" style="margin-top: 15px">
+        <div class="card-deck-wrapper">
+          <% @user.courses.in_groups_of(2, false) do |courses| %>
+            <div class="card-deck">
+              <%= render partial: 'course', collection: courses %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% else %>
+      <h2>No one course has been found.</h2>
+
+      <% if it_is_current_user @user %>
+        <p class="lead">
+          <%= link_to 'Create a new one', new_course_path %>
+        </p>
+      <% end %>
+    <% end %>
+  </div>
+</div>
+

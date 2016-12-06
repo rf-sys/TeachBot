@@ -80,9 +80,13 @@ end
 # font-awesome
 gem 'font-awesome-sass'
 
+# google captcha
 gem 'recaptcha'
+
+# mailer service (production)
 gem 'sendgrid-ruby'
 
-gem 'will_paginate', '~> 3.1.0'
+# pagination gem
+gem 'kaminari'
 
-ruby '2.3.1'
+ruby '2.3.3'

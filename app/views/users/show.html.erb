@@ -1,32 +1,8 @@
- <ul class="nav nav-tabs" role="tablist">
-      <li class="nav-item">
-        <a class="nav-link active" data-toggle="tab" href="#profile" role="tab">Profile</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" data-toggle="tab" href="#lessons" role="tab">Lessons</a>
-      </li>
-      <% if it_is_current_user(@user) %>
-          <li class="nav-item">
-            <a class="nav-link" data-toggle="tab" href="#settings" role="tab">Settings</a>
-          </li>
-      <% end %>
-    </ul>
+<%= render 'nav' %>
 
-    <!-- Tab panes -->
-    <div class="tab-content">
-      <div class="tab-pane active" id="profile" role="tabpanel">
-        <%= render 'profile' %>
-      </div>
-      <div class="tab-pane" id="lessons" role="tabpanel">
-        <%= render partial: 'lessons', locals: {recent_lessons: @user.recent_lessons} %>
-      </div>
-      <% if it_is_current_user(@user) %>
-          <div class="tab-pane" id="settings" role="tabpanel">
-            <div class="row">
-              <div class="col-xs">
-                <%= render 'settings' %>
-              </div>
-            </div>
-          </div>
-      <% end %>
-    </div>
+<!-- Tab panes -->
+<div class="tab-content">
+  <div class="tab-pane active" id="profile" role="tabpanel">
+    <%= render 'profile' %>
+  </div>
+</div>

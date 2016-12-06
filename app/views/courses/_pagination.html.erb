@@ -1,0 +1,7 @@
+<div id="subscriptions_list">
+  <%= render partial: 'courses/course', collection: @subscriptions %>
+</div>
+<div id="paginator" class="row flex-items-xs-center">
+  <%= paginate @subscriptions, theme: 'simple_bootstrap_paginator', remote: true,
+               params: {controller: 'api', action: 'subscriptions_pagination'} %>
+</div>

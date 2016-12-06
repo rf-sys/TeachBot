@@ -11,29 +11,41 @@ class ApiController < ApplicationController
 
   def facebook_oauth
 
-    unless code_exist?(request[:code])
-      return fb_validation_error
-    end
+    return fb_validation_error unless code_exist?(request[:code])
 
     access_token = get_access_token request[:code]
 
-    unless valid_access_token(access_token['access_token'])
-      return fb_validation_error
-    end
+    return fb_validation_error unless valid_access_token?(access_token['access_token'])
 
     fb_user = get_user_data(access_token['access_token'])
 
-    log_in create_or_initialize_user(fb_user)
+    begin
+      user = create_or_initialize_user(fb_user)
+    rescue StandardError => e
+      return fb_validation_error(e.message)
+    end
+
+    log_in user
 
     redirect_to root_path
   end
 
 
+
+  def subscriptions_pagination
+    if current_user
+      # @subscriptions ||= current_user.subscriptions.paginate(:page => params[:page], :per_page => 2)
+      @subscriptions ||= current_user.subscriptions.page(params[:page]).per(2)
+
+      render :partial => 'courses/pagination'
+
+    end
+  end
+
+
   private
 
-  def fb_validation_error
-    redirect_to root_path, flash: {
-        danger_notice: 'Something went wrong. Try login with facebook again'
-    }
+  def fb_validation_error(error = 'Something went wrong. Try login with facebook again')
+    redirect_to root_path, flash: {danger_notice: error}
   end
 end

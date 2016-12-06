@@ -3,6 +3,7 @@ class User < ApplicationRecord
   require 'sendgrid-ruby'
   include SendGrid
   include BCrypt
+
   # to get 'authenticate method' and 'password='.
   # 'password=' generates password_digest
   include ActiveModel::SecurePassword::InstanceMethodsOnActivation
@@ -11,7 +12,11 @@ class User < ApplicationRecord
   has_many :lessons
   has_many :recent_lessons, -> { order('created_at DESC').limit(2) }, class_name: 'Lesson'
 
+  has_many :courses, foreign_key: 'author_id'
+  has_and_belongs_to_many :subscriptions, class_name: 'Course'
+
   scope :select_profile_attr, -> { select(:id, :username, :email, :avatar, :updated_at) }
+  scope :find_with_profile, -> (id) { includes(:profile).find(id) }
 
   attr_accessor :remember_token, :activation_token
   accepts_nested_attributes_for :profile, reject_if: :all_blank
@@ -23,8 +28,9 @@ class User < ApplicationRecord
 
   before_save :downcase_email
   before_create :create_activation_digest
-  before_destroy :delete_avatar, :cache_cleaner
-  after_update_commit :cache_cleaner
+
+  before_destroy :delete_avatar, :clean_user_courses_cache, :clean_user_subscriptions_cache
+  after_update_commit :clean_user_courses_cache, :clean_user_subscriptions_cache
   after_create :generate_profile
 
 
@@ -80,12 +86,17 @@ class User < ApplicationRecord
     self.activation_digest = User.digest(activation_token)
   end
 
-  def cache_cleaner
-    Rails.cache.delete("/user/#{self.id}/info")
-  end
 
   def generate_profile
     self.create_profile
+  end
+
+  def clean_user_courses_cache
+    Rails.cache.delete("user/#{self.id}/courses")
+  end
+
+  def clean_user_subscriptions_cache
+    Rails.cache.delete("user/#{self.id}/subscriptions")
   end
 
 

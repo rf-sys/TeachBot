@@ -1,24 +1,32 @@
 <% if @user.profile.facebook.present? %>
-    <p><i class="fa fa-facebook profile_icon" aria-hidden="true"></i>
-      <%= link_to @user.profile.facebook,
-                  'https://www.facebook.com/' + @user.profile.facebook,
-                  target: '_blank' %>
-    </p>
+  <p><i class="fa fa-facebook profile_icon" aria-hidden="true"></i>
+    <%= link_to @user.profile.facebook,
+                'https://www.facebook.com/' + @user.profile.facebook,
+                target: '_blank', id: 'user_facebook' %>
+  </p>
 <% end %>
 <% if @user.profile.twitter.present? %>
-    <p><i class="fa fa-twitter profile_icon" aria-hidden="true"></i>
-      <%= link_to @user.profile.twitter,
-                  'https://twitter.com/' + @user.profile.twitter,
-                  target: '_blank' %>
-    </p>
+  <p><i class="fa fa-twitter profile_icon" aria-hidden="true"></i>
+    <%= link_to @user.profile.twitter,
+                'https://twitter.com/' + @user.profile.twitter,
+                target: '_blank', id: 'user_twitter' %>
+  </p>
 <% end %>
 <% if @user.profile.website.present? %>
-    <p><i class="fa fa-link profile_icon" aria-hidden="true"></i>
-      <%= link_to @user.profile.website, @user.profile.website, target: '_blank' %></p>
+  <p><i class="fa fa-link profile_icon" aria-hidden="true"></i>
+    <%= link_to @user.profile.website, @user.profile.website,
+                target: '_blank', id: 'user_website' %></p>
 <% end %>
 
 <% if @user.profile.about.present? %>
-    <p class="lead">
-      <%= @user.profile.about %>
-    </p>
+  <blockquote class="blockquote" id="user_about">
+    <%= @user.profile.about %>
+  </blockquote>
+<% end %>
+
+<% if @user.profile.location %>
+  <p><i class="fa fa-map-marker" aria-hidden="true"></i>
+    <%= link_to @user.profile.location, 'https://www.google.com.ua/maps/place/' + @user.profile.location,
+                target: '_blank', id: 'user_location' %>
+  </p>
 <% end %>

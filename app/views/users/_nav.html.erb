@@ -1,0 +1,24 @@
+<ul class="nav nav-tabs" role="tablist">
+  <li class="nav-item">
+    <%= link_to 'Profile', user_path(@user), class: 'nav-link ' + (action_name == 'show' ? 'active' : '') %>
+  </li>
+  <li class="nav-item dropdown">
+    <%= link_to 'Courses', '#', class: 'nav-link dropdown-toggle ' + (controller_name == 'courses' ? 'active' : ''),
+                data: {toggle: 'dropdown'}, aria: {haspopup: 'true', expanded: 'false'} %>
+    <div class="dropdown-menu">
+
+
+      <% if it_is_current_user @user %>
+        <%= link_to 'My courses', user_courses_path(@user), class: 'dropdown-item' %>
+        <%= link_to 'Create course', new_course_path, class: 'dropdown-item' %>
+        <% else %>
+        <%= link_to "User's courses", user_courses_path(@user), class: 'dropdown-item' %>
+      <% end %>
+    </div>
+  </li>
+  <% if it_is_current_user @user %>
+    <li class="nav-item">
+      <%= link_to 'Settings', edit_user_path(@user), class: 'nav-link ' + (action_name == 'edit' ? 'active' : '') %>
+    </li>
+  <% end %>
+</ul>

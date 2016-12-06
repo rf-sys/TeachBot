@@ -36,9 +36,9 @@
     </div>
 
     <div class="col-xs-8 flex-xs-middle">
-      <% @lessons.in_groups_of(2, false) do |group| %>
+      <% @courses.in_groups_of(2, false) do |group| %>
         <div class="row">
-          <%= render partial: 'lesson', collection: group, cached: true %>
+          <%= render partial: 'course', collection: group, cached: true %>
         </div>
       <% end %>
     </div>

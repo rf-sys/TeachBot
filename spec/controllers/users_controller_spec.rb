@@ -1,17 +1,33 @@
 require 'rails_helper'
 
 RSpec.describe UsersController, :type => :controller do
-  before :each do
-    @request.host = 'localhost:3000'
+  include ActiveJob::TestHelper
+  it 'responds successfully if correct data' do
+    expect {
+      post :create, params: {
+          user: {
+              username: 'Okalia',
+              email: 'okalia@example.com',
+              password: 'password',
+              password_confirmation: 'password'
+          }
+      }
+    }.to change(ActiveJob::Base.queue_adapter.enqueued_jobs, :size).by(1)
+    expect(response).to have_http_status(302) # indicate redirect status code
+    expect(response).to redirect_to(root_path)
   end
-  describe 'POST #create' do
-    it 'valid response and flash message' do
-      post :create, { :params => { user: {username: 'Okalia', email: 'rodion2014@inbox.ru', password: 'password'} } }
 
-      expect(response).to redirect_to('/')
-
-      expect(flash[:super_info_notice]).to match('Please check your email (rodion2014@inbox.ru) to activate your account. Email must come during several minutes.')
-    end
-
+  it 'responds as error if incorrect data' do
+    expect {
+      post :create, params: {
+          user: {
+              username: 'Okalia',
+              email: '',
+              password: 'password',
+              password_confirmation: 'password'
+          }
+      }
+    }.to change(ActiveJob::Base.queue_adapter.enqueued_jobs, :size).by(0)
+    expect(response).to have_http_status(422)
   end
 end

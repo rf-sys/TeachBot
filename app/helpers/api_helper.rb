@@ -9,7 +9,7 @@ module ApiHelper
       true
     end
 
-    def valid_access_token(access_token)
+    def valid_access_token?(access_token)
       unless access_token
         return false
       end
@@ -44,7 +44,7 @@ module ApiHelper
 
       response = Net::HTTP.get_response(uri)
 
-      JSON.parse(response.body)
+      JSON.parse response.body
     end
 
     def get_user_data(access_token)
@@ -52,18 +52,24 @@ module ApiHelper
 
       response = Net::HTTP.get_response(request)
 
-      JSON.parse(response.body)
+      JSON.parse response.body
     end
 
 
     def create_or_initialize_user(user)
-      User.where(facebook_id: user['id']).first_or_create(
+      raise StandardError, 'Something went wrong. Try login with facebook again' unless user
+
+      user = User.where(facebook_id: user['id']).first_or_initialize(
           username: user['name'],
           email: user['email'],
           avatar: "https://graph.facebook.com/#{user['id']}/picture?height=200&width=200",
           activated: true,
           facebook_id: user['id']
       )
+      if user.new_record?
+        raise StandardError, user.errors.full_messages[0] unless user.save
+      end
+      user
     end
   end
 end

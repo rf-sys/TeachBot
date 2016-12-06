@@ -1,82 +1,88 @@
 <%= form_for @user, remote: true, authenticity_token: true, html: {id: 'edit_user_form'} do |f| %>
-    <div class="modal-body">
-      <%= react_component('ResponseMessagesBlock') %>
-      <div class="form-group">
-        <%= f.label :username %>
-        <%= f.text_field :username, class: 'form-control', required: 'true' %>
-        <small class="form-text text-muted">You nickname - your public name.</small>
-      </div>
-      <div class="form-group">
-        <%= f.label :email %>
-        <%= f.text_field :email, class: 'form-control', required: 'true' %>
-        <small class="form-text text-muted">We'll never share your email with anyone else.</small>
-      </div>
-
-      <div class="form-group">
-        <%= f.label :avatar %>
-        <%= f.file_field :avatar, class: 'form-control-file' %>
-        <small class="form-text text-muted">Avatar in your profile.</small>
-      </div>
-
-      <%= f.fields_for :profile do |elem| %>
-          <div class="form-group">
-            <%= elem.label :facebook %>
-            <div class="input-group">
-              <span class="input-group-addon" id="facebook_addon" style="background: #3B5998; color: white">https://www.facebook.com/</span>
-              <%= elem.text_field :facebook, class: 'form-control', placeholder: 'Example: Okalia' %>
-            </div>
-            <small class="form-text text-muted">
-              If you have facebook account, you can type your nickname or id. URL of your
-              account will be generated automatically.
-            </small>
-          </div>
-
-          <div class="form-group">
-            <%= elem.label :twitter %>
-            <div class="input-group">
-              <span class="input-group-addon" id="twitter_addon" style="background: #1B95E0; color: white">https://twitter.com/</span>
-              <%= elem.text_field :twitter, class: 'form-control', placeholder: 'Example: Okalia' %>
-            </div>
-            <small class="form-text text-muted">
-              If you have twitter account, you can type your nickname. URL of your
-              account will be generated automatically.
-            </small>
-          </div>
-
-          <div class="form-group">
-            <%= elem.label :website %>
-            <%= elem.url_field :website, class: 'form-control',
-                               placeholder: 'Example: http://my_own_site.com' %>
-            <small class="form-text text-muted">
-              If you have your own website, you can type its URL.
-            </small>
-          </div>
-
-          <div class="form-group">
-            <%= elem.label :about %>
-            <%= elem.text_area :about, class: 'form-control',
-                               placeholder: 'Example: Hello! My name is ... I am ... years old. I like...' %>
-            <small class="form-text text-muted">
-              Say something about yourself.
-            </small>
-          </div>
-
-          <div class="form-group">
-            <%= elem.label :location %>
-            <%= elem.text_field :location, class: 'form-control' %>
-            <small class="form-text text-muted">
-              Where do you live ?
-            </small>
-          </div>
-
-      <% end %>
-
-
+  <div class="modal-body">
+    <%= react_component('ResponseMessagesBlock') %>
+    <div class="form-group">
+      <%= f.label :username %>
+      <%= f.text_field :username, class: 'form-control', required: 'true' %>
+      <small class="form-text text-muted">You nickname - your public name.</small>
     </div>
-    <div class="modal-footer">
-      <%= link_to 'Delete', @user, class: 'btn btn-outline-danger float-xs-left', method: 'delete',
-                  data: {confirm: 'Are you sure? You will not be able to recover your account'} %>
-      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-      <%= f.submit class: 'btn btn-primary', data: {disable_with: 'Loading...'} %>
+    <div class="form-group">
+      <%= f.label :email %>
+      <%= f.text_field :email, class: 'form-control', required: 'true' %>
+      <small class="form-text text-muted">We'll never share your email with anyone else.</small>
     </div>
+
+    <div class="form-group">
+      <%= f.label :avatar %>
+      <div id="avatar_upload_wrapper">
+        <%= image_tag @user.avatar, id: 'uploaded_avatar' %>
+        <label class="user_avatar">
+          <%= f.file_field :avatar %>
+          <span>Change avatar</span>
+        </label>
+      </div>
+      <small class="form-text text-muted">Avatar in your profile.</small>
+    </div>
+
+    <%= f.fields_for :profile do |elem| %>
+      <div class="form-group">
+        <%= elem.label :facebook %>
+        <div class="input-group">
+          <span class="input-group-addon" id="facebook_addon" style="background: #3B5998; color: white">https://www.facebook.com/</span>
+          <%= elem.text_field :facebook, class: 'form-control', placeholder: 'Example: Okalia' %>
+        </div>
+        <small class="form-text text-muted">
+          If you have facebook account, you can type your nickname or id. URL of your
+          account will be generated automatically.
+        </small>
+      </div>
+
+      <div class="form-group">
+        <%= elem.label :twitter %>
+        <div class="input-group">
+          <span class="input-group-addon" id="twitter_addon" style="background: #1B95E0; color: white">https://twitter.com/</span>
+          <%= elem.text_field :twitter, class: 'form-control', placeholder: 'Example: Okalia' %>
+        </div>
+        <small class="form-text text-muted">
+          If you have twitter account, you can type your nickname. URL of your
+          account will be generated automatically.
+        </small>
+      </div>
+
+      <div class="form-group">
+        <%= elem.label :website %>
+        <%= elem.url_field :website, class: 'form-control',
+                           placeholder: 'Example: http://my_own_site.com' %>
+        <small class="form-text text-muted">
+          If you have your own website, you can type its URL.
+        </small>
+      </div>
+
+      <div class="form-group">
+        <%= elem.label :about %>
+        <%= elem.text_area :about, class: 'form-control',
+                           placeholder: 'Example: Hello! My name is ... I am ... years old. I like...' %>
+        <small class="form-text text-muted">
+          Say something about yourself.
+        </small>
+      </div>
+
+      <div class="form-group">
+        <%= elem.label :location %>
+        <%= elem.text_field :location, class: 'form-control' %>
+        <small class="form-text text-muted">
+          Where do you live ?
+        </small>
+      </div>
+
+    <% end %>
+
+
+  </div>
+  <div class="modal-footer">
+    <%= link_to 'Delete', @user, class: 'btn btn-outline-danger float-xs-left', method: 'delete',
+                data: {confirm: 'Are you sure? You will not be able to recover your account'} %>
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+    <%= f.submit class: 'btn btn-primary', data: {disable_with: 'Loading...'} %>
+  </div>
 <% end %>
