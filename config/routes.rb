@@ -37,20 +37,18 @@ Rails.application.routes.draw do
   # resources
 
   resources :users do
-    resources :courses, except: [:show], controller: 'user/courses' do
-      resources :lessons, except: [:show], controller: 'user/lessons'
-    end
+    resources :courses, only: [:index], controller: 'user/courses'
   end
 
-  resources :courses, only: [:index, :show] do
-    resources :lessons, only: [:index, :show]
+  resources :courses do
+    resources :lessons, except: [:index]
   end
 
   resources :account_activations, only: [:edit]
 
 
   get 'oauth/facebook', to: 'api#facebook_oauth'
-
+  get 'api/subscriptions', to: 'api#subscriptions_pagination'
 
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end

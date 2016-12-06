@@ -31,6 +31,18 @@ class ApiController < ApplicationController
   end
 
 
+
+  def subscriptions_pagination
+    if current_user
+      # @subscriptions ||= current_user.subscriptions.paginate(:page => params[:page], :per_page => 2)
+      @subscriptions ||= current_user.subscriptions.page(params[:page]).per(2)
+
+      render :partial => 'courses/pagination'
+
+    end
+  end
+
+
   private
 
   def fb_validation_error(error = 'Something went wrong. Try login with facebook again')

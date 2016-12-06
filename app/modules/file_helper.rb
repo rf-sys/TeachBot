@@ -43,7 +43,7 @@ module FileHelper
       end
 
       def check_size
-        unless @avatar.size < 500.kilobytes
+        unless @avatar.size <= 500.kilobytes
           raise 'File is too large (Maximum size: 500 kb)'
         end
       end

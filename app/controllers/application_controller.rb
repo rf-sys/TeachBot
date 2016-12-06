@@ -1,9 +1,9 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
-
   include SessionsHelper
+  include CustomHelpers::Responses
+  include CustomHelpers::Cache
   helper_method :current_user, :it_is_current_user
-
 
   # if no session[:user_id] - check cookie and log_in user with its value (id of the user)
   def current_user
@@ -33,34 +33,47 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def it_is_current_user(user)
+  def profile_owner
+    unless current_user.id === params[:id].to_i
+      deny_access_message
+    end
+  end
 
+  def it_is_current_user(user)
     if current_user&&user
       current_user.id == user.id
     end
-
   end
 
-  def profile_owner
-    unless current_user.id === params[:id].to_i
-      access_denied_message
+  def is_owner?(target, key = 'author_id')
+    unless current_user.id === target.send(key)
+      return false
     end
+    true
   end
 
-  def courses_owner
-    unless current_user.id === params[:user_id].to_i
-      access_denied_message
+  def have_access_to_private_course(course)
+    unless course.public
+      unless current_user
+        flash[:danger_notice] = 'You need login to go there'
+        return redirect_to root_path
+      end
+      unless course.subscribers.where(:id => current_user.id).take
+        return false
+      end
     end
+    true
   end
 
-  private
+  protected
 
-  def access_denied_message
-    if request.xhr?
-      render :json => {:error => ['Access denied']}, status: 403
-    else
-      flash[:danger_notice] = 'Access denied'
-      redirect_to root_url
+  def deny_access_message(msg = 'Access denied')
+    respond_to do |format|
+      format.js { render :json => msg, status: 403 }
+      format.html do
+        flash[:danger_notice] = msg
+        redirect_to root_url
+      end
     end
   end
 

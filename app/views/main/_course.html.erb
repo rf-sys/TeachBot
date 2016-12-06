@@ -1,0 +1,10 @@
+<div class="col-md">
+  <div class="card card-block">
+    <h4 class="card-title"><%= course.title[0..20] %></h4>
+    <p class="card-text">
+      <%= course.description[0..50] %>
+    </p>
+
+    <%= link_to 'Visit', course_path(course), class: 'card-link' %>
+  </div>
+</div>

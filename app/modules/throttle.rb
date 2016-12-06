@@ -12,6 +12,8 @@ module Throttle
 
       def self.before(controller)
 
+        return true if Rails.env == 'test'
+
         remote_ip = controller.request.remote_ip
         if too_many_attempts?(remote_ip)
           mark_ip(remote_ip)
@@ -46,6 +48,9 @@ module Throttle
       MAX_ATTEMPTS = 5
 
       def self.before(controller)
+
+        return true if Rails.env == 'test'
+
         remote_ip = controller.request.remote_ip
 
         if too_many_attempts?(remote_ip)

@@ -1,0 +1,18 @@
+<%= react_component('ResponseMessagesBlock') %>
+<%= form_for @lesson, url: course_lessons_path(@course), remote: true do |f| %>
+  <div class="form-group">
+    <%= f.label :title %>
+    <%= f.text_field :title, class: 'form-control', placeholder: 'Type the title of the course', required: 'true' %>
+    <small>Title of your course</small>
+  </div>
+  <div class="form-group">
+    <%= f.label :description %>
+    <%= f.text_field :description, class: 'form-control', placeholder: 'Type the description of the course', required: 'true' %>
+    <small>Description of your course</small>
+  </div>
+
+  <%= f.submit class: 'btn btn-outline-primary pull-xs-right',
+               id: 'create_user_btn',
+               data: {disable_with: 'Loading...'}
+  %>
+<% end %>

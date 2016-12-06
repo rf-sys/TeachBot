@@ -29,8 +29,8 @@ class User < ApplicationRecord
   before_save :downcase_email
   before_create :create_activation_digest
 
-  before_destroy :delete_avatar, :cache_cleaner, :clean_user_courses_cache
-  after_update_commit :cache_cleaner, :clean_user_courses_cache
+  before_destroy :delete_avatar, :clean_user_courses_cache, :clean_user_subscriptions_cache
+  after_update_commit :clean_user_courses_cache, :clean_user_subscriptions_cache
   after_create :generate_profile
 
 
@@ -93,6 +93,10 @@ class User < ApplicationRecord
 
   def clean_user_courses_cache
     Rails.cache.delete("user/#{self.id}/courses")
+  end
+
+  def clean_user_subscriptions_cache
+    Rails.cache.delete("user/#{self.id}/subscriptions")
   end
 
 

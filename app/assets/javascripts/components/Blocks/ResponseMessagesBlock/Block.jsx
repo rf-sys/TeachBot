@@ -37,6 +37,18 @@ var Block = React.createClass({
         }).bind('ajax:error', (xhr, data) => {
             this.handleErrorAjax(xhr, data);
         });
+
+        $("form[id^='edit_course_']").bind('ajax:success', (xhr, data) => {
+            this.handleSuccessAjax(xhr, data);
+        }).bind('ajax:error', (xhr, data) => {
+            this.handleErrorAjax(xhr, data);
+        });
+
+        $('#new_lesson').bind('ajax:success', (xhr, data) => {
+            this.handleSuccessAjax(xhr, data);
+        }).bind('ajax:error', (xhr, data) => {
+            this.handleErrorAjax(xhr, data);
+        });
     },
     handleSuccessAjax(xhr, data) {
         this.setState({list: [], success: true});

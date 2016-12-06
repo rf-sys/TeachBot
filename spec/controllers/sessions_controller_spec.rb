@@ -26,16 +26,4 @@ RSpec.describe SessionsController, :type => :controller do
 
     expect(response).to have_http_status(404)
   end
-
-  it 'calls throttle reaction' do
-    5.times do
-      post :create, params: {
-          session: {
-              email: 'invalid@example.com',
-              password: 'invalid'
-          }
-      }
-    end
-    expect(response).to have_http_status(403)
-  end
 end

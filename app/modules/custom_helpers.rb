@@ -1,11 +1,11 @@
 module CustomHelpers
-  class Responses
-    def send_fail_json(errors)
-      render :json => {:error => errors}, status: 422
+  module Responses
+    def fail_json(errors)
+      return :json => {:error => errors}, status: 422
     end
   end
 
-  class Cache
+  module Cache
     # flexible cache to prevent repeating Rails.cache.fetch
     def get_from_cache(klass, id, option = 'info')
       class_name = klass.name.demodulize.downcase

@@ -1,0 +1,16 @@
+// Place all the styles related to the courses controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+.visit-lesson-btn {
+  background: $brand-primary;
+  color: white;
+}
+
+.course-top-line {
+  height: 5px; margin-left: -15px; margin-right: -15px; background: $brand-primary;
+}
+
+.visit-lesson-block {
+  padding-right: 15px;
+  padding-left: 15px;
+}
