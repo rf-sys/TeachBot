@@ -14,5 +14,4 @@ class UserMailerTest < ActionMailer::TestCase
     assert_match user.activation_token,   mail.body.encoded
     assert_match CGI.escape(user.email),  mail.body.encoded
   end
-
 end

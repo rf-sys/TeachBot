@@ -2,13 +2,13 @@ require 'rails_helper'
 
 RSpec.describe SessionsController, :type => :controller do
   before :each do
-    User.create(username: 'Okalia', email: 'okalia@example.com', password: 'password', activated: true)
+    create(:user)
   end
 
   it 'responds successfully if correct data' do
     post :create, params: {
         session: {
-            email: 'okalia@example.com',
+            email: 'testuser@gmail.com',
             password: 'password'
         }
     }
