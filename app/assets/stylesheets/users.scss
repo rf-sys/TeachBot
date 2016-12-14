@@ -18,8 +18,7 @@
 }
 
 .profile_icon {
-  height: 15px;
-  width: 15px;
+  font-size: 20px;
 }
 
 #avatar_upload_wrapper {
@@ -51,4 +50,22 @@ label.user_avatar input[type="file"] {
 }
 .user_avatar:hover {
   background-color:rgba(0,0,0,0.8);
+}
+
+.loading-posts-spinner {
+  text-align: center;
+  font-size: 24px;
+}
+.font-size-24 {
+  font-size: 24px;
+}
+#user_posts_list {
+  max-height: 850px;
+  overflow: auto;
+}
+.trash-icon-post {
+  cursor: pointer;
+  position: absolute;
+  top: 25px;
+  right: 25px;
 }

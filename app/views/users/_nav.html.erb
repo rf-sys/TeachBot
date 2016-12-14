@@ -10,8 +10,10 @@
 
       <% if it_is_current_user @user %>
         <%= link_to 'My courses', user_courses_path(@user), class: 'dropdown-item' %>
-        <%= link_to 'Create course', new_course_path, class: 'dropdown-item' %>
-        <% else %>
+        <% if @user.has_role?(:teacher) %>
+          <%= link_to 'Create course', new_course_path, class: 'dropdown-item' %>
+        <% end %>
+      <% else %>
         <%= link_to "User's courses", user_courses_path(@user), class: 'dropdown-item' %>
       <% end %>
     </div>

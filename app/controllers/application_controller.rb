@@ -8,9 +8,9 @@ class ApplicationController < ActionController::Base
   # if no session[:user_id] - check cookie and log_in user with its value (id of the user)
   def current_user
     if (user_id = session[:user_id])
-      @current_user ||= User.find_by(id: user_id)
+      @current_user ||= get_from_cache(User, user_id) # User.find_by(id: user_id)
     elsif (user_id = cookies.signed[:user_id])
-      user = User.find_by(id: user_id)
+      user = get_from_cache(User, user_id)
       if user && user.authenticated?(:remember, cookies[:remember_token])
         log_in user
         @current_user = user
@@ -23,7 +23,6 @@ class ApplicationController < ActionController::Base
       flash[:danger_notice] = 'You need login to go there'
       redirect_to root_url
     end
-
   end
 
   def require_guest
@@ -40,7 +39,7 @@ class ApplicationController < ActionController::Base
   end
 
   def it_is_current_user(user)
-    if current_user&&user
+    if (@current_user || current_user) && user
       current_user.id == user.id
     end
   end
@@ -63,6 +62,13 @@ class ApplicationController < ActionController::Base
       end
     end
     true
+  end
+
+  def require_teacher
+    unless @current_user.has_role? :teacher
+      flash[:danger_notice] = 'You are not a teacher'
+      redirect_to root_path
+    end
   end
 
   protected

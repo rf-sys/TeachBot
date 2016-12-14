@@ -1,39 +1,12 @@
 <div class="container-fluid" style="margin-top: 15px">
-  <div class="row">
-    <% if current_user %>
-      <div class="col-md-8">
-        <h1 style="text-align: center;">Public courses</h1>
-        <div class="card-deck-wrapper">
-          <% @public_courses.in_groups_of(3, false) do |courses| %>
-            <div class="card-deck">
-              <%= render partial: 'course', collection: courses, cached: true %>
-            </div>
-          <% end %>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <h1 style="text-align: center;">Subscriptions</h1>
-        <div id="courses_index_subscriptions">
-          <div id="subscriptions_list">
-            <%= render partial: 'course', collection: @subscriptions %>
-          </div>
-          <div id="paginator" class="row flex-items-xs-center">
-              <%= paginate @subscriptions, theme: 'simple_bootstrap_paginator', remote: true,
-                           params: {controller: 'api', action: 'subscriptions_pagination'} %>
-          </div>
-        </div>
-      </div>
-    <% else %>
-      <div class="col-md-12">
-        <h1 style="text-align: center;">Public courses</h1>
-        <div class="card-deck-wrapper">
-          <% @public_courses.in_groups_of(4, false) do |courses| %>
-            <div class="card-deck">
-              <%= render partial: 'course', collection: courses, cached: true %>
-            </div>
-          <% end %>
-        </div>
-      </div>
-    <% end %>
+  <h1 style="text-align: center;">Public courses</h1>
+
+  <div class="card-columns load-fade">
+    <%= render partial: 'course', collection: @courses, cached: true %>
+  </div>
+
+  <hr>
+  <div style="text-align: center">
+    <%= paginate @courses, theme: 'simple_bootstrap_paginator' %>
   </div>
 </div>

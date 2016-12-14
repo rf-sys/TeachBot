@@ -3,26 +3,54 @@
 <!-- Tab panes -->
 <div class="tab-content">
   <div class="tab-pane active load-fade" id="profile" role="tabpanel">
+    <div class="container-fluid" style="margin-top: 15px">
+      <div class="row">
+        <div class="col-md-8">
+          <% if @user.paginate_courses.present? %>
+            <h1 style="text-align: center;">Public courses</h1>
+            <hr>
+            <div id="courses_index_courses">
+              <div class="list-group load-fade" id="courses_paginate_list">
+                <%= render partial: 'course', collection: @user.paginate_courses, cached: true %>
+              </div>
 
-    <% if @user.courses.present? %>
-      <div class="container-fluid" style="margin-top: 15px">
-        <div class="card-deck-wrapper">
-          <% @user.courses.in_groups_of(2, false) do |courses| %>
-            <div class="card-deck">
-              <%= render partial: 'course', collection: courses %>
+              <div id="pagination_link" style="margin-top: 5px">
+              <%= link_to_next_page(@user.paginate_courses, 'More courses', remote: true, class: 'btn btn-block btn-outline-primary',
+                                    params: {controller: '/api', action: 'user_courses_pagination', :user_id => @user.id}) %>
+              </div>
             </div>
+          <% else %>
+            <h2>No one course has been found.</h2>
+            <% if it_is_current_user @user %>
+              <p class="lead">
+                <%= link_to 'Create a new one', new_course_path %>
+              </p>
+            <% end %>
           <% end %>
         </div>
-      </div>
-    <% else %>
-      <h2>No one course has been found.</h2>
+        <div class="col-md-4">
+          <h1 style="text-align: center;">Subscriptions</h1>
+          <hr>
+          <% if @user.paginate_subscriptions.present? %>
+            <div id="courses_index_subscriptions">
+              <div id="subscriptions_list" class="load-fade">
+                <%= render partial: 'course', collection: @user.paginate_subscriptions, cached: true %>
+              </div>
+              <div id="paginator" class="row flex-items-xs-center">
+                <%= paginate @user.paginate_subscriptions, theme: 'simple_bootstrap_paginator', remote: true,
+                             params: {controller: '/api', action: 'subscriptions_pagination'} %>
+              </div>
+            </div>
+          <% else %>
+            <p class="lead">
+              No subscriptions. Subscriptions need to be able to visit private courses.
+            </p>
+          <% end %>
 
-      <% if it_is_current_user @user %>
-        <p class="lead">
-          <%= link_to 'Create a new one', new_course_path %>
-        </p>
-      <% end %>
-    <% end %>
+        </div>
+      </div>
+
+    </div>
   </div>
 </div>
 

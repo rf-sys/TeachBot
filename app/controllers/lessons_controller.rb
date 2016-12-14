@@ -10,9 +10,7 @@ class LessonsController < ApplicationController
 
   def show
 
-    @lesson = get_from_cache(Lesson, params[:id]) do
-      Lesson.where(:course_id => params[:course_id]).includes(:course).find(params[:id])
-    end
+    @lesson = Lesson.where(:course_id => params[:course_id]).includes(:course).find(params[:id])
 
     unless have_access_to_private_course(@lesson.course)
       deny_access_message 'You dont have access to browse this course'
