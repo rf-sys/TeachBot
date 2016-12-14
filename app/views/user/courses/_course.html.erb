@@ -10,7 +10,7 @@
   <p class="list-group-item-text">
     <%= link_to 'Visit', course_path(course), class: 'btn btn-sm btn-outline-info' %>
 
-    <% if course.author_id == (current_user.id || nil) %>
+    <% if course.author_id == current_user.id %>
       <%= link_to 'Edit', edit_course_path(course), class: 'btn btn-sm btn-outline-success' %>
     <% end %>
   </p>
