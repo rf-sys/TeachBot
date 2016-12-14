@@ -11,7 +11,7 @@
             <hr>
             <div id="courses_index_courses">
               <div class="list-group load-fade" id="courses_paginate_list">
-                <%= render partial: 'course', collection: @user.paginate_courses, cached: true %>
+                <%= render partial: 'course', collection: @user.paginate_courses %>
               </div>
 
               <div id="pagination_link" style="margin-top: 5px">
