@@ -1,4 +1,4 @@
-<a href="<%= course_path(course) %>" class="list-group-item list-group-item-action load-fade">
+<div class="list-group-item list-group-item-action load-fade">
   <h5 class="list-group-item-heading">
     <%= course.title %>
   </h5>
@@ -6,4 +6,12 @@
     <%= course.description %>
   </p>
   <small>Type: <%= course.public %></small>
-</a>
+
+  <p class="list-group-item-text">
+    <%= link_to 'Visit', course_path(course), class: 'btn btn-sm btn-outline-info' %>
+
+    <% if course.author_id == (current_user.id || nil) %>
+      <%= link_to 'Edit', edit_course_path(course), class: 'btn btn-sm btn-outline-success' %>
+    <% end %>
+  </p>
+</div>

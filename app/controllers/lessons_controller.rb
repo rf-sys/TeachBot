@@ -1,13 +1,6 @@
 class LessonsController < ApplicationController
   before_action :require_user, except: [:show]
 
-=begin
-  def index
-    @lessons = Lesson.paginate(:page => params[:page], :per_page => 2)
-    # here we can organize pagination...
-  end
-=end
-
   def show
 
     @lesson = Lesson.where(:course_id => params[:course_id]).includes(:course).find(params[:id])
