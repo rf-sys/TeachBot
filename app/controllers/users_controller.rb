@@ -30,21 +30,14 @@ class UsersController < ApplicationController
 
   def update
     @user = User.find(params[:id])
-    file = FileHelper::Uploader::AvatarUploader.new(@user, params[:user][:avatar])
-    unless params[:user][:avatar].nil?
-      if file.valid?
-        params[:user][:avatar] = file.path + '?updated=' + Time.now.to_i.to_s
-      else
-        return render :json => {:error => [file.error]}, status: 422
-      end
-    end
+    form = UpdateForm.new(@user, update_params)
+    updating = Updating.new(form)
 
-    if @user.update(update_params) && file.save
+    if form.valid? && updating.update
       success_update
     else
-      render fail_json(@user.errors.full_messages)
+      render :json => {:error => form.errors}, status: 422
     end
-
   end
 
   def destroy
@@ -64,7 +57,7 @@ class UsersController < ApplicationController
 
   def update_params
     params.require(:user).permit(:username, :email, :avatar,
-                                 profile_attributes: [:facebook, :twitter, :website, :location, :about])
+                                 profile_attributes: [:facebook, :twitter, :website, :location, :about, :id])
   end
 
 end

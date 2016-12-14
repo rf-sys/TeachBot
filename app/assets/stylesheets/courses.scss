@@ -7,10 +7,27 @@
 }
 
 .course-top-line {
-  height: 5px; margin-left: -15px; margin-right: -15px; background: $brand-primary;
+  height: 5px;
+  background: $brand-primary;
 }
 
 .visit-lesson-block {
   padding-right: 15px;
   padding-left: 15px;
+}
+
+.course-poster {
+  width: 100%;
+  height: auto;
+}
+
+.course-poster-preview {
+  height: 250px;
+  width: 100%;
+  margin-bottom: 5px
+}
+
+.course-subscriber-avatar {
+  height: 50px;
+  width: 50px;
 }

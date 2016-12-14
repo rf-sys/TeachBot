@@ -1,26 +1,27 @@
 module FileHelper
   module Uploader
 
-    class AvatarUploader
+    class ImageUploader
 
       attr_reader :path
       attr_reader :error
 
-      def initialize(user, avatar = nil)
-        @avatar = avatar
-        @user = user
-        @path = "/assets/images/avatars/#{@user.id}.jpg"
+      def initialize(entity, dir, image = nil, options = {})
+        @image = image
+        @entity = entity
+        @path = "/assets/images/#{dir}/#{@entity.id}.jpg"
+        @dir = dir
+        @options = options
       end
 
       def save
-        if @avatar.nil?
+        if @image.nil?
           return true
         end
-        File.open(Rails.root.join('public', 'assets/images/avatars', "#{@user.id}.jpg"), 'wb') do |file|
-          file.write(@avatar.read)
+        File.open(Rails.root.join('public', 'assets/images/' + @dir, "#{@entity.id}.jpg"), 'wb') do |file|
+          file.write(@image.read)
         end
       end
-
 
       def valid?
         begin
@@ -37,14 +38,15 @@ module FileHelper
       protected
       def check_type
         accepted_formats = %w(.png .jpg .jpeg .bmp .gif .svg)
-        unless accepted_formats.include? File.extname(@avatar.original_filename).downcase
+        unless accepted_formats.include? File.extname(@image.original_filename).downcase
           raise 'File has no valid type (image required)'
         end
       end
 
       def check_size
-        unless @avatar.size <= 500.kilobytes
-          raise 'File is too large (Maximum size: 500 kb)'
+        size = @options[:max_size] || 500
+        unless @image.size <= size.kilobytes
+          raise "File is too large (Maximum size: #{size} kb)"
         end
       end
     end

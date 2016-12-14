@@ -1,5 +1,12 @@
- <div class="card card-block">
-    <h4 class="card-title"><%= course.title %></h4>
-    <p class="card-text"><%= course.description %></p>
-    <%= link_to 'Visit', course_path(course), class: 'card-link' %>
+<div class="card box-shadow-block">
+  <%= image_tag course.poster, class: 'card-img-top img-fluid',
+                alt: 'Poster not found' if course.poster %>
+  <div class="card-block">
+    <h2 class="card-title" style="word-break: break-all"><%= course.title %></h2>
+    <p class="card-text" style="word-break: break-all"><%= course.description %></p>
+    <p class="card-text"><small class="text-muted">Last updated <%= course.updated_at.strftime('%F') %></small></p>
   </div>
+  <div class="card-footer text-muted">
+    <%= link_to 'Visit', course_path(course), class: 'btn btn-primary' %>
+  </div>
+</div>

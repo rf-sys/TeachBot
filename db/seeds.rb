@@ -6,9 +6,9 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
-User.create!(username: 'TestUser',
-             email: 'testuser@gmail.com',
-             password: 'password',
-             password_confirmation: 'password',
-             activated: true,
-             activated_at: Time.zone.now)
+Role.create([{ name: 'user' }, { name: 'teacher' }, { name: 'admin' }])
+
+user = User.create(username: 'admin', email: 'admin@mail.ru', password: ENV['ADMIN_ACCOUNT_PASSWORD'], activated: true)
+user.add_role(:teacher)
+user.add_role(:admin)
+

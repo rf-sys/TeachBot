@@ -1,0 +1,6 @@
+<div class="list-group load-fade">
+  <%= render partial: 'user/courses/course', collection: @courses %>
+</div>
+
+<%= paginate @courses, theme: 'simple_bootstrap_paginator', remote: true,
+             params: {controller: '/api', action: 'user_courses_pagination'} %>

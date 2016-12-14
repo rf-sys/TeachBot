@@ -30,15 +30,35 @@ class ApiController < ApplicationController
     redirect_to root_path
   end
 
-
-
   def subscriptions_pagination
     if current_user
-      # @subscriptions ||= current_user.subscriptions.paginate(:page => params[:page], :per_page => 2)
-      @subscriptions ||= current_user.subscriptions.page(params[:page]).per(2)
+      @subscriptions ||= current_user.subscriptions.page(params[:page]).per(1)
 
       render :partial => 'courses/pagination'
 
+    end
+  end
+
+  def user_courses_pagination
+    @user = get_from_cache(User, params[:user_id])
+    @courses = @user.courses.page(params[:page]).per(1)
+  end
+
+  def subscribers
+    course = Course.find(params[:id])
+
+    unless current_user.id == course.author_id
+      return render :json => {status: 'Access denied'}
+    end
+
+    render :json => {subscribers: course.subscribers.select(:id, :username, :avatar)}
+  end
+
+  def find_user_by_username
+    if params[:username]
+      users = User.select(:id, :username, :avatar).where('username LIKE ?', "%#{params[:username]}%").limit(10)
+
+      render :json => {users: users }
     end
   end
 

@@ -1,6 +1,9 @@
-<div class="card card-block">
-  <h4 class="card-title"><%= course.title %></h4>
-  <p class="card-text"><%= course.description %></p>
-  <%= link_to 'Visit', course_path(course), class: 'card-link' %>
-  <%= link_to 'Edit', edit_course_path(course), class: 'card-link' if it_is_current_user(@user) %>
-</div>
+<a href="<%= course_path(course) %>" class="list-group-item list-group-item-action load-fade">
+  <h5 class="list-group-item-heading">
+    <%= course.title %>
+  </h5>
+  <p class="list-group-item-text">
+    <%= course.description %>
+  </p>
+  <small>Type: <%= course.public %></small>
+</a>

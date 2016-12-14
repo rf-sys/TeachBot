@@ -1,4 +1,5 @@
 class User < ApplicationRecord
+  rolify
   require 'validators/EmailValidator'
   require 'sendgrid-ruby'
   include SendGrid
@@ -11,9 +12,16 @@ class User < ApplicationRecord
   has_one :profile, dependent: :destroy, inverse_of: :user
   has_many :lessons
   has_many :recent_lessons, -> { order('created_at DESC').limit(2) }, class_name: 'Lesson'
+  has_many :posts, dependent: :destroy
 
   has_many :courses, foreign_key: 'author_id'
+
+  has_many :paginate_courses, -> { page(1).per(1) },
+           class_name: 'Course', foreign_key: 'author_id'
+
   has_and_belongs_to_many :subscriptions, class_name: 'Course'
+
+  has_and_belongs_to_many :paginate_subscriptions, -> { page(1).per(1) }, class_name: 'Course'
 
   scope :select_profile_attr, -> { select(:id, :username, :email, :avatar, :updated_at) }
   scope :find_with_profile, -> (id) { includes(:profile).find(id) }
@@ -29,10 +37,14 @@ class User < ApplicationRecord
   before_save :downcase_email
   before_create :create_activation_digest
 
-  before_destroy :delete_avatar, :clean_user_courses_cache, :clean_user_subscriptions_cache
-  after_update_commit :clean_user_courses_cache, :clean_user_subscriptions_cache
-  after_create :generate_profile
+  before_destroy :delete_avatar
+  after_create :generate_profile, :assign_default_role
+  after_commit :clean_user_courses_cache
 
+
+  def assign_default_role
+    self.add_role(:user) if self.roles.blank?
+  end
 
   # delete avatar before delete user
   def delete_avatar
@@ -93,10 +105,6 @@ class User < ApplicationRecord
 
   def clean_user_courses_cache
     Rails.cache.delete("user/#{self.id}/courses")
-  end
-
-  def clean_user_subscriptions_cache
-    Rails.cache.delete("user/#{self.id}/subscriptions")
   end
 
 

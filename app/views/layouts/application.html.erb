@@ -2,9 +2,17 @@
 <html>
 <head>
   <title>Firstapp</title>
+  <meta name="turbolinks-cache-control" content="no-preview">
   <%= csrf_meta_tags %>
   <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+
+  <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+  <style>
+    html, body {
+      font-family: 'Lato', sans-serif;
+    }
+  </style>
 
 
   <%= yield :head %>
@@ -16,9 +24,9 @@
 <%= render 'shared/header' %>
 
 <%= render 'shared/notices' %>
-
+<div class="load-fade">
 <%= yield %>
-
+</div>
 <%= render 'shared/footer', cached: true %>
 
 <%= yield :bottom %>

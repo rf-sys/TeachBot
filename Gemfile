@@ -89,4 +89,6 @@ gem 'sendgrid-ruby'
 # pagination gem
 gem 'kaminari'
 
+gem 'rolify'
+
 ruby '2.3.3'

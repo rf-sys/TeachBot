@@ -5,10 +5,11 @@
 @import "global_partials/notices";
 @import "global_partials/helpers";
 
+
 .turbolinks-progress-bar {
   background-color: #FF4C3B;
 }
 
 .box-shadow-block {
-  box-shadow: 0 0 5px;
+  box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.3);
 }

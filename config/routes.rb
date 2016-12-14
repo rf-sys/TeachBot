@@ -1,6 +1,10 @@
 Rails.application.routes.draw do
 
   namespace :user do
+    get 'posts/index'
+  end
+
+  namespace :user do
     get 'lessons/index'
   end
 
@@ -38,17 +42,25 @@ Rails.application.routes.draw do
 
   resources :users do
     resources :courses, only: [:index], controller: 'user/courses'
+    resources :posts, only: [:index], controller: 'user/posts'
   end
 
   resources :courses do
     resources :lessons, except: [:index]
+    resources :subscribers, only: [:create, :destroy]
   end
 
   resources :account_activations, only: [:edit]
 
+  resources :posts, only: [:create, :destroy]
+
 
   get 'oauth/facebook', to: 'api#facebook_oauth'
   get 'api/subscriptions', to: 'api#subscriptions_pagination'
+  get 'api/users_course_paginates', to: 'api#user_courses_pagination'
+  get 'api/find/user/username', to: 'api#find_user_by_username'
+  post 'api/subscribers', to: 'api#subscribers'
+
 
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end

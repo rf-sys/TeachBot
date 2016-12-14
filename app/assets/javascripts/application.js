@@ -20,9 +20,6 @@
 //= require components
 //= require_tree .
 
-/*
-npm install *
-Here type: window.* = require('*') to get global access
 
-Don't forget to use "rake tmp:cache:clear" to prevent possible errors
-*/
+window.momentJs = require('moment');
+window._ = require('lodash');

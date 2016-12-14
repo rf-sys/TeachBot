@@ -22,7 +22,7 @@ $(document).on 'turbolinks:load', ->
 		if this.files && this.files[0]
 			reader = new FileReader();
 			reader.onload = (e) ->
-				$("#uploaded_avatar").attr 'src', e.target.result
+				$("#uploaded_avatar").hide().fadeIn(300).attr 'src', e.target.result
 			reader.readAsDataURL(this.files[0]);
 
 	$('#edit_user_form').on('ajax:success', (e, response) ->

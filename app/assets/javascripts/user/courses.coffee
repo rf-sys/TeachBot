@@ -4,3 +4,6 @@
 $(document).on 'turbolinks:load', ->
 	$('#new_course').bind 'ajax:success', ->
 		$('#new_course').find("input[type=text], textarea").val ""
+	if $('#body_courses_index').length
+		$("#courses_index_subscriptions").on 'ajax:success', (event, response, status) ->
+			$("#courses_index_subscriptions").html(response)

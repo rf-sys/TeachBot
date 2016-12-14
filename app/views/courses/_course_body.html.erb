@@ -1,0 +1,44 @@
+<div class="box-shadow-block">
+  <div class="course-top-line background_coloured_element"></div>
+  <%= image_tag @course.poster, class: 'course-poster', id: 'course_poster_image' if @course.poster %>
+  <div style="padding: 0 15px 15px 15px">
+    <div class="row">
+      <div class="col-sm">
+        <h1 class="display-4"><%= @course.title %></h1>
+        <hr>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm">
+        <blockquote class="blockquote">
+          <%= @course.description %>
+        </blockquote>
+      </div>
+    </div>
+
+    <table class="table">
+      <tbody>
+      <tr>
+        <th scope="row">Author</th>
+        <td>
+          <%= link_to @course.author.username, user_path(@course.author), class: 'text_coloured_element' %>
+          <%= image_tag @course.author.avatar, class: 'rounded-circle', height: '30px', width: '30px' %>
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">Last update</th>
+        <td>
+          <%= @course.updated_at %>
+        </td>
+      </tr>
+
+      <tr>
+        <th scope="row"><i class="fa fa-eye" aria-hidden="true" title="Count of views"></i></th>
+        <td>
+          <%= @views %>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
