@@ -34,7 +34,7 @@
           <% if @user.paginate_subscriptions.present? %>
             <div id="courses_index_subscriptions">
               <div id="subscriptions_list" class="load-fade">
-                <%= render partial: 'course', collection: @user.paginate_subscriptions, cached: true %>
+                <%= render partial: 'course', collection: @user.paginate_subscriptions %>
               </div>
               <div id="paginator" class="row flex-items-xs-center">
                 <%= paginate @user.paginate_subscriptions, theme: 'simple_bootstrap_paginator', remote: true,

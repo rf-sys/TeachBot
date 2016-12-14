@@ -31,12 +31,9 @@ class ApiController < ApplicationController
   end
 
   def subscriptions_pagination
-    if current_user
-      @subscriptions ||= current_user.subscriptions.page(params[:page]).per(1)
-
-      render :partial => 'courses/pagination'
-
-    end
+    @user = get_from_cache(User, params[:user_id])
+    @subscriptions = @user.subscriptions.page(params[:page]).per(1)
+    render :partial => 'courses/pagination'
   end
 
   def user_courses_pagination
