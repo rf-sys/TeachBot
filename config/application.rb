@@ -10,7 +10,7 @@ module Firstapp
   class Application < Rails::Application
 
     config.autoload_paths << "#{Rails.root}/lib"
-    config.cache_store = :file_store, "cache"
+    config.cache_store = :file_store, "#{Rails.root}/tmp/cache/file_store"
     config.react.addons = true
     config.browserify_rails.commandline_options = '-t [ babelify --presets [ es2015 react ] --extensions .jsx ]'
     config.active_job.queue_adapter = :resque
