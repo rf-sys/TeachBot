@@ -31,9 +31,9 @@ class ApiController < ApplicationController
   end
 
   def subscriptions_pagination
-    @user = get_from_cache(User, params[:user_id])
-    @subscriptions = @user.subscriptions.page(params[:page]).per(1)
-    render :partial => 'courses/pagination'
+    user = get_from_cache(User, params[:user_id])
+    subscriptions = user.subscriptions.page(params[:page]).per(1)
+    render :partial => 'courses/pagination', locals: { subscriptions: subscriptions }
   end
 
   def user_courses_pagination
@@ -42,19 +42,12 @@ class ApiController < ApplicationController
   end
 
   def subscribers
-    course = Course.find(params[:id])
-
-    unless current_user.id == course.author_id
-      return render :json => {status: 'Access denied'}
-    end
-
-    render :json => {subscribers: course.subscribers.select(:id, :username, :avatar)}
+    @course = Course.find(params[:id])
   end
 
   def find_user_by_username
     if params[:username]
       users = User.select(:id, :username, :avatar).where('username LIKE ?', "%#{params[:username]}%").limit(10)
-
       render :json => {users: users }
     end
   end

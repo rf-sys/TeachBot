@@ -26,18 +26,9 @@
       </div>
       <div class="col-md-3">
         <div class="list-group">
-          <h2 class="list-group-item disabled">
-            Subscribers
-          </h2>
-          <%= render partial: 'subscriber', collection: @course.subscribers %>
-
-
-          <% if it_is_current_user(@course.author) %>
-              <button class="btn btn-info btn-block" type="button" data-toggle="modal" data-target="#subscribe_modal">
-                Add new subscriber
-              </button>
-            <%= render 'subscribe_modal' %>
-          <% end %>
+          <%= react_component('CourseSubscribers', {
+              current_user: current_user.id, course: @course.id, author: @course.author_id
+          }) %>
         </div>
       </div>
     <% else %>

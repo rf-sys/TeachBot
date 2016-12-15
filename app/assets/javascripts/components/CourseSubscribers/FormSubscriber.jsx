@@ -1,4 +1,4 @@
-class Subscriber extends React.Component {
+class FormSubscriber extends React.Component {
     constructor(props) {
         super(props)
     }
@@ -13,7 +13,7 @@ class Subscriber extends React.Component {
         ajax.done((response) => {
             this.props.unsubscribe(response.user, response.status);
         }).fail((response) => {
-            this.props.setMessage(response.responseJSON.status);
+            this.props.setMessage(response.responseJSON.status, false);
         })
 
     }

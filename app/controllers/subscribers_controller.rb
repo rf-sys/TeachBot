@@ -2,9 +2,6 @@ class SubscribersController < ApplicationController
   before_action :require_user, :require_teacher
 
   def create
-
-
-
     course = Course.find(params[:course_id])
 
     unless is_owner?(course)
