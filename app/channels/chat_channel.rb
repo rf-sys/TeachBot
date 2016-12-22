@@ -7,19 +7,19 @@ class ChatChannel < ApplicationCable::Channel
 
   # user has left the chat
   def unsubscribed
-    Redis.new.srem('participants', current_user.to_json)
+    $redis_connection.srem('participants', current_user.to_json)
     receive_members
   end
 
   # user has been joined to the chat
   def appear
-    Redis.new.sadd('participants', current_user.to_json)
+    $redis_connection.sadd('participants', current_user.to_json)
     receive_members
   end
 
   # user has left the chat
   def leave
-    Redis.new.srem('participants', current_user.to_json)
+    $redis_connection.srem('participants', current_user.to_json)
     receive_members
   end
 
@@ -27,7 +27,7 @@ class ChatChannel < ApplicationCable::Channel
   private
 
   def receive_members
-    members = Redis.new.smembers('participants')
+    members = $redis_connection.smembers('participants')
     members.map! { |item| JSON.parse(item) }
 
     ActionCable.server.broadcast self.class.name, members: members, type: 'members'
