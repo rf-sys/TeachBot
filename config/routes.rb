@@ -64,6 +64,7 @@ Rails.application.routes.draw do
   get 'api/find/user/username', to: 'api#find_user_by_username'
   post 'api/subscribers', to: 'api#subscribers'
 
+  mount ActionCable.server => '/cable'
 
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end
