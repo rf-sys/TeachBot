@@ -16,13 +16,19 @@ $ ->
 					$("#course_preview_poster").hide().fadeIn(300).attr 'src', e.target.result
 				reader.readAsDataURL(this.files[0]);
 
-		$('#new_course').on 'ajax:aborted:file', (event, elements) ->
-			request_with_poster(event, elements)
-			false
+		$('#new_course')
+			.on 'ajax:aborted:file', (event, elements) ->
+				request_with_poster(event, elements)
+				false
+			.on 'ajax:success', (event, response) ->
+			  $(document).trigger('RMB:success', response.message)
 
-		$("form[id^='edit_course_']").on 'ajax:aborted:file', (event, elements) ->
-			request_with_poster(event, elements, 'PATCH')
-			false
+		$("form[id^='edit_course_']")
+			.on 'ajax:aborted:file', (event, elements) ->
+				request_with_poster(event, elements, 'PATCH')
+				false
+			.on 'ajax:success', (event, response) ->
+		    $(document).trigger('RMB:success', response.message)
 
 		if $('#course_theme_color').length
 			color = $('#course_theme_color').attr 'content'

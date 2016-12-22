@@ -1,7 +1,7 @@
 module CustomHelpers
   module Responses
-    def fail_json(errors)
-      return :json => {:error => errors}, status: 422
+    def error_message(errors, status)
+       render :json => {:errors => errors}, status: status
     end
   end
 

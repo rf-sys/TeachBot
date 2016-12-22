@@ -2,7 +2,7 @@
   <meta id="course_theme_color" content="<%= @lesson.course.theme %>">
 <% end %>
 
-<%= render partial: 'nav', locals: {lesson: @lesson} %>
+<%= render partial: 'nav', locals: {lesson: @lesson, course: @lesson.course} %>
 
 <h1><%= @lesson.title %></h1>
 <p class="lead">

@@ -11,11 +11,12 @@ class SessionsController < ApplicationController
     user = User.find_by(email: params[:session][:email].downcase)
 
     unless user
-      return user_not_found_message
+      return error_message(['User with this credentials not found'], 404)
     end
 
     if user.facebook_id
-      return render :json => 'You can access Facebook account only with facebook login button', status: 403
+
+      return error_message(['You can access Facebook account only with facebook login button'], 403)
     end
 
     if user.authenticate(params[:session][:password])
@@ -24,21 +25,16 @@ class SessionsController < ApplicationController
         params[:session][:remember_me] == '1' ? remember(user) : forget(user)
         redirect_to root_url
       else
-        return render :json => 'Account not activated. Check your email and confirm it', status: 404
+
+        return error_message(['Account not activated. Check your email and confirm it'], 404)
       end
     else
-      user_not_found_message
+      error_message(['User with this credentials not found'], 404)
     end
   end
 
   def destroy
     log_out if logged_in?
     redirect_to '/'
-  end
-
-  private
-
-  def user_not_found_message
-    render :json => 'User with this credentials not found', status: 404
   end
 end

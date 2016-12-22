@@ -31,7 +31,7 @@ class CoursesController < ApplicationController
     course = current_user.courses.create(course_params)
 
     unless course.persisted?
-      return render fail_json course.errors.full_messages
+      return error_message(course.errors.full_messages, 422)
     end
 
     unless params[:course][:poster].nil?
@@ -40,7 +40,7 @@ class CoursesController < ApplicationController
         course.update_column('poster', file.path + '?updated=' + Time.now.to_i.to_s)
         file.save
       else
-        return render :json => {:error => [file.error]}, status: 422
+        return error_message([file.error], 422)
       end
     end
     render :json => {:message => 'Course has been created successfully'}
@@ -61,7 +61,7 @@ class CoursesController < ApplicationController
     file = ImageUploader.new(@course, 'courses_posters', request_file, {max_size: 1024})
 
     unless validate_file(file, request_file)
-      return render :json => {:error => [file.error]}, status: 422
+      return error_message([file.error], 422)
     end
 
     params[:course][:poster] = file.path + '?updated=' + Time.now.to_i.to_s
@@ -69,7 +69,7 @@ class CoursesController < ApplicationController
     if @course.update(course_params) && file.save
       render :json => {:message => 'Course has been updated successfully'}
     else
-      render fail_json(@course.errors.full_messages)
+      error_message(@course.errors.full_messages, 422)
     end
 
   end

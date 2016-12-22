@@ -2,7 +2,7 @@ class FormNewSubscriber extends React.Component {
     constructor(props) {
         super(props);
         this.state = {users: [], username: '', loading: false};
-        this.findUser = _.debounce(this.findUser.bind(this), 1000);
+        this.findUser = _.debounce(this.findUser.bind(this), 500);
         this.subscribeUser = this.subscribeUser.bind(this);
     }
 

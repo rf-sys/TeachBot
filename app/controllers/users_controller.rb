@@ -20,7 +20,7 @@ class UsersController < ApplicationController
       flash[:super_info_notice] = "Please check your email (#{user_params[:email]}) to activate your account. Email must come during several minutes."
       redirect_to '/'
     else
-      render fail_json(@user.errors.full_messages)
+      error_message(@user.errors.full_messages, 422)
     end
   end
 
@@ -36,7 +36,7 @@ class UsersController < ApplicationController
     if form.valid? && updating.update
       success_update
     else
-      render :json => {:error => form.errors}, status: 422
+      error_message(form.errors, 422)
     end
   end
 

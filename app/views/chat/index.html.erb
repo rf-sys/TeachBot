@@ -12,6 +12,7 @@
       </div>
       <%= form_for @message, remote: true, authenticity_token: true do |f| %>
         <div class="form-group">
+          <%= react_component('ResponseMessagesBlock') %>
           <%= f.text_area :text, class: 'form-control', placeholder: 'Text of your message', required: true %>
         </div>
         <div class="text-xs-right">

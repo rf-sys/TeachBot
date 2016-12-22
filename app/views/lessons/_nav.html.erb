@@ -1,9 +1,9 @@
 <nav class="nav nav-inline box-shadow-block" style="padding: 15px; margin-bottom: 5px">
-  <a class="nav-link text_coloured_element" href="<%= course_path(lesson.course) %>">
-    <%= image_tag lesson.course.poster, height: '30', width: '60' if lesson.course.poster %>
+  <a class="nav-link text_coloured_element" href="<%= course_path(course) %>">
+    <%= image_tag course.poster, height: '30', width: '60' if course.poster %>
   </a>
-  <%= link_to lesson.course.title, course_path(lesson.course), class: 'nav-link text_coloured_element' %>
+  <%= link_to course.title, course_path(course), class: 'nav-link text_coloured_element' %>
   <span class="nav-link">/</span>
-  <span class="nav-link"><%= lesson.title %></span>
+  <span class="nav-link"><%= lesson.title or '-' %></span>
 
 </nav>

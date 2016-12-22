@@ -25,7 +25,7 @@ class LessonsController < ApplicationController
     if lesson.valid?
       render :json => {:message => 'Lesson has been created successfully'}
     else
-      render fail_json(lesson.errors.full_messages)
+      error_message(lesson.errors.full_messages, 422)
     end
   end
 
