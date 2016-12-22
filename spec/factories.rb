@@ -1,4 +1,8 @@
 FactoryGirl.define do
+  factory :message do
+    text "MyString"
+    user nil
+  end
   factory :user, aliases: [:author] do
     username 'TestUser1'
     email 'testuser@gmail.com'

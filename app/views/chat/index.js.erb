@@ -1,0 +1,10 @@
+$('#chat_messages').prepend('<%= j render partial: 'chat/message', collection: @messages.reverse %>');
+
+// Update pagination link
+<% if @messages.last_page? %>
+$('#chat_pagination_link').html('');
+<% else %>
+$('#chat_pagination_link')
+    .html("<%=j link_to_next_page(@messages, 'Older messages', remote: true,
+                                class: 'btn btn-block btn-sm btn-outline-secondary') %>");
+<% end %>

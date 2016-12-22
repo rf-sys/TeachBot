@@ -21,11 +21,6 @@
             </div>
           <% else %>
             <h2>No one course has been found.</h2>
-            <% if it_is_current_user @user %>
-              <p class="lead">
-                <%= link_to 'Create a new one', new_course_path %>
-              </p>
-            <% end %>
           <% end %>
         </div>
         <div class="col-md-4">

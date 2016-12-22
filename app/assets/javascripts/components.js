@@ -5,3 +5,4 @@ global.ResponseMessagesBlock = require('components/Blocks/ResponseMessagesBlock/
 global.RightBottomNotice = require('components/global/right-bottom-notice.jsx').default;
 global.Posts = require('components/Posts/Posts.jsx').default;
 global.CourseSubscribers = require('components/CourseSubscribers/CourseSubscribers.jsx').default;
+global.ChatParticipants = require('components/Chat/ChatParticipants.jsx').default;

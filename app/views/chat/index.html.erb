@@ -1,0 +1,26 @@
+<div class="container" style="margin-top: 15px">
+  <div class="row">
+    <div class="col-md-8" style="margin-bottom: 15px">
+      <div class="box-shadow-block" style="margin-bottom: 15px; height: 700px; overflow: auto" id="chat_block">
+        <div id="chat_pagination_link">
+          <%= link_to_next_page(@messages, 'Older messages', remote: true,
+                                class: 'btn btn-block btn-sm btn-outline-secondary') %>
+        </div>
+        <div id="chat_messages">
+          <%= render partial: 'chat/message', collection: @messages.reverse %>
+        </div>
+      </div>
+      <%= form_for @message, remote: true, authenticity_token: true do |f| %>
+        <div class="form-group">
+          <%= f.text_area :text, class: 'form-control', placeholder: 'Text of your message', required: true %>
+        </div>
+        <div class="text-xs-right">
+          <%= f.submit class: 'btn btn-outline-primary' %>
+        </div>
+      <% end %>
+    </div>
+    <div class="col-md-4">
+      <%= react_component('ChatParticipants') %>
+    </div>
+  </div>
+</div>

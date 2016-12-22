@@ -13,6 +13,7 @@ class User < ApplicationRecord
   has_many :lessons
   has_many :recent_lessons, -> { order('created_at DESC').limit(2) }, class_name: 'Lesson'
   has_many :posts, dependent: :destroy
+  has_many :messages, dependent: :destroy
 
   has_many :courses, foreign_key: 'author_id'
 

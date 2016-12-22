@@ -54,6 +54,9 @@ Rails.application.routes.draw do
 
   resources :posts, only: [:create, :destroy]
 
+  resources :messages, only: [:create]
+
+  resources :chat
 
   get 'oauth/facebook', to: 'api#facebook_oauth'
   get 'api/subscriptions', to: 'api#subscriptions_pagination'

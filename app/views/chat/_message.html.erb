@@ -1,0 +1,12 @@
+<div class="media load-fade">
+  <a class="media-left" href="<%= user_path(message.user) %>">
+    <%= image_tag message.user.avatar, class: 'media-object chat_user_avatar' %>
+  </a>
+  <div class="media-body">
+    <h4 class="media-heading"><%= message.user.username %></h4>
+    <%= message.text %>
+    <p class="text-xs-right">
+      <%= Time.now.strftime('%x - %r') %>
+    </p>
+  </div>
+</div>

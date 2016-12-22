@@ -42,6 +42,7 @@ group :development, :test do
   gem 'meta_request'
   gem 'factory_girl_rails', '~> 4.0'
   gem 'database_cleaner'
+  gem 'rack_session_access'
 end
 
 group :development do

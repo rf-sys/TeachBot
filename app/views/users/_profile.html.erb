@@ -7,6 +7,12 @@
           <div class="row flex-items-xs-center">
             <div class="col-sm flex-xs-middle" style="text-align: center">
               <h1 class="display-4" id="user_username"><%= @user.username %></h1>
+              <hr>
+              <div style="font-size: 24px">
+                <% @user.roles.each do |role| %>
+                <span class="tag tag-pill tag-info"><%= role.name %></span>
+                <% end %>
+              </div>
             </div>
             <div class="col-sm flex-xs-middle" style="text-align: center">
               <%= image_tag @user.avatar, height: '200px', width: '200px', id: 'user_avatar' %>
