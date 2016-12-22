@@ -4,31 +4,51 @@
     <%= link_to 'TeachBot', root_path, class: 'navbar-brand brand-blink', style: 'width: 8ch' %>
     <ul class="nav navbar-nav">
       <li class="nav-item active">
-        <%= link_to 'Home', root_path, class: 'nav-link' %>
+        <a class="nav-link" href="<%= root_path %>">
+          <i class="fa fa-home" aria-hidden="true"></i> Home
+        </a>
       </li>
-      <li class="nav-item">
-        <%= link_to 'Courses', courses_path, class: 'nav-link' %>
+      <li class="nav-item active">
+        <a class="nav-link" href="<%= courses_path %>">
+          <i class="fa fa-list-ul" aria-hidden="true"></i> Courses
+        </a>
       </li>
-      <li class="nav-item">
-        <%= link_to 'Chat', chat_index_path, class: 'nav-link' %>
+      <li class="nav-item active">
+        <a class="nav-link" href="<%= chat_index_path %>">
+          <i class="fa fa-weixin" aria-hidden="true"></i> Chat
+        </a>
       </li>
     </ul>
     <ul class="nav navbar-nav float-lg-right">
 
       <% if current_user %>
         <li class="nav-item">
-          <%= link_to current_user.username, current_user, class: 'nav-link', id: 'header_user_link' %>
+
+          <a class="nav-link active" href="<%= chat_index_path %>">
+            <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+            <span id="header_user_link"><%= current_user.username %></span>
+          </a>
         </li>
 
         <li class="nav-item">
-          <%= link_to 'Logout', logout_path, class: 'nav-link', method: 'delete' %>
+          <a class="nav-link" href="<%= logout_path %>" data-method="delete">
+            <i class="fa fa-plug" aria-hidden="true"></i>
+            Logout
+          </a>
+
         </li>
       <% else %>
-        <li class="nav-item">
-          <%= link_to 'Login', login_path, class: 'nav-link' %>
+        <li class="nav-item active">
+          <a class="nav-link" href="<%= login_path %>">
+            <i class="fa fa-sign-in" aria-hidden="true"></i>
+            Login
+          </a>
         </li>
-        <li class="nav-item">
-          <%= link_to 'Sign Up', signup_path, class: 'nav-link' %>
+        <li class="nav-item active">
+          <a class="nav-link" href="<%= signup_path %>">
+            <i class="fa fa-user-plus" aria-hidden="true"></i>
+            Sign Up
+          </a>
         </li>
       <% end %>
     </ul>
@@ -36,21 +56,21 @@
 </nav>
 
 <% if flash[:super_info_notice] %>
-<div class="alert alert-info" style="margin-bottom: 0; border-radius: 0;">
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-  <%= flash[:super_info_notice] %>
-</div>
+  <div class="alert alert-info" style="margin-bottom: 0; border-radius: 0;">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <%= flash[:super_info_notice] %>
+  </div>
 <% end %>
 
 <% if flash[:super_danger_notice] %>
-    <div class="alert alert-danger" style="margin-bottom: 0; border-radius: 0;">
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
-      <%= flash[:super_danger_notice] %>
-    </div>
+  <div class="alert alert-danger" style="margin-bottom: 0; border-radius: 0;">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <%= flash[:super_danger_notice] %>
+  </div>
 <% end %>
 
 
