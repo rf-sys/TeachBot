@@ -10,10 +10,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161218124951) do
+ActiveRecord::Schema.define(version: 20161223144341) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "chats", force: :cascade do |t|
+    t.string   "text"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "chats_users", id: false, force: :cascade do |t|
+    t.integer "chat_id"
+    t.integer "user_id"
+    t.index ["chat_id"], name: "index_chats_users_on_chat_id", using: :btree
+    t.index ["user_id"], name: "index_chats_users_on_user_id", using: :btree
+  end
 
   create_table "courses", force: :cascade do |t|
     t.integer  "author_id"
@@ -50,6 +63,8 @@ ActiveRecord::Schema.define(version: 20161218124951) do
     t.integer  "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer  "chat_id"
+    t.index ["chat_id"], name: "index_messages_on_chat_id", using: :btree
     t.index ["user_id"], name: "index_messages_on_user_id", using: :btree
   end
 
@@ -104,5 +119,6 @@ ActiveRecord::Schema.define(version: 20161218124951) do
     t.index ["user_id", "role_id"], name: "index_users_roles_on_user_id_and_role_id", using: :btree
   end
 
+  add_foreign_key "messages", "chats"
   add_foreign_key "messages", "users"
 end

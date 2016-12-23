@@ -10,7 +10,8 @@
           <%= render partial: 'chat/message', collection: @messages.reverse %>
         </div>
       </div>
-      <%= form_for @message, remote: true, authenticity_token: true do |f| %>
+      <%= form_for :message, url: chat_messages_path(@chat),
+                   remote: true, authenticity_token: true, html: {id: 'new_message'} do |f| %>
         <div class="form-group">
           <%= react_component('ResponseMessagesBlock') %>
           <%= f.text_area :text, class: 'form-control', placeholder: 'Text of your message', required: true %>

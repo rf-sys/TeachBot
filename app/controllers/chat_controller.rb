@@ -2,8 +2,9 @@ class ChatController < ApplicationController
   before_action :require_user, :set_user_identifier
 
   def index
-    @messages = Message.includes(:user).order(created_at: :desc).page(params[:page]).per(8)
-    @message = Message.new
+    @chat = get_from_cache(Chat, 1)
+    @messages = @chat.messages.includes(:user).order(created_at: :desc).page(params[:page]).per(8)
+
   end
 
   private

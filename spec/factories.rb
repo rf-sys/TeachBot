@@ -1,4 +1,7 @@
 FactoryGirl.define do
+  factory :chat do
+    user nil
+  end
   factory :message do
     text "MyString"
     user nil
