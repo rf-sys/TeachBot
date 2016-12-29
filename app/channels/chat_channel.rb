@@ -2,7 +2,12 @@
 class ChatChannel < ApplicationCable::Channel
 
   def subscribed
-    stream_from 'ChatChannel'
+    stream_from 'Chat:1'
+    stream_from "user_#{current_user.id}_new_chat"
+
+    current_user.chats.uniq.each do |chat|
+      stream_from "Chat:#{chat.id}"
+    end
   end
 
   # user has left the chat
@@ -23,6 +28,18 @@ class ChatChannel < ApplicationCable::Channel
     receive_members
   end
 
+  def new_chat(data)
+    stream_from "Chat:#{data['chat_id']}"
+
+    recipient = User.find(data['recipient'])
+    unless current_user == recipient
+      ActionCable.server.broadcast "user_#{recipient.id}_new_chat", chat: data['chat'], type: 'new_chat'
+    end
+  end
+
+  def subscribe_to_chat(data)
+    stream_from "Chat:#{data['chat_id']}"
+  end
 
   private
 
@@ -30,6 +47,6 @@ class ChatChannel < ApplicationCable::Channel
     members = $redis_connection.smembers('participants')
     members.map! { |item| JSON.parse(item) }
 
-    ActionCable.server.broadcast self.class.name, members: members, type: 'members'
+    ActionCable.server.broadcast 'Chat:1', members: members, type: 'members'
   end
 end

@@ -14,7 +14,7 @@
         </a>
       </li>
       <li class="nav-item active">
-        <a class="nav-link" href="<%= chat_index_path %>">
+        <a class="nav-link" href="<%= public_chat_path %>">
           <i class="fa fa-weixin" aria-hidden="true"></i> Chat
         </a>
       </li>
@@ -22,11 +22,19 @@
     <ul class="nav navbar-nav float-lg-right">
 
       <% if current_user %>
-        <li class="nav-item">
 
-          <a class="nav-link active" href="<%= chat_index_path %>">
+        <li class="nav-item">
+          <a class="nav-link active" href="<%= user_path(current_user) %>">
             <i class="fa fa-user-circle-o" aria-hidden="true"></i>
             <span id="header_user_link"><%= current_user.username %></span>
+          </a>
+        </li>
+
+        <%= react_component('Notifications', {}, tag: 'li', class: 'nav-item') %>
+
+        <li class="nav-item active">
+          <a class="nav-link" href="<%= chats_path %>">
+            <i class="fa fa-weixin" aria-hidden="true"></i> Conversations
           </a>
         </li>
 

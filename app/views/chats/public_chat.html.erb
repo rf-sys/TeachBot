@@ -1,15 +1,8 @@
 <div class="container" style="margin-top: 15px">
   <div class="row">
-    <h1 class="display-4"><%= @chat.title %></h1>
     <div class="col-md-8" style="margin-bottom: 15px">
-      <div class="box-shadow-block" style="margin-bottom: 15px; height: 700px; overflow: auto" id="chat_block">
-        <div id="chat_pagination_link">
-          <%= link_to_next_page(@messages, 'Older messages', remote: true,
-                                class: 'btn btn-block btn-sm btn-outline-secondary') %>
-        </div>
-        <div id="chat_messages">
-          <%= render partial: 'chat/message', collection: @messages.reverse %>
-        </div>
+      <div class="box-shadow-block chat_block" id="chat_block">
+        <%= react_component('PublicChat', current_user: current_user.id) %>
       </div>
       <%= form_for :message, url: chat_messages_path(@chat),
                    remote: true, authenticity_token: true, html: {id: 'new_message'} do |f| %>

@@ -1,4 +1,4 @@
-$('#chat_messages').prepend('<%= j render partial: 'chat/message', collection: @messages.reverse %>');
+$('#chat_messages').prepend('<%= j render partial: 'chats/message', collection: @messages.reverse %>');
 
 // Update pagination link
 <% if @messages.last_page? %>

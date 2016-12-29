@@ -2,14 +2,15 @@ module SessionsHelper
   # Logs in the given user.
   def log_in(user)
     session[:user_id] = user.id
+    cookies.signed[:live_user_id] = session[:user_id]
     flash[:info_notice] = 'You have been logged in as: ' + user.username
   end
 
   # Remembers a user in a persistent session and save remember_token in DB
   def remember(user)
-    user.remember # create token and save its hash in the DB
-    cookies.permanent.signed[:user_id] = user.id # create cookie with user id
-    cookies.permanent[:remember_token] = user.remember_token # create user's token as cookie to check in further
+    user.remember # message token and save its hash in the DB
+    cookies.permanent.signed[:user_id] = user.id # message cookie with user id
+    cookies.permanent[:remember_token] = user.remember_token # message user's token as cookie to check in further
   end
 
   # destroy session and clear current_user
@@ -24,6 +25,7 @@ module SessionsHelper
     user.forget
     cookies.delete(:user_id)
     cookies.delete(:remember_token)
+    cookies.delete(:live_user_id)
   end
 
   # Returns true if the user is logged in, false otherwise.

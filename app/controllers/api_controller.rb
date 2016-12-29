@@ -3,6 +3,7 @@ class ApiController < ApplicationController
   include ApiHelper::Facebook
 
   before_action :require_guest, only: [:facebook_oauth]
+  before_action :require_user, only: [:conversations, :conversation_messages]
 
   def bot
     bot = TeachBot::Commands.new(request)
@@ -33,7 +34,7 @@ class ApiController < ApplicationController
   def subscriptions_pagination
     user = get_from_cache(User, params[:user_id])
     subscriptions = user.subscriptions.page(params[:page]).per(1)
-    render :partial => 'courses/pagination', locals: { subscriptions: subscriptions }
+    render :partial => 'courses/pagination', locals: {subscriptions: subscriptions}
   end
 
   def user_courses_pagination
@@ -48,8 +49,22 @@ class ApiController < ApplicationController
   def find_user_by_username
     if params[:username]
       users = User.select(:id, :username, :avatar).where('username LIKE ?', "%#{params[:username]}%").limit(10)
-      render :json => {users: users }
+      render :json => {users: users}
     end
+  end
+
+  def conversations
+    @chats = current_user.chats.includes(:users).distinct
+  end
+
+  def conversation_messages
+
+    chat = Chat.find(params[:id])
+    unless current_user_related_to_chat(chat)
+      error_message(['Forbidden'], 403)
+    end
+
+    @messages = chat.messages.reverse_order.page(params[:page]).per(2)
   end
 
 
@@ -57,5 +72,10 @@ class ApiController < ApplicationController
 
   def fb_validation_error(error = 'Something went wrong. Try login with facebook again')
     redirect_to root_path, flash: {danger_notice: error}
+  end
+
+  def current_user_related_to_chat(chat)
+    return true if chat.id == 1 # public_chat
+    chat.users.include?(current_user)
   end
 end

@@ -5,7 +5,7 @@ module Throttle
 
   module Interval
 
-    # use when we register (create) new user
+    # use when we register (message) new user
     class RequestInterval
 
       SIGNUP_INTERVAL = 2 # seconds
@@ -35,7 +35,7 @@ module Throttle
         controller.render :json => 'Too many attempts. Try in ' + SIGNUP_INTERVAL.to_s + ' seconds', status: 403
       end
 
-      # create a new cache of the ip
+      # message a new cache of the ip
       def self.mark_ip(remote_ip)
         REDIS.set("throttle[signup_interval][#{remote_ip}]", true, ex: SIGNUP_INTERVAL)
       end
@@ -75,7 +75,7 @@ module Throttle
         controller.render :json => 'Too many attempts. Try in ' + SESSION_LOCKER_INTERVAL.to_s + ' minutes', status: 403
       end
 
-      # create a new cache with updated values
+      # message a new cache with updated values
       def self.add_attempt(remote_ip)
 
         # 'increment' resets expire time in cache...Cache simple doesn't delete after expire time

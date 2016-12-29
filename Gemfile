@@ -82,7 +82,7 @@ end
 gem 'font-awesome-sass'
 
 # google captcha
-gem 'recaptcha'
+gem 'recaptcha', '3.4.0'
 
 # mailer service (production)
 gem 'sendgrid-ruby'

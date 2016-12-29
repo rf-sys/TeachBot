@@ -2,7 +2,7 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
 $ ->
-	$(this).whenExist '#body_chat_index', ->
+	$(this).whenExist '#body_chats_public_chat', ->
 		$('#new_message')
 			.on 'ajax:send', ->
 			  $('#message_text').val('')

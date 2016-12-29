@@ -1,0 +1,37 @@
+// Place all the styles related to the chats controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+.chat_user_avatar {
+  height: 60px;
+  width: 60px;
+}
+
+.small_chat_user_avatar {
+  height: 25px;
+  width: 25px;
+}
+.no_border_radius {
+  border-radius: 0;
+}
+
+.word_wrap_bw {
+  word-wrap: break-word;
+}
+#chat_older_messages_btn {
+  display: none;
+}
+
+#chat_block_errors {
+  display: none;
+}
+
+.chat_block {
+  margin-bottom: 15px;
+  height: 700px;
+  overflow: auto;
+}
+
+.found_users_list {
+  margin-top: 15px;
+  margin-bottom: 15px;
+}

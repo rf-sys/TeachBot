@@ -8,9 +8,11 @@ class ApplicationController < ActionController::Base
   # if no session[:user_id] - check cookie and log_in user with its value (id of the user)
   def current_user
     if (user_id = session[:user_id])
+      cookies.signed[:live_user_id] = session[:user_id] unless cookies[:live_user_id]
       @current_user ||= get_from_cache(User, user_id) # User.find_by(id: user_id)
     elsif (user_id = cookies.signed[:user_id])
       user = get_from_cache(User, user_id)
+      cookies.signed[:live_user_id] = user.id unless cookies[:live_user_id]
       if user && user.authenticated?(:remember, cookies[:remember_token])
         log_in user
         @current_user = user

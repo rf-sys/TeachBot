@@ -5,11 +5,35 @@
 @import "global_partials/notices";
 @import "global_partials/helpers";
 
-
 .turbolinks-progress-bar {
   background-color: #FF4C3B;
 }
 
 .box-shadow-block {
   box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.notifications-bell {
+  position: relative;
+}
+
+.notifications-block {
+  width: 250px;
+  height: 400px;
+  background: white;
+  position: absolute;
+  top: 42px;
+  left: 0;
+}
+
+.notifications-block_triangle {
+  position: absolute;
+  left: 3px;
+  top: 32px;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 5px 10px 5px;
+  border-color: transparent transparent white transparent;
+
 }

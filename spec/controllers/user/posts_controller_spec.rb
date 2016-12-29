@@ -4,7 +4,7 @@ RSpec.describe User::PostsController, type: :controller do
 
   describe 'GET #index' do
     before :each do
-      @post = create(:post)
+      @post = message(:post)
 
       get :index, params: {user_id: @post.user_id}
     end

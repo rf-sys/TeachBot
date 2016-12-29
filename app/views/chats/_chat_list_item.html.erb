@@ -1,0 +1,12 @@
+<li class="list-group-item">
+  <% chat_list_item.users.each do |user| %>
+    <%= user.username %>
+  <% end.uniq %>
+  <p>
+    <% chat_list_item.messages.last.tap do |msg| %>
+      <small>
+        <%= msg.user.username %>:<%= msg.text %>
+      </small>
+    <% end %>
+  </p>
+</li>

@@ -1,0 +1,8 @@
+<div class="container" style="margin-top: 15px">
+  <div class="row">
+    <div class="col-md">
+      <%= react_component('ModalNewMessage') %>
+      <%= react_component('Conversations', current_user: current_user.attributes.slice('id', 'username', 'avatar')) %>
+    </div>
+  </div>
+</div>

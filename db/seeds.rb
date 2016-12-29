@@ -3,8 +3,8 @@
 #
 # Examples:
 #
-#   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
-#   Character.create(name: 'Luke', movie: movies.first)
+#   movies = Movie.message([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
+#   Character.message(name: 'Luke', movie: movies.first)
 
 Role.create([{ name: 'user' }, { name: 'teacher' }, { name: 'admin' }])
 
@@ -12,4 +12,4 @@ user = User.create(username: 'admin', email: 'admin@mail.ru', password: ENV['ADM
 user.add_role(:teacher)
 user.add_role(:admin)
 
-Chat.create(text: 'Public Chat')
+Chat.create(title: 'Public Chat')

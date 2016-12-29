@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe CoursesController, :type => :controller do
   before :each do
-    @course = create(:course)
+    @course = message(:course)
     @redis = Redis.new
     @redis.flushall
   end

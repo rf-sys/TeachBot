@@ -1,4 +1,4 @@
-const Block = React.createClass({
+const ResponseMessagesBlock = React.createClass({
     getInitialState() {
         return {
             list: [],
@@ -60,5 +60,3 @@ const Block = React.createClass({
 
     }
 });
-
-export default Block

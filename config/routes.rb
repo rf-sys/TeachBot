@@ -1,6 +1,14 @@
 Rails.application.routes.draw do
 
   namespace :user do
+    get 'messages/create'
+  end
+
+  namespace :chat do
+    get 'messages/create'
+  end
+
+  namespace :user do
     get 'posts/index'
   end
 
@@ -22,7 +30,7 @@ Rails.application.routes.draw do
 
   get 'account_activations/edit'
 
-  # sign up (create user)
+  # sign up (message user)
   get 'signup' => 'users#new'
 
 
@@ -37,6 +45,9 @@ Rails.application.routes.draw do
   get 'bot', to: 'api#bot'
 
   root 'main#index'
+
+  get 'public_chat', to: 'chats#public_chat'
+  get 'conversations', to: 'chats#index'
 
   # resources
 
@@ -54,10 +65,10 @@ Rails.application.routes.draw do
 
   resources :posts, only: [:create, :destroy]
 
+  resources :messages, only: [:create]
 
-
-  resources :chat do
-    resources :messages, only: [:create]
+  resources :chats do
+    resources :messages, only: [:create], controller: 'chat/messages'
   end
 
   get 'oauth/facebook', to: 'api#facebook_oauth'
@@ -65,6 +76,8 @@ Rails.application.routes.draw do
   get 'api/users_course_paginates', to: 'api#user_courses_pagination'
   get 'api/find/user/username', to: 'api#find_user_by_username'
   post 'api/subscribers', to: 'api#subscribers'
+  post 'api/conversations', to: 'api#conversations'
+  post 'api/conversations/:id/messages', to: 'api#conversation_messages'
 
   mount ActionCable.server => '/cable'
 

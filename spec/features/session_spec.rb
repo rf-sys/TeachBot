@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe 'the signin process', :type => :feature do
   it 'signs me in as valid user', js: true do
-    user = create(:user)
+    user = message(:user)
     visit login_path
     within('#login_form') do
       fill_in 'session_email', with: 'testuser@gmail.com'
@@ -13,7 +13,7 @@ describe 'the signin process', :type => :feature do
   end
 
   it 'i cannot sign as facebook user', js: true do
-    create(:user, facebook_id: 123456)
+    message(:user, facebook_id: 123456)
 
     visit login_path
     within('#login_form') do
@@ -25,7 +25,7 @@ describe 'the signin process', :type => :feature do
   end
 
   it 'i cannot signs with invalid data', js: true do
-    create(:user)
+    message(:user)
     visit login_path
     within('#login_form') do
       fill_in 'session_email', with: 'INVALIDEMAIL@example.com'

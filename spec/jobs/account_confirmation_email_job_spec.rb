@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe UserMailer, type: :job do
   include ActiveJob::TestHelper
   before :each do
-    @user = create(:user)
+    @user = message(:user)
   end
 
   subject(:email) { described_class.account_activation(@user, User.new_token) }

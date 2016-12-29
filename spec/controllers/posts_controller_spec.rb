@@ -4,8 +4,8 @@ RSpec.describe PostsController, type: :controller do
   describe 'Access checks' do
     it 'denies if foreign use try delete post' do
 
-      post = create(:post)
-      foreign_user = create(:second_user)
+      post = message(:post)
+      foreign_user = message(:second_user)
 
       # imitation of the auth user
       session[:user_id] = foreign_user.id
@@ -17,10 +17,10 @@ RSpec.describe PostsController, type: :controller do
     end
 
     it 'redirects if guest' do
-      post :create
+      post :message
       expect(response).to have_http_status(302)
 
-      post = create(:post)
+      post = message(:post)
       delete :destroy, params: {id: post.id}
       expect(response).to have_http_status(302)
 

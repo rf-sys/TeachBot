@@ -20,6 +20,8 @@ class User < ApplicationRecord
   has_many :paginate_courses, -> { order('created_at ASC').page(1).per(1) },
            class_name: 'Course', foreign_key: 'author_id'
 
+  has_and_belongs_to_many :chats
+
   has_and_belongs_to_many :subscriptions, class_name: 'Course'
 
   has_and_belongs_to_many :paginate_subscriptions, -> { page(1).per(1) }, class_name: 'Course'
@@ -56,7 +58,7 @@ class User < ApplicationRecord
 
   # generate and store token to the database
   def remember
-    self.remember_token = User.new_token # create new string which is like a token
+    self.remember_token = User.new_token # message new string which is like a token
     update_attribute(:remember_digest, User.digest(remember_token)) # save a hash of the token above in the DB
   end
 
@@ -110,7 +112,7 @@ class User < ApplicationRecord
 
 
   class << self
-    # create a hash of the token
+    # message a hash of the token
     def digest(string)
       cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST : BCrypt::Engine.cost
       BCrypt::Password.create(string, cost: cost)

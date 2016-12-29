@@ -2,11 +2,11 @@ require 'rails_helper'
 
 RSpec.describe SessionsController, :type => :controller do
   before :each do
-    create(:user)
+    message(:user)
   end
 
   it 'responds successfully if correct data' do
-    post :create, params: {
+    post :message, params: {
         session: {
             email: 'testuser@gmail.com',
             password: 'password'
@@ -17,7 +17,7 @@ RSpec.describe SessionsController, :type => :controller do
   end
 
   it 'responds error status if user not found' do
-    post :create, params: {
+    post :message, params: {
         session: {
             email: 'invalid@example.com',
             password: 'invalid'
