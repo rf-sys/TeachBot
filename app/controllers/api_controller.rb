@@ -3,13 +3,14 @@ class ApiController < ApplicationController
   include ApiHelper::Facebook
 
   before_action :require_guest, only: [:facebook_oauth]
-  before_action :require_user, only: [:conversations, :conversation_messages]
+  before_action :require_user, only: [:conversations, :conversation_messages, :notifications]
 
   def bot
     bot = TeachBot::Commands.new(request)
     render :json => bot.generate_response, status: bot.status
   end
 
+  # facebook auth service
   def facebook_oauth
 
     return fb_validation_error unless code_exist?(request[:code])
@@ -31,21 +32,26 @@ class ApiController < ApplicationController
     redirect_to root_path
   end
 
+  # get user's subscriptions, devided by pagination
   def subscriptions_pagination
     user = get_from_cache(User, params[:user_id])
     subscriptions = user.subscriptions.page(params[:page]).per(1)
     render :partial => 'courses/pagination', locals: {subscriptions: subscriptions}
   end
 
+  # return courses, created by specific user and divided by pagination
   def user_courses_pagination
     @user = get_from_cache(User, params[:user_id])
     @courses = @user.courses.page(params[:page]).per(1)
   end
 
+  # return subscribers of the course
   def subscribers
     @course = Course.find(params[:id])
   end
 
+  # find user by username and return as json
+  # @return [Object]
   def find_user_by_username
     if params[:username]
       users = User.select(:id, :username, :avatar).where('username LIKE ?', "%#{params[:username]}%").limit(10)
@@ -53,18 +59,32 @@ class ApiController < ApplicationController
     end
   end
 
+  # @return [Object]
   def conversations
     @chats = current_user.chats.includes(:users).distinct
   end
 
+  # get messages, related to specific Chat with pagination
+  # @return [Object]
   def conversation_messages
-
     chat = Chat.find(params[:id])
     unless current_user_related_to_chat(chat)
       error_message(['Forbidden'], 403)
     end
-
     @messages = chat.messages.reverse_order.page(params[:page]).per(2)
+  end
+
+
+  # return unread notifications for current_user
+  # @return [Object]
+  def unread_notifications_count
+    render :json => {count: current_user.notifications.where(notifications: {readed: false}).count}
+  end
+
+  # return user's notifications
+  # @return [Object]
+  def notifications
+    @notifications = current_user.notifications
   end
 
 
@@ -74,6 +94,9 @@ class ApiController < ApplicationController
     redirect_to root_path, flash: {danger_notice: error}
   end
 
+
+  # access check 'if current_user is related to provided chat'
+  # @param [Chat] chat
   def current_user_related_to_chat(chat)
     return true if chat.id == 1 # public_chat
     chat.users.include?(current_user)

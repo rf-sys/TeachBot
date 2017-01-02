@@ -1,0 +1,2 @@
+module UserControllers::TestsHelper
+end

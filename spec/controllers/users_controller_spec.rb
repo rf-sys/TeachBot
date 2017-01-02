@@ -4,7 +4,7 @@ RSpec.describe UsersController, :type => :controller do
   include ActiveJob::TestHelper
   it 'responds successfully if correct data' do
     expect {
-      post :message, params: {
+      post :create, params: {
           user: {
               username: 'Okalia',
               email: 'okalia@example.com',
@@ -19,7 +19,7 @@ RSpec.describe UsersController, :type => :controller do
 
   it 'responds as error if incorrect data' do
     expect {
-      post :message, params: {
+      post :create, params: {
           user: {
               username: 'Okalia',
               email: '',

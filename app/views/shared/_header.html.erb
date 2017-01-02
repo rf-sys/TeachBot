@@ -30,13 +30,13 @@
           </a>
         </li>
 
-        <%= react_component('Notifications', {}, tag: 'li', class: 'nav-item') %>
-
         <li class="nav-item active">
           <a class="nav-link" href="<%= chats_path %>">
             <i class="fa fa-weixin" aria-hidden="true"></i> Conversations
           </a>
         </li>
+
+        <%= react_component('Notifications', {}, tag: 'li', class: 'nav-item hidden-md-down') %>
 
         <li class="nav-item">
           <a class="nav-link" href="<%= logout_path %>" data-method="delete">

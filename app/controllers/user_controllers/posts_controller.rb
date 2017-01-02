@@ -1,4 +1,4 @@
-class User::PostsController < ApplicationController
+class UserControllers::PostsController < ApplicationController
   def index
     posts = Post.select(:id, :title, :text, :created_at)
                  .where(:user_id => params[:user_id]).order(created_at: :desc).page(params[:page]).per(5)

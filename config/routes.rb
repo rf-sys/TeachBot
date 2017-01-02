@@ -1,6 +1,10 @@
 Rails.application.routes.draw do
 
   namespace :user do
+    get 'notifications/index'
+  end
+
+  namespace :user do
     get 'messages/create'
   end
 
@@ -52,8 +56,8 @@ Rails.application.routes.draw do
   # resources
 
   resources :users do
-    resources :courses, only: [:index], controller: 'user/courses'
-    resources :posts, only: [:index], controller: 'user/posts'
+    resources :courses, only: [:index], controller: 'user_controllers/courses'
+    resources :posts, only: [:index], controller: 'user_controllers/posts'
   end
 
   resources :courses do
@@ -68,8 +72,10 @@ Rails.application.routes.draw do
   resources :messages, only: [:create]
 
   resources :chats do
-    resources :messages, only: [:create], controller: 'chat/messages'
+    resources :messages, only: [:create], controller: 'chat_controllers/messages'
   end
+
+  resources :notifications, only: [:destroy]
 
   get 'oauth/facebook', to: 'api#facebook_oauth'
   get 'api/subscriptions', to: 'api#subscriptions_pagination'
@@ -78,6 +84,8 @@ Rails.application.routes.draw do
   post 'api/subscribers', to: 'api#subscribers'
   post 'api/conversations', to: 'api#conversations'
   post 'api/conversations/:id/messages', to: 'api#conversation_messages'
+  post 'api/notifications/count', to: 'api#unread_notifications_count'
+  post 'api/notifications', to: 'api#notifications'
 
   mount ActionCable.server => '/cable'
 

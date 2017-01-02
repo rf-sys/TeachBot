@@ -1,4 +1,4 @@
-class Chat::MessagesController < ApplicationController
+class ChatControllers::MessagesController < ApplicationController
   before_action :require_user
 
   def create

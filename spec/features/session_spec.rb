@@ -1,8 +1,12 @@
 require 'rails_helper'
-
+Capybara::Webkit.configure do |config|
+  config.allow_url("fonts.googleapis.com")
+  config.allow_url("connect.facebook.net")
+end
 describe 'the signin process', :type => :feature do
+
   it 'signs me in as valid user', js: true do
-    user = message(:user)
+    user = create(:user)
     visit login_path
     within('#login_form') do
       fill_in 'session_email', with: 'testuser@gmail.com'
@@ -13,7 +17,7 @@ describe 'the signin process', :type => :feature do
   end
 
   it 'i cannot sign as facebook user', js: true do
-    message(:user, facebook_id: 123456)
+    create(:user, facebook_id: 123456)
 
     visit login_path
     within('#login_form') do
@@ -25,7 +29,7 @@ describe 'the signin process', :type => :feature do
   end
 
   it 'i cannot signs with invalid data', js: true do
-    message(:user)
+    create(:user)
     visit login_path
     within('#login_form') do
       fill_in 'session_email', with: 'INVALIDEMAIL@example.com'

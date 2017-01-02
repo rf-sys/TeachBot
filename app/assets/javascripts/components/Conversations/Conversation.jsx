@@ -1,6 +1,7 @@
 class Conversation extends React.Component {
     constructor(props) {
         super(props);
+        this.openIfHash = this.openIfHash.bind(this);
         this.setUsersList = this.setUsersList.bind(this);
         this.lastMessage = this.lastMessage.bind(this);
         this.getMessages = this.getMessages.bind(this);
@@ -31,6 +32,16 @@ class Conversation extends React.Component {
                 this.setState({loaded_once: true});
             }
         }.bind(this));
+        this.openIfHash();
+    }
+
+    openIfHash() {
+        let expression = /#dialog=(\w+)/;
+        let hash = window.location.hash;
+        let dialog_id = hash.replace(expression, '$1');
+
+        if (dialog_id.length)
+            $(`#collapse_${dialog_id}_dialog`).collapse('show')
     }
 
     setUsersList() {
@@ -102,7 +113,7 @@ class Conversation extends React.Component {
     }
 
     hideNotification() {
-        this.setState({notification: {show: false}})
+        this.setState({notification: {message: null, status: null, show: false}})
     }
 
     render() {
@@ -145,14 +156,14 @@ class Conversation extends React.Component {
                     </h5>
                 </div>
 
-                <div id={collapse} className="collapse" role="tabpanel" aria-labelledby={heading}>
+                <div id={collapse} name={collapse} className="collapse" role="tabpanel" aria-labelledby={heading}>
                     {((this.state.current_page < this.state.total_pages) && !this.state.loading_cog)
                         ? older_msg_btn : ''}
                     <div className="card-block">
                         {(this.state.loading_cog) ? loading_cog : ''}
                         {(this.state.messages.length) ? <Messages messages={this.state.messages}/> : no_messages}
                         <hr/>
-                        <Notification notification={this.state.notification}
+                        <ConvMessageNotification notification={this.state.notification}
                                       hideNotification={this.hideNotification.bind(this)}/>
                         <SendMessageForm sendMessage={this.sendMessage.bind(this)}/>
                     </div>

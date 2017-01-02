@@ -9,7 +9,7 @@ const ResponseMessagesBlock = React.createClass({
         this.listenAjax();
     },
     listenAjax() {
-        $(document)
+        $(document).unbind('RMB:success').unbind('ajax:error')
             .on('RMB:success', function (event, message) {
                 this.setState({list: [], success: true});
                 this.setState({list: [message], success: true});

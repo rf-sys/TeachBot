@@ -1,12 +1,11 @@
 require 'rails_helper'
 
-RSpec.describe User::PostsController, type: :controller do
+RSpec.describe UserControllers::PostsController, type: :controller do
 
   describe 'GET #index' do
     before :each do
-      @post = message(:post)
-
-      get :index, params: {user_id: @post.user_id}
+      @post = create(:post)
+      get :index, params: {user_id: @post.user.id}
     end
 
     it 'returns http success' do

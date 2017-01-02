@@ -1,0 +1,16 @@
+.live_light {
+  z-index: -100;
+  animation: live_light_animation 2s infinite;
+  -webkit-animation-delay: 1s; /* Safari 4.0 - 8.0 */
+  animation-delay: 1s;
+}
+
+@keyframes live_light_animation {
+  0% {
+    border: 5px solid #d9534f;
+  }
+
+  100% {
+    border: 30px solid transparent;
+  }
+}

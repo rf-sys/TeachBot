@@ -1,4 +1,4 @@
-class Notification extends React.Component {
+class ConvMessageNotification extends React.Component {
     constructor(props) {
         super(props)
     }

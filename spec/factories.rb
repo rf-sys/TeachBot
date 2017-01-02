@@ -1,11 +1,21 @@
 FactoryGirl.define do
+  factory :notification do
+    user
+    title 'TestNotificationTitle'
+    text 'TestNotificationText'
+    link 'TestNotificationLink'
+    readed false
+  end
+
   factory :chat do
     user nil
   end
+
   factory :message do
     text "MyString"
     user nil
   end
+
   factory :user, aliases: [:author] do
     username 'TestUser1'
     email 'testuser@gmail.com'

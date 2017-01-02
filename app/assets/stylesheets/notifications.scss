@@ -1,0 +1,56 @@
+.notifications-bell {
+  position: relative;
+}
+
+.notifications-block {
+  width: 350px;
+  height: 400px;
+  overflow: auto;
+  background: white;
+  position: absolute;
+  top: 50px;
+  left: -240px;
+}
+
+.notifications-block_triangle {
+  position: absolute;
+  left: 3px;
+  top: 32px;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 5px 10px 5px;
+  border-color: transparent transparent white transparent;
+
+}
+.notifications-block_counter_wrapper {
+  position: absolute;
+  border-radius: 100%;
+  top: -10px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.notifications-block_counter_inner {
+  position: absolute;
+  border-radius: 100%;
+}
+
+.notifications-block_counter_inner_live {
+  @extend .notifications-block_counter_inner;
+  height: 25px;
+  width: 25px;
+}
+.notifications-block_counter_inner_counter {
+  @extend .notifications-block_counter_inner;
+  height: 20px;
+  width: 20px;
+  text-align: center;
+  font-size: 10px;
+  flex-direction: column;
+  display: flex;
+  justify-content: center;
+}

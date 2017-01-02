@@ -15,13 +15,9 @@ class Chat < ApplicationRecord
 
 
 
-  def save_with_participants
+  def create_and_add_participants
     self.save
     self.users << [self.initiator, self.recipient]
-  end
-
-  def save_message
-
   end
 
   class << self

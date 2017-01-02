@@ -20,6 +20,8 @@ class User < ApplicationRecord
   has_many :paginate_courses, -> { order('created_at ASC').page(1).per(1) },
            class_name: 'Course', foreign_key: 'author_id'
 
+  has_many :notifications
+
   has_and_belongs_to_many :chats
 
   has_and_belongs_to_many :subscriptions, class_name: 'Course'
@@ -83,6 +85,11 @@ class User < ApplicationRecord
   # Sends activation email.
   def send_activation_email
     UserMailer.account_activation(self, self.activation_token).deliver_later
+  end
+
+
+  def attach_notification(notification)
+    self.notifications << notification
   end
 
 

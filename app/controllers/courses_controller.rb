@@ -28,7 +28,7 @@ class CoursesController < ApplicationController
   end
 
   def create
-    course = current_user.courses.message(course_params)
+    course = current_user.courses.create(course_params)
 
     unless course.persisted?
       return error_message(course.errors.full_messages, 422)

@@ -92,4 +92,6 @@ gem 'kaminari'
 
 gem 'rolify'
 
+gem 'animate_css_on_rails'
+
 ruby '2.3.3'

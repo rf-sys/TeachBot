@@ -1,16 +1,18 @@
 require 'rails_helper'
 
 RSpec.describe CoursesController, :type => :controller do
+  include ActiveJob::TestHelper
   before :each do
-    @course = message(:course)
+    @course = create(:course)
     @redis = Redis.new
     @redis.flushall
   end
   describe 'GET #show' do
     it 'changes redis' do
-      get :show, params: {id: @course.id}
-      expect(response).to be_success
-      expect(@redis.get("courses/#{@course.id}/visitors")).to eq('1')
+      expect {
+        get :show, params: {id: @course.id}
+
+      }.to change(ActiveJob::Base.queue_adapter.enqueued_jobs, :size).by(1)
     end
   end
 end
