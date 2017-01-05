@@ -1,4 +1,5 @@
 class ChatControllers::MessagesController < ApplicationController
+  include MessagesHelper
   before_action :require_user
 
   def create
@@ -13,10 +14,16 @@ class ChatControllers::MessagesController < ApplicationController
 
     message = current_user.messages.new(message_params)
 
+
     if chat.messages << message
+      message.unread_users << [chat.users]
       render :json => {:message => 'Message has been sent'}
-      ac_message_broadcast(message)
-      ac_notification_send(chat.users, send_json(message))
+      # broadcast message into the chat (message.chat)
+      message_broadcast(message)
+      # send notification about new message to all users, exclude current
+      # ac_notification_send(chat.users, send_json(message))
+      # broadcast about new message for all users, exclude current
+      ac_unread_message(chat.users)
     else
       error_message(message.errors.full_messages, 422)
     end
@@ -30,29 +37,26 @@ class ChatControllers::MessagesController < ApplicationController
     params.require(:message).permit(:text)
   end
 
-  def ac_message_broadcast(message)
-    ActionCable.server.broadcast "Chat:#{message.chat_id}", response: send_json(message), type: 'message'
-  end
-
+  # send notification to all passed users, exclude current
+  # @param [User] users
   def ac_notification_send(users, data)
-    users = users - [current_user]
-    puts users.to_s
+    users = users_exclude_current(users, current_user)
 
-    users.each { |user| NotificationsChannel.broadcast_to(user, response: data, type: 'message') }
-
+    users.each { |user| NotificationsChannel.broadcast_to(user, {response: data, type: 'notify_new_message'}) }
   end
 
-  def send_json(msg)
-    {
-        message: {
-            id: msg.id,
-            text: msg.text,
-            chat_id: msg.chat_id,
-            user: msg.user.attributes.slice('id', 'username', 'avatar')
-        }
-    }
+  # add new message to unread messages for all passed users, exclude current
+  def ac_unread_message(users)
+    users = users_exclude_current(users, current_user)
+
+    users.each { |user| UnreadMessagesChannel.add_message(user) }
   end
 
+  def equal_recipient?(user)
+    current_user == user
+  end
+
+  # @param [Chat] chat
   def current_user_related_to_chat(chat)
     chat.users.include?(current_user)
   end

@@ -6,6 +6,7 @@ class ApplicationController < ActionController::Base
   helper_method :current_user, :it_is_current_user
 
   # if no session[:user_id] - check cookie and log_in user with its value (id of the user)
+  # @return [User]
   def current_user
     if (user_id = session[:user_id])
       cookies.signed[:live_user_id] = session[:user_id] unless cookies[:live_user_id]

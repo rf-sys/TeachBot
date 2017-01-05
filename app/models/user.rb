@@ -28,6 +28,8 @@ class User < ApplicationRecord
 
   has_and_belongs_to_many :paginate_subscriptions, -> { page(1).per(1) }, class_name: 'Course'
 
+  has_and_belongs_to_many :unread_messages, join_table: 'unread_messages_users', class_name: 'Message'
+
   scope :select_profile_attr, -> { select(:id, :username, :email, :avatar, :updated_at) }
   scope :find_with_profile, -> (id) { includes(:profile).find(id) }
 
@@ -116,7 +118,6 @@ class User < ApplicationRecord
   def clean_user_courses_cache
     Rails.cache.delete("user/#{self.id}/courses")
   end
-
 
   class << self
     # message a hash of the token

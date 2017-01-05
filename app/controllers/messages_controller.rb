@@ -1,5 +1,6 @@
 class MessagesController < ApplicationController
   before_action :require_user
+  include MessagesHelper
 
   # calls when we use modal window to send message to user, with which we haven't got a chat yet.
   # Logic:
@@ -39,11 +40,6 @@ class MessagesController < ApplicationController
   end
 
 
-  # send message to chat through Action Cable
-  def ac_message_broadcast(message)
-    ActionCable.server.broadcast "Chat:#{message.chat_id}", response: send_json(message), type: 'message', head: :ok
-  end
-
   # sends notification about new chat to recipient
   # @param [Chat] chat
   def send_new_chat_notification(chat)
@@ -62,19 +58,6 @@ class MessagesController < ApplicationController
 
   end
 
-  # json response format for new messages
-  # @param [Message] msg
-  def send_json(msg)
-    {
-        message: {
-            id: msg.id,
-            text: msg.text,
-            chat_id: msg.chat_id,
-            user: msg.user.attributes.slice('id', 'username', 'avatar')
-        }
-    }
-  end
-
   # generate message
   def init_message(params, chat)
     message = Message.new(params)
@@ -88,7 +71,8 @@ class MessagesController < ApplicationController
   # @param [Message] message
   def save_and_send_with_cable(chat, message)
     chat.messages << message
-    ac_message_broadcast(message)
+    message.unread_users << [chat.users]
+    message_broadcast(message)
     if block_given?
       yield
     end

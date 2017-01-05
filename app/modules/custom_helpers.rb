@@ -7,6 +7,7 @@ module CustomHelpers
 
   module Cache
     # flexible cache to prevent repeating Rails.cache.fetch
+    # @param [ApplicationRecord] klass
     def get_from_cache(klass, id, option = 'info')
       class_name = klass.name.demodulize.downcase
       Rails.cache.fetch("#{class_name}/#{id}/#{option}") do

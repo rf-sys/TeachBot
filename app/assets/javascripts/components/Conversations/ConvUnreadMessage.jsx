@@ -1,34 +1,29 @@
-class Message extends React.Component {
+class ConvUnreadMessage extends React.Component {
     constructor(props) {
         super(props);
-        this.markMessageAsRead = this.markMessageAsRead.bind(this);
-        this.state = {read: this.props.message.read}
     }
-
-    componentDidMount() {
-        if (!this.props.message.read) {
-            this.markMessageAsRead();
-            $(document).trigger('unread_messages:update');
-        }
-
-    };
 
     markMessageAsRead() {
         let ajax = $.post(`/api/messages/read`, {id: this.props.message.id});
 
-        ajax.done((resp) => {
+        ajax.done(
+            /** @param {{status: String}} resp */
+            (resp) => {
             this.setState({read: true});
+            this.props.removeMessage(this.props.message.id);
         });
 
     }
 
 
     render() {
-        let mark_as_read = (
-            <button className="btn btn-sm btn-outline-info" onClick={this.markMessageAsRead}>Mark as read</button>
-        );
         return (
-            <div className="media">
+            <div className="media" style={{position: 'relative'}}>
+
+                <button type="button" onClick={this.markMessageAsRead.bind(this)}
+                        className="btn btn-sm btn-danger rounded-circle unread_messages_mark_as_read_button">
+                    <i className="fa fa-trash-o" aria-hidden="true"/>
+                </button>
                 <a className="media-left" href="#">
                     <img className="media-object chat_user_avatar" src={this.props.message.user.avatar}
                          alt="Not found"/>
@@ -39,7 +34,6 @@ class Message extends React.Component {
                     <div>
                         <small>{momentJs(this.props.message.created_at).fromNow()}</small>
                         <br/>
-                        <b>{(!this.state.read) ? mark_as_read : ''}</b>
                     </div>
                 </div>
             </div>

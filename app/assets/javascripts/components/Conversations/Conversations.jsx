@@ -13,8 +13,8 @@ class Conversations extends React.Component {
         this.ChatGeneratorFromActionCable();
         let ajax = $.post('/api/conversations');
         ajax.done((resp) => {
-            let dialogs = resp.sort(this.sortByLastMessage);
-            this.setState({dialogs: dialogs});
+
+            this.setState({dialogs: resp});
         });
     }
 
@@ -55,9 +55,21 @@ class Conversations extends React.Component {
         this.setState({dialogs: dialogs});
     }
 
+    updateDialogPosition(message) {
+        let index = _.findIndex(this.state.dialogs, (d) => d.id == message.chat_id);
+        let dialogs = this.state.dialogs;
+        _.set(dialogs[index], 'last_message', message);
+
+        this.setState({dialogs: dialogs});
+    }
+
     render() {
-        let dialogs = this.state.dialogs.map((dialog) => {
-            return <Conversation dialog={dialog} key={dialog.id} current_user={this.props.current_user}/>
+
+        let sorted_dialogs = this.state.dialogs.sort(this.sortByLastMessage);
+
+        let dialogs = sorted_dialogs.map((dialog) => {
+            return <Conversation dialog={dialog} key={dialog.id} current_user={this.props.current_user}
+                                 updateDialogPosition={this.updateDialogPosition.bind(this)}/>
         });
         return (
             <div>

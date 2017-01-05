@@ -78,14 +78,20 @@ Rails.application.routes.draw do
   resources :notifications, only: [:destroy]
 
   get 'oauth/facebook', to: 'api#facebook_oauth'
-  get 'api/subscriptions', to: 'api#subscriptions_pagination'
-  get 'api/users_course_paginates', to: 'api#user_courses_pagination'
-  get 'api/find/user/username', to: 'api#find_user_by_username'
-  post 'api/subscribers', to: 'api#subscribers'
-  post 'api/conversations', to: 'api#conversations'
-  post 'api/conversations/:id/messages', to: 'api#conversation_messages'
-  post 'api/notifications/count', to: 'api#unread_notifications_count'
-  post 'api/notifications', to: 'api#notifications'
+
+  namespace :api do
+    get 'subscriptions', action: 'subscriptions_pagination'
+    get 'users_course_paginates', action: 'user_courses_pagination'
+    get 'find/user/username', action: 'find_user_by_username'
+    post 'subscribers', action: 'subscribers'
+    post 'conversations', action: 'conversations'
+    post 'conversations/:id/messages', action: 'conversation_messages'
+    post 'notifications/count', action: 'unread_notifications_count'
+    post 'notifications', action: 'notifications'
+    post 'messages/read', action: 'mark_message_as_read'
+    post 'messages/unread/count', action: 'unread_messages_count'
+    post 'messages/unread/all', action: 'unread_messages'
+  end
 
   mount ActionCable.server => '/cable'
 

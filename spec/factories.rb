@@ -8,12 +8,18 @@ FactoryGirl.define do
   end
 
   factory :chat do
-    user nil
+    association :initiator, factory: :user
+    association :recipient, factory: :second_user
   end
 
   factory :message do
-    text "MyString"
-    user nil
+    text 'TestMessage'
+    factory :message_with_user do
+      user
+      factory :message_with_user_and_chat do
+        chat
+      end
+    end
   end
 
   factory :user, aliases: [:author] do

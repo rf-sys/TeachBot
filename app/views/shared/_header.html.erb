@@ -30,9 +30,10 @@
           </a>
         </li>
 
-        <li class="nav-item active">
+        <li class="nav-item active" style="position: relative">
           <a class="nav-link" href="<%= chats_path %>">
             <i class="fa fa-weixin" aria-hidden="true"></i> Conversations
+            <%= react_component('UnreadMessages') %>
           </a>
         </li>
 

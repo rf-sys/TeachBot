@@ -10,3 +10,4 @@ global.PublicChat = require('components/Chat/PublicChat.jsx').default;
 global.Conversations = require('components/Conversations/Conversations.jsx').default;
 global.ModalNewMessage = require('components/Conversations/ModalNewMessage.jsx').default;
 global.Notifications = require('components/Notifications/Notifications.jsx').default;
+global.UnreadMessages = require('components/UnreadMessages/UnreadMessages.jsx').default;

@@ -1,17 +1,7 @@
-class Message extends React.Component {
+class UnreadMessage extends React.Component {
     constructor(props) {
         super(props);
-        this.markMessageAsRead = this.markMessageAsRead.bind(this);
-        this.state = {read: this.props.message.read}
     }
-
-    componentDidMount() {
-        if (!this.props.message.read) {
-            this.markMessageAsRead();
-            $(document).trigger('unread_messages:update');
-        }
-
-    };
 
     markMessageAsRead() {
         let ajax = $.post(`/api/messages/read`, {id: this.props.message.id});
@@ -24,9 +14,6 @@ class Message extends React.Component {
 
 
     render() {
-        let mark_as_read = (
-            <button className="btn btn-sm btn-outline-info" onClick={this.markMessageAsRead}>Mark as read</button>
-        );
         return (
             <div className="media">
                 <a className="media-left" href="#">
@@ -39,7 +26,7 @@ class Message extends React.Component {
                     <div>
                         <small>{momentJs(this.props.message.created_at).fromNow()}</small>
                         <br/>
-                        <b>{(!this.state.read) ? mark_as_read : ''}</b>
+                        <button className="btn btn-sm btn-outline-info" onClick={this.markMessageAsRead}>Mark as read</button>
                     </div>
                 </div>
             </div>

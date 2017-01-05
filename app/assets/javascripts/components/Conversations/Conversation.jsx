@@ -11,8 +11,8 @@ class Conversation extends React.Component {
             next_page: 1,
             total_pages: 1,
             loaded_once: false,
-            loading_cog: false
-
+            loading_cog: false,
+            unread_messages_block_show: false
         }
     }
 
@@ -23,6 +23,9 @@ class Conversation extends React.Component {
                 let messages = this.state.messages.slice();
                 messages.push(response.message);
                 this.setState({messages: messages});
+
+                if (this.props.current_user.id != response.message.user_id)
+                    this.props.updateDialogPosition(this.state.messages[this.state.messages.length - 1]);
 
             }.bind(this));
 
@@ -109,6 +112,7 @@ class Conversation extends React.Component {
         let ajax = $.post(`/chats/${this.props.dialog.id}/messages`, {message: {text: text}});
         ajax.done((resp) => {
             this.setState({notification: {message: resp.message, status: 'success', show: true}});
+            this.props.updateDialogPosition(this.state.messages[this.state.messages.length - 1]);
         });
     }
 
@@ -138,15 +142,36 @@ class Conversation extends React.Component {
                 <div className="card-header" role="tab" id={heading}>
                     <h5 className="mb-0">
                         <div className="row flex-items-xs-middle">
-                            <div className="col-md-9 flex-xs-middle text-xs-center text-md-left">
+                            <div className="col-md-7 flex-xs-middle text-xs-center text-md-left">
                                 {this.setUsersList()}
                             </div>
-                            <div className="col-md-3 text-sm-right flex-xs-middle">
-                                <a data-toggle="collapse" data-parent="#dialogs_collapse" href={`#${collapse}`}
-                                   aria-expanded="true" aria-controls="collapseOne"
-                                   className="btn btn-outline-info btn-block">
-                                    Open dialog
-                                </a>
+                            <div className="col-md-5 text-sm-right text-xs-center flex-xs-middle">
+                                <div className="row flex-items-xs-center">
+                                    <div className="col-xs-9 flex-xs-middle">
+                                        <div className="btn-group">
+                                            <a data-toggle="collapse" data-parent="#dialogs_collapse"
+                                               href={`#${collapse}`}
+                                               aria-expanded="true" aria-controls="collapseOne"
+                                               className="btn btn-primary">
+                                                Open dialog
+                                            </a>
+                                            <button type="button"
+                                                    className="btn btn-primary dropdown-toggle dropdown-toggle-split"
+                                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <span className="sr-only">Toggle Dropdown</span>
+                                            </button>
+                                            <div className="dropdown-menu">
+                                                <a className="dropdown-item" href="#">Mark all messages as read</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="col-xs-3 flex-xs-middle">
+                                        <ConvUnreadMessages dialog={this.props.dialog}
+                                                            count={this.props.dialog.unread_messages_count} />
+                                    </div>
+                                </div>
+
+
                             </div>
                         </div>
                         <hr/>
@@ -164,7 +189,7 @@ class Conversation extends React.Component {
                         {(this.state.messages.length) ? <Messages messages={this.state.messages}/> : no_messages}
                         <hr/>
                         <ConvMessageNotification notification={this.state.notification}
-                                      hideNotification={this.hideNotification.bind(this)}/>
+                                                 hideNotification={this.hideNotification.bind(this)}/>
                         <SendMessageForm sendMessage={this.sendMessage.bind(this)}/>
                     </div>
                 </div>

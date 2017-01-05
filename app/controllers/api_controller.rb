@@ -1,9 +1,11 @@
 class ApiController < ApplicationController
   require 'net/http'
-  include ApiHelper::Facebook
+  include ApiHelper::Facebook, MessagesHelper
 
   before_action :require_guest, only: [:facebook_oauth]
-  before_action :require_user, only: [:conversations, :conversation_messages, :notifications]
+  before_action :require_user, only: [
+      :conversations, :conversation_messages, :notifications, :unread_messages_count, :unread_messages
+  ]
 
   def bot
     bot = TeachBot::Commands.new(request)
@@ -61,30 +63,59 @@ class ApiController < ApplicationController
 
   # @return [Object]
   def conversations
-    @chats = current_user.chats.includes(:users).distinct
+    @chats = current_user.chats.with_users_and_messages
   end
 
   # get messages, related to specific Chat with pagination
   # @return [Object]
   def conversation_messages
-    chat = Chat.find(params[:id])
+    chat = get_from_cache(Chat, params[:id])
+
     unless current_user_related_to_chat(chat)
       error_message(['Forbidden'], 403)
     end
-    @messages = chat.messages.reverse_order.page(params[:page]).per(2)
+    @messages = chat.messages.includes(:unread_users).reverse_order.page(params[:page]).per(2)
   end
 
 
   # return unread notifications for current_user
   # @return [Object]
   def unread_notifications_count
-    render :json => {count: current_user.notifications.where(notifications: {readed: false}).count}
+    count = current_user.notifications.where(notifications: {readed: false}).count
+    render :json => {count: count}
+  end
+
+  # return count of unread messages
+  def unread_messages_count
+    count = current_user.unread_messages.count
+
+    render :json => {count: count}
+  end
+
+  # return unread messages
+  def unread_messages
+    @messages = current_user.unread_messages.includes(:user).where(:messages => {chat_id: params[:chat_id]})
   end
 
   # return user's notifications
   # @return [Object]
   def notifications
-    @notifications = current_user.notifications
+    @notifications = Rails.cache.fetch('api/notifications?user=' + current_user.cache_key) do
+      current_user.notifications
+    end
+  end
+
+
+  # delete provided message from current user unread messages
+  def mark_message_as_read
+    message = get_from_cache(Message, params[:id])
+    if current_user.unread_messages.delete(message)
+      UnreadMessagesChannel.remove_message(current_user)
+      render :json => {status: 'done'}, status: 200
+    else
+      render :json => 'Something went wrong', status: 422
+    end
+
   end
 
 
@@ -100,5 +131,9 @@ class ApiController < ApplicationController
   def current_user_related_to_chat(chat)
     return true if chat.id == 1 # public_chat
     chat.users.include?(current_user)
+  end
+
+  def message_belongs_to_current(message)
+    message.user_id == current_user.id
   end
 end
