@@ -18,8 +18,8 @@ ActiveRecord::Schema.define(version: 20170106163551) do
   create_table "chats", force: :cascade do |t|
     t.datetime "created_at",                   null: false
     t.datetime "updated_at",                   null: false
-    t.integer  "initiator_id",                 null: false
-    t.integer  "recipient_id",                 null: false
+    t.integer  "initiator_id"
+    t.integer  "recipient_id"
     t.boolean  "public_chat",  default: false
   end
 

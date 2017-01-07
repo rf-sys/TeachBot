@@ -50,7 +50,8 @@ class PublicChat extends React.Component {
         return (
             <div>
                 {(this.state.current_page < this.state.total_pages) ? older_msg_btn : ''}
-                {(this.state.messages.length) ? <Messages messages={this.state.messages}/> : no_messages}
+                {(this.state.messages.length) ? <ChatMessages messages={this.state.messages} public_chat={true} /> :
+                    no_messages}
             </div>
         )
     }

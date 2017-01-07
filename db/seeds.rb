@@ -12,4 +12,4 @@ user = User.create(username: 'admin', email: 'admin@mail.ru', password: ENV['ADM
 user.add_role(:teacher)
 user.add_role(:admin)
 
-Chat.create(title: 'Public Chat')
+Chat.create(initiator: user, recipient: user, public_chat: true)

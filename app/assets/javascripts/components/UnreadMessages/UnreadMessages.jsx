@@ -6,21 +6,21 @@ class UnreadMessages extends React.Component {
     }
 
     componentDidMount() {
-        $(document).ready(() => {
-            $(document).unbind('unread_messages:remove').bind('unread_messages:remove', () => {
-                if (this.state.count) {
-                    let newCount = this.state.count - 1;
-                    this.updateCount(newCount);
-                }
-            });
 
-            $(document).unbind('unread_messages:add').bind('unread_messages:add', () => {
-                console.log('initiate unread_messages:add');
-                let newCount = this.state.count + 1;
-                console.log('newCount', newCount);
+        $(document).unbind('unread_messages:remove').on('unread_messages:remove', () => {
+            if (this.state.count) {
+                let newCount = this.state.count - 1;
                 this.updateCount(newCount);
-            });
+            }
         });
+
+        $(document).unbind('unread_messages:add').on('unread_messages:add', () => {
+            console.log('initiate unread_messages:add');
+            let newCount = this.state.count + 1;
+            console.log('newCount', newCount);
+            this.updateCount(newCount);
+        });
+
         let count;
         if (count = sessionStorage.getItem('unread_messages:count')) {
             console.log('presence', parseInt(count));
