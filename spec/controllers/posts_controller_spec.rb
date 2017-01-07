@@ -8,7 +8,7 @@ RSpec.describe PostsController, type: :controller do
       foreign_user = create(:second_user)
 
       # imitation of the auth user
-      session[:user_id] = foreign_user.id
+      auth_user_as(foreign_user)
 
       delete :destroy, params: {id: post.id}
 

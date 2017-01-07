@@ -11,7 +11,8 @@ class PublicChat extends React.Component {
 
     componentDidMount() {
         this.getMessages();
-        $(document).unbind('chat:1:receive_message').on('chat:1:receive_message', function (event, data) {
+        $(document).unbind(`chat:${this.props.public_chat}:receive_message`)
+            .on(`chat:${this.props.public_chat}:receive_message`, function (event, data) {
             let messages = this.state.messages.slice();
             messages.push(data.message);
             this.setState({messages: messages});
@@ -19,7 +20,7 @@ class PublicChat extends React.Component {
     }
 
     getMessages() {
-        let ajax = $.post(`/api/conversations/1/messages?page=${this.state.next_page}`);
+        let ajax = $.post(`/api/conversations/${this.props.public_chat}/messages?page=${this.state.next_page}`);
         ajax.done((resp) => {
             if (resp.page == 1)
                 this.setState({messages: resp.messages.reverse()});

@@ -6,9 +6,9 @@ class ChatControllers::MessagesController < ApplicationController
 
     chat = get_from_cache(Chat, params[:chat_id])
 
-    unless chat.id == 1
+    unless chat.public_chat
       unless current_user_related_to_chat(chat)
-        error_message('Forbidden', 403)
+        return error_message('Forbidden', 403)
       end
     end
 
@@ -16,10 +16,10 @@ class ChatControllers::MessagesController < ApplicationController
 
 
     if chat.messages << message
-      message.unread_users << [chat.users]
+      message.unread_users << [chat.users] unless chat.public_chat
       render :json => {:message => 'Message has been sent'}
       # broadcast message into the chat (message.chat)
-      message_broadcast(message)
+      (chat.public_chat) ? message_broadcast(message, 'public_chat_message') : message_broadcast(message)
       # send notification about new message to all users, exclude current
       # ac_notification_send(chat.users, send_json(message))
       # broadcast about new message for all users, exclude current

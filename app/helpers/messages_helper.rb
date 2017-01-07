@@ -3,8 +3,8 @@ module MessagesHelper
     users - [current_user]
   end
 
-  def message_broadcast(message)
-    ActionCable.server.broadcast "Chat:#{message.chat_id}", response: send_json(message), type: 'message'
+  def message_broadcast(message, type = 'message')
+    ActionCable.server.broadcast "Chat:#{message.chat_id}", response: send_json(message), type: type
   end
 
   # json response format for new messages

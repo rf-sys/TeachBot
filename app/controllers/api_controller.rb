@@ -129,7 +129,7 @@ class ApiController < ApplicationController
   # access check 'if current_user is related to provided chat'
   # @param [Chat] chat
   def current_user_related_to_chat(chat)
-    return true if chat.id == 1 # public_chat
+    return true if chat.public_chat # public_chat
     chat.users.include?(current_user)
   end
 

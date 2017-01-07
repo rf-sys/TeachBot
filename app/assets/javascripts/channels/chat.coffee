@@ -9,6 +9,7 @@ App.chat = App.cable.subscriptions.create "ChatChannel",
     console.log 'recieved_console:', data
     switch data.type
       when 'message' then @appendMessage(data)
+      when 'public_chat_message' then @appendPulicChatMessage(data)
       when 'members' then @updateParticipants(data)
       when 'new_chat' then @triggerNewChatEvent(data)
 
@@ -24,16 +25,23 @@ App.chat = App.cable.subscriptions.create "ChatChannel",
 
   appendMessage: (data) ->
     if $('#body_chats_index').length
-      $(document).trigger "chat:#{data.response.message.chat_id}:receive_message", data.response
+      @triggetMessage(data)
      #$('#chat_messages').append(data.message)
      #$('#chat_block').scrollTop($('#chat_block').height())
+  appendPulicChatMessage: (data) ->
+    if $('#body_chats_public_chat').length
+      @triggetMessage(data)
 
   updateParticipants: (users) ->
-    $(document).trigger('participants', users)
+    if $('#body_chats_public_chat').length
+      $(document).trigger('participants', users)
 
   triggerNewChatEvent: (data) ->
     $(document).trigger 'chat:new_chat:action_cable', data.chat
     @perform 'subscribe_to_chat', chat_id: data.chat.id
+
+  triggetMessage: (data) ->
+    $(document).trigger "chat:#{data.response.message.chat_id}:receive_message", data.response
 
 $ ->
   $(this).on 'turbolinks:load', ->

@@ -10,11 +10,13 @@ class Chat < ApplicationRecord
     where(
         '(initiator_id = ? AND recipient_id = ?) OR (initiator_id = ? AND recipient_id = ?)',
         user_1, user_2, user_2, user_1
-    )
+    ).where(public_chat: false)
   end
 
 
   scope :with_users_and_messages, -> { includes(:users, messages: [:user]).distinct }
+
+  scope :public_chat, -> { where(public_chat: true).take }
 
   def create_and_add_participants
     self.save

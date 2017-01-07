@@ -38,6 +38,14 @@ FactoryGirl.define do
     activation_token User.new_token
   end
 
+  factory :third_user, class: User do
+    username 'TestUser3'
+    email 'testuser3@gmail.com'
+    password 'password'
+    activated true
+    activation_token User.new_token
+  end
+
   factory :course do
     author
     title 'Test Course Title'

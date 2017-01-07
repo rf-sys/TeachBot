@@ -19,7 +19,7 @@ RSpec.describe ApiController, type: :controller do
       user = chat.initiator
       message = create(:message, chat: chat, user: user)
 
-      session[:user_id] = user.id
+      auth_user_as(user)
 
       user.unread_messages << [message]
       expect(user.unread_messages.count).to eq (1)

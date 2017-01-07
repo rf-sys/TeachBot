@@ -8,7 +8,7 @@ RSpec.describe SubscribersController, type: :controller do
 
   it 'approves access' do
     # auth user
-    session[:user_id] = @course.author_id
+    auth_user_as(@course.author)
     # simulate teacher role
     @course.author.add_role :teacher
 
@@ -19,7 +19,7 @@ RSpec.describe SubscribersController, type: :controller do
 
   it 'declines access for no teacher' do
     # auth user
-    session[:user_id] = @course.author_id
+    auth_user_as(@course.author)
 
     delete :destroy, params: {course_id: @course.id, id: @foreign_user.id}
     expect(response).to have_http_status(302) # indicate redirect status code
@@ -35,7 +35,7 @@ RSpec.describe SubscribersController, type: :controller do
   it 'declines access for foreign teacher' do
     @foreign_user.add_role :teacher
 
-    session[:user_id] = @foreign_user.id
+    auth_user_as(@foreign_user)
 
 
     delete :destroy, params: {course_id: @course.id, id: @course.author_id}

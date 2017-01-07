@@ -1,8 +1,10 @@
 # Be sure to restart your server when you modify this file. Action Cable runs in a loop that does not support auto reloading.
 class ChatChannel < ApplicationCable::Channel
-
+  include CustomHelpers::Cache
   def subscribed
-    stream_from 'Chat:1'
+    @public_chat = get_from_cache(Chat, 'public_chat') {Chat.public_chat}
+
+    stream_from 'Chat:' + @public_chat.id.to_s
     stream_from "user_#{current_user.id}_new_chat"
 
     current_user.chats.uniq.each do |chat|
@@ -47,6 +49,6 @@ class ChatChannel < ApplicationCable::Channel
     members = $redis_connection.smembers('participants')
     members.map! { |item| JSON.parse(item) }
 
-    ActionCable.server.broadcast 'Chat:1', members: members, type: 'members'
+    ActionCable.server.broadcast "Chat:#{@public_chat.id}", members: members, type: 'members'
   end
 end
