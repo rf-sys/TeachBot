@@ -4,15 +4,7 @@ class ConvUnreadMessage extends React.Component {
     }
 
     markMessageAsRead() {
-        let ajax = $.post(`/api/messages/read`, {id: this.props.message.id});
-
-        ajax.done(
-            /** @param {{status: String}} resp */
-            (resp) => {
-            this.setState({read: true});
-            this.props.removeMessage(this.props.message.id);
-        });
-
+        $.post(`/api/messages/read`, {id: this.props.message.id});
     }
 
 

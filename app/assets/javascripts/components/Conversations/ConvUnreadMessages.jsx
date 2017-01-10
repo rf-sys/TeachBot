@@ -4,6 +4,15 @@ class ConvUnreadMessages extends React.Component {
         this.state = {loaded_once: false, messages: [], count: this.props.count || 0}
     }
 
+    componentDidMount() {
+        $(document).unbind(`chat:${this.props.dialog.id}:unread_messages:remove`)
+            .on(`chat:${this.props.dialog.id}:unread_messages:remove`, (event, message_id) => {
+                console.log('message_id', message_id);
+          if (this.state.count)
+            this.removeMessage(message_id);
+        });
+    }
+
     loadUnreadMessages() {
         $(this.dropdown).toggleClass('open');
 

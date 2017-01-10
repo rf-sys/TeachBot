@@ -109,8 +109,11 @@ class ApiController < ApplicationController
   # delete provided message from current user unread messages
   def mark_message_as_read
     message = get_from_cache(Message, params[:id])
+    chat_id = message.chat_id
+    message_id = message.id
+
     if current_user.unread_messages.delete(message)
-      UnreadMessagesChannel.remove_message(current_user)
+      UnreadMessagesChannel.remove_message(current_user, chat_id, message_id)
       render :json => {status: 'done'}, status: 200
     else
       render :json => 'Something went wrong', status: 422

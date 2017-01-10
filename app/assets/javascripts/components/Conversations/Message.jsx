@@ -8,7 +8,6 @@ class Message extends React.Component {
     componentDidMount() {
         if (!this.props.message.read) {
             this.markMessageAsRead();
-            $(document).trigger('unread_messages:update');
         }
 
     };

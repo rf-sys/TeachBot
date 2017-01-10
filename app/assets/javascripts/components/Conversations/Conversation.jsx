@@ -103,9 +103,10 @@ class Conversation extends React.Component {
             }
             this.setState({next_page: resp.page + 1, current_page: resp.page, total_pages: resp.total_pages})
         });
+
         ajax.always(() => {
             this.setState({loading_cog: false});
-        })
+        });
     }
 
     sendMessage(text) {
