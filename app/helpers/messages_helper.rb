@@ -32,6 +32,13 @@ module MessagesHelper
   def user_related_to_chat(chat, user)
     chat.users.include?(user)
   end
+
+  # add new message to unread messages for all passed users, exclude current
+  def broadcast_new_unread_message(users, current_user)
+    users = users_exclude_current(users, current_user)
+
+    users.each { |user| UnreadMessagesChannel.add_message(user) }
+  end
 end
 
 module MessageStrategy
@@ -105,13 +112,6 @@ module MessageStrategy
         message.unread_users << [chat.users]
         message_broadcast(message)
         broadcast_new_unread_message(chat.users, current_user)
-      end
-
-      # add new message to unread messages for all passed users, exclude current
-      def broadcast_new_unread_message(users, current_user)
-        users = users_exclude_current(users, current_user)
-
-        users.each { |user| UnreadMessagesChannel.add_message(user) }
       end
     end
 

@@ -37,6 +37,56 @@ RSpec.describe ApiController, type: :controller do
   end
 
 
+  describe 'POST #mark_all_messages_as_read' do
+    it 'denies access for guests' do
+      post :mark_all_messages_as_read
+      expect(response.status).to eq(302)
+    end
+
+    it 'deletes unread_messages from DB' do
+      message = create_and_set_unread_message
+      expect(message.user.unread_messages).to match_array([message])
+
+      session[:user_id] = message.user.id
+      post :mark_all_messages_as_read, params: {chat_id: message.chat.id}
+      expect(message.user.unread_messages.count).to eq(0)
+      expect(response.status).to eq(200)
+    end
+
+    it 'deletes unread messages of particular user' do
+      chat = create(:chat)
+      initiator = chat.initiator
+      recipient = chat.recipient
+
+      # send messages from initiator to recipient
+      5.times do |i|
+        message = create(:message, chat: chat, user: initiator, text: 'TestMessage1_' + i.to_s)
+        recipient.unread_messages << message
+      end
+
+      # send messages from recipient to initiator
+      5.times do |i|
+        message = create(:message, chat: chat, user: recipient, text: 'TestMessage2_' + i.to_s)
+        initiator.unread_messages << message
+      end
+
+      expect(Message.all.count).to eq(10)
+      expect(recipient.unread_messages.count).to eq(5)
+      expect(initiator.unread_messages.count).to eq(5)
+
+      session[:user_id] = recipient.id
+      post :mark_all_messages_as_read, params: {chat_id: chat.id}
+
+      expect(Message.all.count).to eq(10)
+      expect(recipient.unread_messages.count).to eq(0)
+      expect(initiator.unread_messages.count).to eq(5)
+
+      expect(response.status).to eq(200)
+
+    end
+  end
+
+
   private
 
   def unread_messages_request(count)
@@ -45,6 +95,12 @@ RSpec.describe ApiController, type: :controller do
     expect(response.content_type).to eq 'application/json'
 
     expect(response.body).to match({count: count}.to_json)
+  end
+
+  def create_and_set_unread_message
+    message = create(:message_with_associations)
+    message.user.unread_messages << message
+    message
   end
 end
 

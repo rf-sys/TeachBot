@@ -91,6 +91,7 @@ Rails.application.routes.draw do
     post 'messages/read', action: 'mark_message_as_read'
     post 'messages/unread/count', action: 'unread_messages_count'
     post 'messages/unread/all', action: 'unread_messages'
+    post 'messages/read/all', action: 'mark_all_messages_as_read'
   end
 
   mount ActionCable.server => '/cable'

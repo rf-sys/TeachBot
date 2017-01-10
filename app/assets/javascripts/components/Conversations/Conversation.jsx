@@ -149,30 +149,19 @@ class Conversation extends React.Component {
                             <div className="col-md-5 text-sm-right text-xs-center flex-xs-middle">
                                 <div className="row flex-items-xs-center">
                                     <div className="col-xs-9 flex-xs-middle">
-                                        <div className="btn-group">
-                                            <a data-toggle="collapse" data-parent="#dialogs_collapse"
+                                            <button data-toggle="collapse" data-parent="#dialogs_collapse"
                                                href={`#${collapse}`}
                                                aria-expanded="true" aria-controls="collapseOne"
-                                               className="btn btn-primary">
+                                               className="btn btn-outline-primary">
                                                 Open dialog
-                                            </a>
-                                            <button type="button"
-                                                    className="btn btn-primary dropdown-toggle dropdown-toggle-split"
-                                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                <span className="sr-only">Toggle Dropdown</span>
                                             </button>
-                                            <div className="dropdown-menu">
-                                                <a className="dropdown-item" href="#">Mark all messages as read</a>
-                                            </div>
-                                        </div>
+
                                     </div>
                                     <div className="col-xs-3 flex-xs-middle">
                                         <ConvUnreadMessages dialog={this.props.dialog}
-                                                            count={this.props.dialog.unread_messages_count} />
+                                                            count={this.props.dialog.unread_messages_count}/>
                                     </div>
                                 </div>
-
-
                             </div>
                         </div>
                         <hr/>

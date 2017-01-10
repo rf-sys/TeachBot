@@ -4,7 +4,8 @@ class ApiController < ApplicationController
 
   before_action :require_guest, only: [:facebook_oauth]
   before_action :require_user, only: [
-      :conversations, :conversation_messages, :notifications, :unread_messages_count, :unread_messages
+      :conversations, :conversation_messages, :notifications, :unread_messages_count, :unread_messages,
+      :mark_all_messages_as_read
   ]
 
   def bot
@@ -118,7 +119,17 @@ class ApiController < ApplicationController
     else
       render :json => 'Something went wrong', status: 422
     end
+  end
 
+  # mark all messages as read
+  def mark_all_messages_as_read
+    messages = current_user.unread_messages.where(chat_id: params[:chat_id])
+
+    if current_user.unread_messages.delete(messages)
+      render :json => {status: 'done'}, status: 200
+    else
+      render :json => 'Something went wrong', status: 422
+    end
   end
 
 

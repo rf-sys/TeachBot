@@ -24,7 +24,10 @@ class MessagesController < ApplicationController
 
     if @chat.new_record?
       @chat.create_and_add_participants
-      save_and_send_with_cable(@chat, @message) { send_new_chat_notification(@chat) }
+      save_and_send_with_cable(@chat, @message) do
+        send_new_chat_notification(@chat)
+        broadcast_new_unread_message(@chat.users, current_user)
+      end
     else
       save_and_send_with_cable(@chat, @message) do
         render json: {response: @message, type: :new_message}

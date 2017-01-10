@@ -14,11 +14,9 @@ FactoryGirl.define do
 
   factory :message do
     text 'TestMessage'
-    factory :message_with_user do
-      user
-      factory :message_with_user_and_chat do
-        chat
-      end
+    factory :message_with_associations do
+      chat
+      user { chat.initiator }
     end
   end
 
