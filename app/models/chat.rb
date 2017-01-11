@@ -10,7 +10,7 @@ class Chat < ApplicationRecord
     where(
         '(initiator_id = ? AND recipient_id = ?) OR (initiator_id = ? AND recipient_id = ?)',
         user_1, user_2, user_2, user_1
-    ).where(public_chat: false)
+    ).where(public_chat: false).joins(:users).group('chats.id').having('count(users.id) = 2')
   end
 
 

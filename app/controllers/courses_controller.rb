@@ -1,5 +1,4 @@
 class CoursesController < ApplicationController
-  include CoursesHelper
   include FileHelper::Uploader
   before_action :require_user, except: [:index, :show]
 

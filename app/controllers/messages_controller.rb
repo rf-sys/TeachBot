@@ -42,7 +42,6 @@ class MessagesController < ApplicationController
     params.require(:message).permit(:text)
   end
 
-
   # sends notification about new chat to recipient
   # @param [Chat] chat
   def send_new_chat_notification(chat)
