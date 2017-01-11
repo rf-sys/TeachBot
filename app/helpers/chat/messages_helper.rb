@@ -1,2 +1,0 @@
-module Chat::MessagesHelper
-end

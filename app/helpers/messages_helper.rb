@@ -25,8 +25,8 @@ module MessagesHelper
   # returns true if current user isn't included into list of users, which didn't read the message
   # @param [Message] message
   # @return boolean
-  def check_if_read(message)
-    !message.unread_users.include?(current_user)
+  def check_if_read(message, user)
+    !message.unread_users.include?(user)
   end
 
   def user_related_to_chat(chat, user)

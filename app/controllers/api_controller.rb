@@ -16,11 +16,13 @@ class ApiController < ApplicationController
   # facebook auth service
   def facebook_oauth
 
-    return fb_validation_error unless code_exist?(request[:code])
+    return fb_validation_error('Code not found. Try log in again.') unless code_exist?(request[:code])
 
     access_token = get_access_token request[:code]
 
-    return fb_validation_error unless valid_access_token?(access_token['access_token'])
+    unless valid_access_token?(access_token['access_token'])
+      return fb_validation_error('Invalid access token. Try log in again.')
+    end
 
     fb_user = get_user_data(access_token['access_token'])
 
