@@ -1,5 +1,6 @@
 class ChatControllers::MessagesController < ApplicationController
-  include MessagesHelper, MessageStrategy::MessageCreateStrategy
+  include MessagesHelper, MessageStrategies::MessageCreateStrategy,
+          MessageStrategies::MessageCreateStrategy::MessageMakers
   before_action :require_user
 
   def create
@@ -8,16 +9,16 @@ class ChatControllers::MessagesController < ApplicationController
 
     message = current_user.messages.new(message_params)
 
-    strategy = MessageCreateStrategyClass.new(chat, message, current_user)
+    strategy = MessageCreate.new(chat, message, current_user)
 
-    unless strategy.have_access?
+    unless strategy.have_access_to_chat?
       return error_message('Forbidden', 403)
     end
 
-    if chat.public_chat
-      save_message(strategy, PublicChatMessage.new)
+    if strategy.public_chat?
+      save_message(strategy, PublicMessageMaker.new)
     else
-      save_message(strategy, PrivateChatMessage.new) { render :json => {:message => 'Message has been sent'} }
+      save_message(strategy, PrivateMessageMaker.new) { render :json => {:message => 'Message has been sent'} }
     end
   end
 
@@ -27,16 +28,12 @@ class ChatControllers::MessagesController < ApplicationController
     params.require(:message).permit(:text)
   end
 
-  def save_message(strategy, message_entity)
-    entity = message_entity
-
-    unless strategy.save(entity)
-      return error_message(entity.errors, 422)
+  def save_message(strategy, maker)
+    unless strategy.save_as(maker)
+      return error_message(maker.errors, 422)
     end
-
     if block_given?
       yield
     end
   end
-
 end

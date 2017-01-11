@@ -1,7 +1,7 @@
 class ConvUnreadMessages extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {loaded_once: false, messages: [], count: this.props.count}
+        this.state = {loaded_once: false, messages: [], count: this.props.count || 0}
     }
 
     componentDidMount() {
@@ -13,13 +13,16 @@ class ConvUnreadMessages extends React.Component {
             });
     }
 
+    /**
+     * Load unread messages from server if menu has been opened first time
+     */
     loadUnreadMessages() {
         $(this.dropdown).toggleClass('open');
 
         if (!this.state.loaded_once) {
             let ajax = $.post('/api/messages/unread/all', {chat_id: this.props.dialog.id});
             ajax.done(
-                /** @param {{ messages: array }} response - a collection of unread messages*/
+                /** @param {{ messages: array }} response - a collection of unread messages */
                 (response) => {
                     this.setState({messages: response.messages});
                 });
@@ -28,6 +31,10 @@ class ConvUnreadMessages extends React.Component {
         }
     }
 
+    /**
+     * Exclude message with given id from messages array and decrease count of unread messages.
+     * @param id
+     */
     removeMessage(id) {
         let messages = this.state.messages.filter((message) => {
             return message.id != id
@@ -40,14 +47,20 @@ class ConvUnreadMessages extends React.Component {
         }
     }
 
+    /**
+     * Mark all messages of the current dialog as read. Reset count and unread messages array.
+     * @param e
+     */
     markAllAsRead(e) {
         e.preventDefault();
         let ajax = $.post('/api/messages/read/all', {chat_id: this.props.dialog.id});
 
-        ajax.done(() => {
-            $(document).trigger('unread_messages:remove_specific_count', this.state.count);
-            this.setState({count: 0, messages: []});
-        });
+        ajax.done(
+            /** @param {{ status: String }} response */
+            (response) => {
+                $(document).trigger('unread_messages:remove_specific_count', this.state.count);
+                this.setState({count: 0, messages: []});
+            });
     }
 
     render() {
@@ -57,13 +70,13 @@ class ConvUnreadMessages extends React.Component {
         });
 
         let display = (
-          <div>
-              <button className="btn btn-block btn-outline-warning" style={{marginBottom: '15px', borderRadius: '0'}}
-              onClick={this.markAllAsRead.bind(this)}>
-                  Mark all as read
-              </button>
-              {messages}
-          </div>
+            <div>
+                <button className="btn btn-block btn-outline-warning" style={{marginBottom: '15px', borderRadius: '0'}}
+                        onClick={this.markAllAsRead.bind(this)}>
+                    Mark all as read
+                </button>
+                {messages}
+            </div>
         );
 
         let button_class_toggle = `btn ${(this.state.count) ? 'btn-outline-danger' : 'btn-outline-secondary' } 
