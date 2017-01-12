@@ -66,7 +66,7 @@ class ApiController < ApplicationController
 
   # @return [Object]
   def conversations
-    @chats = current_user.chats.with_users_and_messages
+    @chats = current_user.chats.distinct
   end
 
   # get messages, related to specific Chat with pagination

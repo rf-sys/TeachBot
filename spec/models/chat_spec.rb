@@ -15,7 +15,7 @@ RSpec.describe Chat, type: :model do
 
       expect(Chat.first.users.count).to eq(3)
 
-      another_user = User.find(2)
+      another_user = User.limit(2).last # get the second user
 
       chat = Chat.between_users(user, another_user).take
 

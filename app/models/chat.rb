@@ -5,7 +5,6 @@ class Chat < ApplicationRecord
   belongs_to :initiator, foreign_key: 'initiator_id', class_name: 'User'
   belongs_to :recipient, foreign_key: 'recipient_id', class_name: 'User'
 
-
   scope :between_users, -> (user_1, user_2) do
     where(
         '(initiator_id = ? AND recipient_id = ?) OR (initiator_id = ? AND recipient_id = ?)',
@@ -13,9 +12,7 @@ class Chat < ApplicationRecord
     ).where(public_chat: false).joins(:users).group('chats.id').having('count(users.id) = 2')
   end
 
-
   scope :with_users_and_messages, -> { includes(:users, messages: [:user]).distinct }
-
   scope :public_chat, -> { where(public_chat: true).take }
 
   def create_and_add_participants

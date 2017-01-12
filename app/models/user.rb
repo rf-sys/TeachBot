@@ -46,7 +46,8 @@ class User < ApplicationRecord
 
   before_destroy :delete_avatar
   after_create :generate_profile, :assign_default_role
-  after_commit :clean_user_courses_cache
+  after_commit :clean_users_caches
+  after_update :touch_chats
 
 
   def assign_default_role
@@ -115,8 +116,16 @@ class User < ApplicationRecord
     self.create_profile
   end
 
-  def clean_user_courses_cache
+  def clean_users_caches
     Rails.cache.delete("user/#{self.id}/courses")
+  end
+
+  # touch all chats, user belongs to
+  def touch_chats
+    # "unless" need to prevent queries if code is wrapped by 'ActiveRecord::Base.no_touching' around
+    unless self.no_touching?
+      chats.each(&:touch)
+    end
   end
 
   class << self
