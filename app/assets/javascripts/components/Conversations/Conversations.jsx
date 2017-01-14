@@ -74,7 +74,7 @@ class Conversations extends React.Component {
         return (
             <div>
                 <ConvFindUsers/>
-                <h1 className="text-xs-center">Dialogs</h1>
+                <h1 className="text-center">Dialogs</h1>
                 <div id="dialogs_collapse" role="tablist" aria-multiselectable="true">
                     {dialogs}
                 </div>

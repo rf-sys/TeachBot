@@ -1,4 +1,4 @@
-$("#courses_paginate_list").append("<%= escape_javascript(render(partial: 'user/courses/course', collection: @courses)) %>");
+$("#courses_paginate_list").append("<%= escape_javascript(render(partial: 'user_controllers/courses/course', collection: @courses)) %>");
 
 // Update pagination link
 <% if @courses.last_page? %>

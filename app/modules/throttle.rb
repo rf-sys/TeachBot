@@ -1,23 +1,46 @@
 module Throttle
 
-  REDIS = Redis.new
+  REDIS = $redis_connection
 
 
   module Interval
 
+    class Base
+      class << self
+        def check_redis_connection(controller)
+          begin
+            REDIS.info
+          rescue Redis::CannotConnectError
+            return false
+          end
+          true
+        end
+
+        def check_test_env
+          Rails.env == 'test'
+        end
+
+        def send_denied_response(controller, message)
+          controller.error_message([message], 403)
+        end
+      end
+    end
+
     # use when we register (message) new user
-    class RequestInterval
+    class RequestInterval < Base
 
       SIGNUP_INTERVAL = 2 # seconds
 
       def self.before(controller)
-
-        return true if Rails.env == 'test'
+        return true if check_test_env
+        unless check_redis_connection(controller)
+          return controller.error_message(['Error of connection to the server. Try again'], 403)
+        end
 
         remote_ip = controller.request.remote_ip
         if too_many_attempts?(remote_ip)
           mark_ip(remote_ip)
-          send_denied_response(controller)
+          send_denied_response(controller, 'Too many attempts. Try in ' + SIGNUP_INTERVAL.to_s + ' seconds')
         else
           mark_ip(remote_ip)
         end
@@ -31,9 +54,7 @@ module Throttle
         false
       end
 
-      def self.send_denied_response(controller)
-        controller.render :json => 'Too many attempts. Try in ' + SIGNUP_INTERVAL.to_s + ' seconds', status: 403
-      end
+
 
       # message a new cache of the ip
       def self.mark_ip(remote_ip)
@@ -42,19 +63,21 @@ module Throttle
 
     end
 
-    class SessionLocker
+    class SessionLocker < Base
 
       SESSION_LOCKER_INTERVAL = 2 # minutes
       MAX_ATTEMPTS = 5
 
       def self.before(controller)
-
-        return true if Rails.env == 'test'
+        return true if check_test_env
+        unless check_redis_connection(controller)
+          return controller.error_message(['Error while connecting to the server. Try again'], 403)
+        end
 
         remote_ip = controller.request.remote_ip
 
         if too_many_attempts?(remote_ip)
-          send_denied_response(controller)
+          send_denied_response(controller, 'Too many attempts. Try in ' + SESSION_LOCKER_INTERVAL.to_s + ' minutes')
         else
           add_attempt(remote_ip)
         end
@@ -62,17 +85,11 @@ module Throttle
       end
 
       def self.too_many_attempts?(remote_ip)
-
-
         unless REDIS.exists("throttle[login_locker][#{remote_ip}]")
           REDIS.set("throttle[login_locker][#{remote_ip}]", 0, ex: SESSION_LOCKER_INTERVAL.minutes)
         end
 
         return REDIS.get("throttle[login_locker][#{remote_ip}]").to_i >= MAX_ATTEMPTS
-      end
-
-      def self.send_denied_response(controller)
-        controller.render :json => 'Too many attempts. Try in ' + SESSION_LOCKER_INTERVAL.to_s + ' minutes', status: 403
       end
 
       # message a new cache with updated values

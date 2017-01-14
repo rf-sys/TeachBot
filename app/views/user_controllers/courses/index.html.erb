@@ -15,8 +15,8 @@
               </div>
 
               <div id="pagination_link" style="margin-top: 5px">
-              <%= link_to_next_page(@user.paginate_courses, 'More courses', remote: true, class: 'btn btn-block btn-outline-primary',
-                                    params: {controller: '/api', action: 'user_courses_pagination', :user_id => @user.id}) %>
+                <%= link_to_next_page(@user.paginate_courses.courses_with_paginate, 'More courses', remote: true, class: 'btn btn-block btn-outline-primary',
+                                      params: {controller: '/api', action: 'user_courses_pagination', :user_id => @user.id}) %>
               </div>
             </div>
           <% else %>
@@ -28,13 +28,8 @@
           <hr>
           <% if @user.paginate_subscriptions.present? %>
             <div id="courses_index_subscriptions">
-              <div id="subscriptions_list" class="load-fade">
-                <%= render partial: 'course', collection: @user.paginate_subscriptions %>
-              </div>
-              <div id="paginator" class="row flex-items-xs-center">
-                <%= paginate @user.paginate_subscriptions, theme: 'simple_bootstrap_paginator', remote: true,
-                             params: {controller: '/api', action: 'subscriptions_pagination'} %>
-              </div>
+              <%= render partial: 'courses/pagination',
+                         locals: {subscriptions: @user.paginate_subscriptions.courses_with_paginate} %>
             </div>
           <% else %>
             <p class="lead">

@@ -147,20 +147,15 @@ class Conversation extends React.Component {
                                 {this.setUsersList()}
                             </div>
                             <div className="col-md-5 text-sm-right text-xs-center flex-xs-middle">
-                                <div className="row flex-items-xs-center">
-                                    <div className="col-xs-9 flex-xs-middle">
-                                            <button data-toggle="collapse" data-parent="#dialogs_collapse"
-                                               href={`#${collapse}`}
-                                               aria-expanded="true" aria-controls="collapseOne"
-                                               className="btn btn-outline-primary">
-                                                Open dialog
-                                            </button>
-
-                                    </div>
-                                    <div className="col-xs-3 flex-xs-middle">
-                                        <ConvUnreadMessages dialog={this.props.dialog}
-                                                            count={this.props.dialog.unread_messages_count}/>
-                                    </div>
+                                <div className="d-flex justify-content-between">
+                                    <button data-toggle="collapse" data-parent="#dialogs_collapse"
+                                            href={`#${collapse}`}
+                                            aria-expanded="false" aria-controls={collapse}
+                                            className="btn btn-outline-primary collapsed">
+                                        Open dialog
+                                    </button>
+                                    <ConvUnreadMessages dialog={this.props.dialog}
+                                                        count={this.props.dialog.unread_messages_count}/>
                                 </div>
                             </div>
                         </div>

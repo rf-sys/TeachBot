@@ -16,7 +16,7 @@
     </style>
 <% end %>
 
-<section class="jumbotron text-xs-center">
+<section class="jumbotron text-center">
   <div class="container">
     <h1 class="jumbotron-heading typing" style="width: 170px;
         margin: 0 auto;">TeachBot</h1>
@@ -31,13 +31,13 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-xs-4 flex-xs-middle">
+    <div class="col">
       <h1 style="text-align: center" class="display-4">Recent lessons</h1>
     </div>
 
-    <div class="col-xs-8 flex-xs-middle">
+    <div class="col">
       <% @courses.in_groups_of(2, false) do |group| %>
-        <div class="row">
+        <div class="row" style="margin-bottom: 10px">
           <%= render partial: 'course', collection: group, cached: true %>
         </div>
       <% end %>

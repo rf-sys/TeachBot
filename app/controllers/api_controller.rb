@@ -40,14 +40,14 @@ class ApiController < ApplicationController
   # get user's subscriptions, devided by pagination
   def subscriptions_pagination
     user = get_from_cache(User, params[:user_id])
-    subscriptions = user.subscriptions.page(params[:page]).per(1)
+    subscriptions = user.subscriptions.page(params[:page]).per(2)
     render :partial => 'courses/pagination', locals: {subscriptions: subscriptions}
   end
 
   # return courses, created by specific user and divided by pagination
   def user_courses_pagination
     @user = get_from_cache(User, params[:user_id])
-    @courses = @user.courses.page(params[:page]).per(1)
+    @courses = @user.courses.page(params[:page]).per(2)
   end
 
   # return subscribers of the course

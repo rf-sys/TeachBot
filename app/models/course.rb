@@ -4,7 +4,7 @@ class Course < ApplicationRecord
   has_and_belongs_to_many :subscribers, class_name: 'User'
   has_many :lessons, dependent: :destroy
 
-  scope :courses_with_paginate, -> { self.page(1).per(1) }
+  scope :courses_with_paginate, -> { page(1).per(2) }
 
   after_create :add_author_as_participant
 
@@ -26,5 +26,6 @@ class Course < ApplicationRecord
   def clean_all_courses_cache
     Rails.cache.delete('course/index/all')
   end
+
 
 end

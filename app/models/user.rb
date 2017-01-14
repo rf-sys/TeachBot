@@ -17,7 +17,7 @@ class User < ApplicationRecord
 
   has_many :courses, foreign_key: 'author_id'
 
-  has_many :paginate_courses, -> { order('created_at ASC').page(1).per(1) },
+  has_many :paginate_courses, -> { order('created_at ASC').limit(2) },
            class_name: 'Course', foreign_key: 'author_id'
 
   has_many :notifications
@@ -26,7 +26,7 @@ class User < ApplicationRecord
 
   has_and_belongs_to_many :subscriptions, class_name: 'Course'
 
-  has_and_belongs_to_many :paginate_subscriptions, -> { page(1).per(1) }, class_name: 'Course'
+  has_and_belongs_to_many :paginate_subscriptions, -> { limit(2) }, class_name: 'Course'
 
   has_and_belongs_to_many :unread_messages, join_table: 'unread_messages_users', class_name: 'Message'
 

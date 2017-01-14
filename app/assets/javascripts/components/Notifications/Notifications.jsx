@@ -132,7 +132,7 @@ class Notifications extends React.Component {
         let unread_notifications_count = (
             <div className="notifications-block_counter_wrapper animated">
                 <div className="live_light notifications-block_counter_inner_live"></div>
-                <div className="animated tag-danger notifications-block_counter_inner_counter">
+                <div className="animated badge-danger notifications-block_counter_inner_counter">
                     {this.state.count}
                 </div>
             </div>

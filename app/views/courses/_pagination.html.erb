@@ -1,7 +1,7 @@
 <div id="subscriptions_list" class="load-fade">
-  <%= render partial: 'user/courses/course', collection: subscriptions %>
+  <%= render partial: 'user_controllers/courses/course', collection: subscriptions %>
 </div>
-<div id="paginator" class="row flex-items-xs-center">
+<div id="paginator" class="row justify-content-center">
   <%= paginate subscriptions, theme: 'simple_bootstrap_paginator', remote: true,
-               params: {controller: 'api', action: 'subscriptions_pagination'} %>
+               params: {controller: '/api', action: 'subscriptions_pagination'} %>
 </div>

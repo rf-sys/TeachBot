@@ -1,7 +1,8 @@
 .unread_messages_block_counter_wrapper {
   @extend .notifications-block_counter_wrapper;
-  right: -25px;
+  right: -15px;
   color: white;
+  z-index: 100;
 }
 
 .unread_messages_mark_as_read_button {
@@ -12,6 +13,6 @@
 
 .unread_messages_dropdown_menu {
   padding: 0;
-  left: -220px;
+  left: -225px;
   width: 300px;
 }

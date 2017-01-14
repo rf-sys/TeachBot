@@ -7,10 +7,10 @@ class ChatParticipant extends React.Component {
         return (
             <a href={ '/users/' + this.props.user.id } className="list-group-item list-group-item-action">
                 <div className="row flex-items-xs-middle">
-                    <div className="col-lg-3 text-xs-center">
+                    <div className="col text-center">
                         <img src={this.props.user.avatar} className="chat_user_avatar"/>
                     </div>
-                    <div className="col-lg-9 word_wrap_bw text-xs-center">{this.props.user.username}</div>
+                    <div className="col word_wrap_bw text-center">{this.props.user.username}</div>
                 </div>
             </a>
         )

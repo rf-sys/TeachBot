@@ -80,9 +80,10 @@
 
   </div>
   <div class="modal-footer">
+    <div class="d-flex justify-content-between" style="width: 100%">
     <%= link_to 'Delete', @user, class: 'btn btn-outline-danger float-xs-left', method: 'delete',
                 data: {confirm: 'Are you sure? You will not be able to recover your account'} %>
-    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
     <%= f.submit class: 'btn btn-primary', data: {disable_with: 'Loading...'} %>
+    </div>
   </div>
 <% end %>

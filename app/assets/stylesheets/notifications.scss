@@ -10,6 +10,7 @@
   position: absolute;
   top: 50px;
   left: -240px;
+  z-index: 100;
 }
 
 .notifications-block_triangle {
@@ -32,6 +33,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 100;
 }
 
 .notifications-block_counter_inner {

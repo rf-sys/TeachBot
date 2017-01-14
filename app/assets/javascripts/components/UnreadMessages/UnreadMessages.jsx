@@ -67,7 +67,7 @@ class UnreadMessages extends React.Component {
         let template = (
             <div className="unread_messages_block_counter_wrapper animated hidden-md-down">
                 <div className="live_light notifications-block_counter_inner_live"></div>
-                <div className="animated tag-danger notifications-block_counter_inner_counter">
+                <div className="animated badge-danger notifications-block_counter_inner_counter">
                     {this.state.count}
                 </div>
             </div>

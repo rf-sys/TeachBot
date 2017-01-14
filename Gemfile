@@ -71,7 +71,7 @@ gem 'browserify-rails'
 # ENV support
 gem 'figaro'
 
-gem 'bootstrap', '~> 4.0.0.alpha5'
+gem 'bootstrap', '~> 4.0.0.alpha6'
 
 # tether need to bootstrap
 source 'https://rails-assets.org' do

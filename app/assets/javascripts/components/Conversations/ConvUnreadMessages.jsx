@@ -17,7 +17,7 @@ class ConvUnreadMessages extends React.Component {
      * Load unread messages from server if menu has been opened first time
      */
     loadUnreadMessages() {
-        $(this.dropdown).toggleClass('open');
+        $(this.dropdown).toggleClass('show');
 
         if (!this.state.loaded_once) {
             let ajax = $.post('/api/messages/unread/all', {chat_id: this.props.dialog.id});
@@ -43,7 +43,7 @@ class ConvUnreadMessages extends React.Component {
         this.setState({messages: messages, count: this.state.count - 1});
 
         if (!this.state.count) {
-            $(this.dropdown).removeClass('open');
+            $(this.dropdown).removeClass('show');
         }
     }
 
@@ -82,9 +82,7 @@ class ConvUnreadMessages extends React.Component {
         let button_class_toggle = `btn ${(this.state.count) ? 'btn-outline-danger' : 'btn-outline-secondary' } 
         rounded-circle`;
         return (
-            <div className="dropdown" ref={(input) => {
-                this.dropdown = input;
-            }}>
+            <div className="dropdown" ref={(input) => { this.dropdown = input; }}>
                 <button className={button_class_toggle} type="button"
                         id={`chat_${this.props.dialog.id}_unread_messages_dropdown`}
                         onClick={this.loadUnreadMessages.bind(this)}
@@ -95,7 +93,7 @@ class ConvUnreadMessages extends React.Component {
                 <div className="dropdown-menu unread_messages_dropdown_menu"
                      id={`conv_${this.props.dialog.id}_um_dropdown_menu`}
                      aria-labelledby={`chat_${this.props.dialog.id}_unread_messages_dropdown`}>
-                    {(this.state.count) ? display : <div>No unread messages</div>}
+                    {(this.state.count) ? display : <h4 className="text-center">No unread messages</h4>}
                 </div>
             </div>
         );
