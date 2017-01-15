@@ -3,10 +3,8 @@ class Posts extends React.Component {
         super(props);
         this.state = {
             posts: [],
-            error: null,
+            errors: [],
             loading: false,
-            message: null,
-            messageStatus: true,
             total_pages: null,
             current_page: null
         };
@@ -14,7 +12,6 @@ class Posts extends React.Component {
         this.createPost = this.createPost.bind(this);
         this.getPosts = this.getPosts.bind(this);
         this.destroyPost = this.destroyPost.bind(this);
-        this.loadMorePosts = this.loadMorePosts.bind(this);
     }
 
     componentDidMount() {
@@ -24,23 +21,27 @@ class Posts extends React.Component {
     getPosts(page = 1) {
         this.setState({loading: true});
 
-        let ajax = jQuery.get(`/users/${this.props.user}/posts?page=${page}`, (response) => {
+        let ajax = jQuery.get(`/users/${this.props.user}/posts?page=${page}`,
+            /**
+             * @param {{ total_pages: number, current_page: number, posts: array }} response
+             */
+            (response) => {
 
 
-            let posts = this.state.posts.slice();
+                let posts = this.state.posts.slice();
 
-            response.posts.forEach((item) => {
-               posts.push(item);
+                response.posts.forEach((item) => {
+                    posts.push(item);
+                });
+
+                this.setState({
+                    posts: posts,
+                    total_pages: response.total_pages,
+                    current_page: response.current_page
+                })
             });
 
-            this.setState({
-                posts: posts,
-                total_pages: response.total_pages,
-                current_page: response.current_page
-            })
-        });
-
-        ajax.fail(() => this.setState({error: 'Something went wrong while loading the posts. Try refresh the page'}));
+        ajax.fail(() => this.setState({errors: ['Something went wrong while loading the posts. Try refresh the page']}));
         ajax.always(() => this.setState({loading: false}))
     }
 
@@ -49,12 +50,16 @@ class Posts extends React.Component {
 
         let ajax = jQuery.post('/posts', {post: {title: title, text: text}});
 
-        ajax.done(({data}) => {
-            let posts = this.state.posts.slice();
-            posts.unshift(data);
-            this.setState({posts: posts})
-        }).fail((data) => {
-            this.setState({error: data})
+        ajax.done(
+            /**
+             * @param {Object} data - created post json data
+             */
+            ({data}) => {
+                let posts = this.state.posts.slice();
+                posts.unshift(data);
+                this.setState({posts: posts})
+            }).fail((data) => {
+            this.setState({errors: data.responseJSON.errors})
         }).always(() => {
             this.setState({loading: false});
         });
@@ -75,13 +80,10 @@ class Posts extends React.Component {
         });
 
         ajax.fail((response) => {
-            this.setState({message: response.status, messageStatus: false})
+            this.setState({errors: response.responseJSON.errors})
         })
     }
 
-    loadMorePosts() {
-        console.log('clicked');
-    }
 
     render() {
         let posts = this.state.posts.map((post, i) => {
@@ -96,37 +98,28 @@ class Posts extends React.Component {
                 <span className="sr-only">Loading...</span>
             </div>
         );
-        if (!this.state.error)
-            if (!this.state.posts.length)
-                return (
-                    <div>
-                        <StatusAlerts message={this.state.message} status={this.state.messageStatus}/>
-                        <div className="alert alert-info">
-                            Posts not found.
-                        </div>
-                        {createPost}
+        if (!this.state.posts.length)
+            return (
+                <div>
+                    <div className="text-center">
+                        No posts
                     </div>
-                );
-            else
-                return (
-                    <div>
-                        <StatusAlerts message={this.state.message} status={this.state.messageStatus}/>
-                        <div id="user_posts_list">
-                            {posts}
-                            <LoadPostsBtn total_pages={this.state.total_pages} current_page={this.state.current_page}
-                                          getPosts={this.getPosts}/>
-                        </div>
-                        {(this.state.loading) ? loading : ''}
-                        {createPost}
-                    </div>
-                );
-
+                    <hr/>
+                    <StatusAlerts errors={this.state.errors} />
+                    {createPost}
+                </div>
+            );
         else
             return (
                 <div>
-                    <div className="alert alert-danger">
-                        {this.state.error}
+                    <div id="user_posts_list">
+                        {posts}
+                        <LoadPostsBtn total_pages={this.state.total_pages} current_page={this.state.current_page}
+                                      getPosts={this.getPosts}/>
                     </div>
+                    {(this.state.loading) ? loading : ''}
+                    <hr/>
+                    <StatusAlerts errors={this.state.errors} />
                     {createPost}
                 </div>
             );

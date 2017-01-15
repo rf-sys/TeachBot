@@ -27,7 +27,7 @@ class Message extends React.Component {
             <button className="btn btn-sm btn-outline-info" onClick={this.markMessageAsRead}>Mark as read</button>
         );
         return (
-            <div className="media">
+            <div className="media animated">
                 <img className="d-flex mr-2 chat_user_avatar" src={this.props.message.user.avatar}
                      alt="Not found"/>
                 <div className="media-body">

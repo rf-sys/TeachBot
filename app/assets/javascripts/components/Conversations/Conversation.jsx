@@ -139,14 +139,14 @@ class Conversation extends React.Component {
         );
 
         return (
-            <div className="card">
+            <div className="card" style={{marginBottom: '5px'}}>
                 <div className="card-header" role="tab" id={heading}>
                     <h5 className="mb-0">
                         <div className="row flex-items-xs-middle">
-                            <div className="col-md-7 flex-xs-middle text-xs-center text-md-left">
+                            <div className="col-md-8 flex-xs-middle text-xs-center text-md-left">
                                 {this.setUsersList()}
                             </div>
-                            <div className="col-md-5 text-sm-right text-xs-center flex-xs-middle">
+                            <div className="col-md-4 text-sm-right text-xs-center flex-xs-middle">
                                 <div className="d-flex justify-content-between">
                                     <button data-toggle="collapse" data-parent="#dialogs_collapse"
                                             href={`#${collapse}`}

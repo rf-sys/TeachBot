@@ -10,7 +10,10 @@ class Messages extends React.Component {
 
         return (
             <div>
+                <ReactCSSTransitionGroup transitionName={{enter: "zoomIn", leave: "zoomOut"}}
+                                         transitionEnterTimeout={1000} transitionLeaveTimeout={1000}>
                 {messages}
+                </ReactCSSTransitionGroup>
             </div>
         )
     }

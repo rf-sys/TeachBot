@@ -43,16 +43,19 @@ class CreatePost extends React.Component {
                               required maxLength="255"
                               onChange={this.changeText.bind(this)} value={this.state.text}/>
                 </div>
-                <button className="btn btn-outline-info">Create Post</button>
-                &nbsp;
-                <button className="btn btn-outline-secondary" type="button" onClick={this.hideForm.bind(this)}>Hide
-                    form
+                <p><button className="btn btn-outline-info">Create Post</button></p>
+                
+                <button className="btn btn-block btn-outline-secondary" type="button"
+                        onClick={this.hideForm.bind(this)}>
+                    Hide form
                 </button>
             </form>
         );
 
-        let button = <button className="btn btn-outline-info" type="button" onClick={this.showForm.bind(this)}>Show
-            form</button>;
+        let button = <button className="btn btn-block btn-outline-info" type="button"
+                             onClick={this.showForm.bind(this)}>
+            Show form
+        </button>;
 
         let margin = {
             marginBottom: '15px'
@@ -60,7 +63,6 @@ class CreatePost extends React.Component {
 
         return (
             <div style={margin}>
-                <hr/>
                 {(this.state.show) ? form : button}
             </div>
         )

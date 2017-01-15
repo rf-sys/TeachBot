@@ -4,9 +4,9 @@ class PostsController < ApplicationController
   def create
     @post = @current_user.posts.build(post_params)
     if @post.save
-      render :json => {data: @post}
+      render :json => {data: @post}, status: :ok
     else
-      render :json => {data: @post.errors.full_messages}, status: :unprocessable_entity
+      render :json => {errors: @post.errors.full_messages}, status: :unprocessable_entity
     end
   end
 
@@ -14,7 +14,7 @@ class PostsController < ApplicationController
     post = Post.find(params[:id])
 
     unless author_of_the_post(post)
-      return render :json => {status: 'Access denied'}, status: :forbidden
+      return render :json => {errors: 'Access denied'}, status: :forbidden
     end
 
     post.destroy
