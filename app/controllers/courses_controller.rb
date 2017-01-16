@@ -6,6 +6,10 @@ class CoursesController < ApplicationController
 
   def index
     @courses = Course.where(:public => true).order(updated_at: :desc).page(params[:page]).per(6)
+
+    respond_to do |format|
+      format.html
+    end
   end
 
   def show
@@ -17,7 +21,8 @@ class CoursesController < ApplicationController
       deny_access_message 'You dont have access to browse this course'
     end
 
-    @views = Redis.new.get("courses/#{@course.id}/visitors") || 0
+
+    @views = $redis_connection.get("courses/#{@course.id}/visitors") || 0
 
     AddNewCourseViewerJob.perform_later(request.remote_ip, @course.id)
   end
@@ -27,21 +32,23 @@ class CoursesController < ApplicationController
   end
 
   def create
-    course = current_user.courses.create(course_params)
 
-    unless course.persisted?
+    course = current_user.courses.new(course_params)
+
+    unless course.valid?
       return error_message(course.errors.full_messages, 422)
     end
 
     unless params[:course][:poster].nil?
       file = ImageUploader.new(course, 'courses_posters', params[:course][:poster], {max_size: 1024})
       if file.valid?
-        course.update_column('poster', file.path + '?updated=' + Time.now.to_i.to_s)
         file.save
+        course.poster = file.path + '?updated=' + Time.now.to_i.to_s
       else
         return error_message([file.error], 422)
       end
     end
+    course.save
     render :json => {:message => 'Course has been created successfully'}
   end
 
@@ -71,6 +78,13 @@ class CoursesController < ApplicationController
       error_message(@course.errors.full_messages, 422)
     end
 
+  end
+
+  def rss_feed
+    @courses = Course.where(:public => true)
+    respond_to do |format|
+      format.rss { render :layout => false }
+    end
   end
 
   private

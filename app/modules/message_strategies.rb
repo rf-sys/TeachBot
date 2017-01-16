@@ -79,9 +79,11 @@ module MessageStrategies
         # @param [Message] message
         # @param [User] user
         def after_save_events(chat, message, user)
-          # We dont need to update all chats, given users related to. This causes touching all chat's users and hence
-          # we touch all chats they belongs to and clear a lot of extra cache, though we have already updated that chat
-          # after create a message and further touching is excessive load.
+          <<~EXPLANATION
+            We dont need to update all chats, given users related to. This causes touching all chat's users and hence
+            we touch all chats they belongs to and clear a lot of extra cache, though we have already updated that chat
+            after create a message and further touching is excessive load.
+          EXPLANATION
           ActiveRecord::Base.no_touching { message.unread_users << [chat.users] }
           message_broadcast(message)
           broadcast_new_unread_message(chat.users, user)

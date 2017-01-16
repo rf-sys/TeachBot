@@ -1,29 +1,5 @@
 Rails.application.routes.draw do
 
-  namespace :user do
-    get 'notifications/index'
-  end
-
-  namespace :user do
-    get 'messages/create'
-  end
-
-  namespace :chat do
-    get 'messages/create'
-  end
-
-  namespace :user do
-    get 'posts/index'
-  end
-
-  namespace :user do
-    get 'lessons/index'
-  end
-
-  namespace :user do
-    get 'courses/index'
-  end
-
   get 'courses/index'
 
   get 'cources/index'
@@ -52,6 +28,9 @@ Rails.application.routes.draw do
 
   get 'public_chat', to: 'chats#public_chat'
   get 'conversations', to: 'chats#index'
+
+  # rss
+  get 'courses/feed' => 'courses#rss_feed'
 
   # resources
 
