@@ -34,7 +34,7 @@ class Message extends React.Component {
                     <h4 className="mt-0">{this.props.message.user.username}</h4>
                     {this.props.message.text}<br/>
                     <div>
-                        <small>{momentJs(this.props.message.created_at).fromNow()}</small>
+                        <small>{moment(this.props.message.created_at).fromNow()}</small>
                         <br/>
                         <b>{(!this.state.read) ? mark_as_read : ''}</b>
                     </div>

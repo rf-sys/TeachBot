@@ -1,8 +1,8 @@
 class CoursesController < ApplicationController
   include FileHelper::Uploader
-  before_action :require_user, except: [:index, :show]
+  before_action :require_user, except: [:index, :show, :rss_feed]
 
-  before_action :require_teacher, except: [:index, :show]
+  before_action :require_teacher, except: [:index, :show, :rss_feed]
 
   def index
     @courses = Course.where(:public => true).order(updated_at: :desc).page(params[:page]).per(6)

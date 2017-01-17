@@ -17,9 +17,7 @@
 //= require bootstrap
 //= require react
 //= require react_ujs
+//= require lodash
+//= require moment
 //= require components
 //= require_tree .
-
-
-window.momentJs = require('moment');
-window._ = require('lodash');

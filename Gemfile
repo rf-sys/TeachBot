@@ -65,9 +65,6 @@ gem 'react-rails'
 # handle .es6 files as es6 files and convert to es5
 gem 'sprockets-es6'
 
-# browserify support (import, require...)
-gem 'browserify-rails'
-
 # ENV support
 gem 'figaro'
 
@@ -76,6 +73,8 @@ gem 'bootstrap', '~> 4.0.0.alpha6'
 # tether need to bootstrap
 source 'https://rails-assets.org' do
   gem 'rails-assets-tether', '>= 1.1.0'
+  gem 'rails-assets-moment'
+  gem 'rails-assets-lodash'
 end
 
 # font-awesome

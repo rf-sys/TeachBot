@@ -5,6 +5,7 @@ class Conversation extends React.Component {
         this.setUsersList = this.setUsersList.bind(this);
         this.lastMessage = this.lastMessage.bind(this);
         this.getMessages = this.getMessages.bind(this);
+        this.belongsToCurrentUser = this.belongsToCurrentUser.bind(this);
         this.state = {
             messages: (this.props.dialog.last_message) ? [this.props.dialog.last_message] : [],
             notification: {message: null, status: null, show: false},
@@ -75,7 +76,7 @@ class Conversation extends React.Component {
                 <div>
                     <div>{message.user.username}: {message.text}
                         &nbsp;
-                        <small>({momentJs(message.created_at).fromNow()})</small>
+                        <small>({moment(message.created_at).fromNow()})</small>
                     </div>
                 </div>
 
@@ -121,6 +122,16 @@ class Conversation extends React.Component {
         this.setState({notification: {message: null, status: null, show: false}})
     }
 
+    //helpers
+
+    /**
+     * @return {boolean}
+     */
+    belongsToCurrentUser() {
+        console.log(this.props.dialog.initiator_id, this.props.current_user.id);
+        return this.props.dialog.initiator_id == this.props.current_user.id
+    }
+
     render() {
         let collapse = `collapse_${this.props.dialog.id}_dialog`;
         let heading = `heading_${this.props.dialog.id}_dialog`;
@@ -138,6 +149,13 @@ class Conversation extends React.Component {
             </div>
         );
 
+        let services_for_author = (
+          <div>
+              <a className="dropdown-item" href="#">Add participant</a>
+              <a className="dropdown-item" href="#">Remove participant</a>
+          </div>
+        );
+
         return (
             <div className="card" style={{marginBottom: '5px'}}>
                 <div className="card-header" role="tab" id={heading}>
@@ -148,14 +166,28 @@ class Conversation extends React.Component {
                             </div>
                             <div className="col-md-4 text-sm-right text-xs-center flex-xs-middle">
                                 <div className="d-flex justify-content-between">
-                                    <button data-toggle="collapse" data-parent="#dialogs_collapse"
-                                            href={`#${collapse}`}
-                                            aria-expanded="false" aria-controls={collapse}
-                                            className="btn btn-outline-primary collapsed">
-                                        Open dialog
-                                    </button>
+                                    <div className="btn-group" role="group"
+                                         aria-label="Button group with nested dropdown">
+                                        <button data-toggle="collapse" data-parent="#dialogs_collapse"
+                                                href={`#${collapse}`}
+                                                aria-expanded="false" aria-controls={collapse}
+                                                className="btn btn-outline-primary collapsed">
+                                            Open dialog
+                                        </button>
+                                        <div className="btn-group" role="group">
+                                            <button id="btnGroupDrop1" type="button"
+                                                    className="btn btn-outline-primary dropdown-toggle"
+                                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i className="fa fa-cogs" aria-hidden="true"></i>
+                                            </button>
+                                            <div className="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                                                {this.belongsToCurrentUser() ? services_for_author : ''}
+                                            </div>
+                                        </div>
+                                    </div>
                                     <ConvUnreadMessages dialog={this.props.dialog}
                                                         count={this.props.dialog.unread_messages_count}/>
+
                                 </div>
                             </div>
                         </div>

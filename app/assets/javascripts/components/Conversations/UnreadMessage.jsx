@@ -24,7 +24,7 @@ class UnreadMessage extends React.Component {
                     <h4 className="media-heading">{this.props.message.user.username}</h4>
                     {this.props.message.text}<br/>
                     <div>
-                        <small>{momentJs(this.props.message.created_at).fromNow()}</small>
+                        <small>{moment(this.props.message.created_at).fromNow()}</small>
                         <br/>
                         <button className="btn btn-sm btn-outline-info" onClick={this.markMessageAsRead}>Mark as read</button>
                     </div>
