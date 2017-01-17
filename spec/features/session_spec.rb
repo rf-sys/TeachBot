@@ -1,8 +1,11 @@
 require 'rails_helper'
+=begin
 Capybara::Webkit.configure do |config|
   config.allow_url("fonts.googleapis.com")
   config.allow_url("connect.facebook.net")
 end
+=end
+
 describe 'the signin process', :type => :feature do
 
   it 'signs me in as valid user', js: true do
