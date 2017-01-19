@@ -79,7 +79,8 @@ class ApplicationController < ActionController::Base
 
   def deny_access_message(msg = 'Access denied')
     respond_to do |format|
-      format.js { render :json => msg, status: 403 }
+      format.js { error_message([msg], 403) }
+      format.json { error_message([msg], 403) }
       format.html do
         flash[:danger_notice] = msg
         redirect_to root_url

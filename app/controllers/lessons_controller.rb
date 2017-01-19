@@ -1,5 +1,6 @@
 class LessonsController < ApplicationController
   before_action :require_user, except: [:show]
+  before_action :set_course_and_check_author, except: [:show]
 
   def show
 
@@ -11,19 +12,14 @@ class LessonsController < ApplicationController
   end
 
   def new
-    @course = Course.find(params[:course_id])
-    return deny_access_message 'You are not the author of this course' unless is_owner? @course
-
     @lesson = Lesson.new
   end
 
   def create
-    @course = Course.find(params[:course_id])
-    return deny_access_message 'You are not the author of this course' unless is_owner? @course
+    lesson = @course.lessons.new(lesson_params)
 
-    lesson = @course.lessons.create(lesson_params)
-    if lesson.valid?
-      render :json => {:message => 'Lesson has been created successfully'}
+    if lesson.save
+      redirect_to course_lesson_path(@course, lesson)
     else
       error_message(lesson.errors.full_messages, 422)
     end
@@ -32,5 +28,11 @@ class LessonsController < ApplicationController
   private
   def lesson_params
     params.require(:lesson).permit(:title, :description)
+  end
+
+  def set_course_and_check_author
+    @course = Course.find(params[:course_id])
+
+    deny_access_message 'You are not the author of this course' unless is_owner? @course
   end
 end

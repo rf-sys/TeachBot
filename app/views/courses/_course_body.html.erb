@@ -1,6 +1,11 @@
 <div class="box-shadow-block">
   <div class="course-top-line background_coloured_element"></div>
   <%= image_tag @course.poster, class: 'course-poster', id: 'course_poster_image' if @course.poster %>
+
+  <% if it_is_current_user(@course.author) %>
+    <%= render 'edit_poster_modal' %>
+  <% end %>
+
   <div style="padding: 0 15px 15px 15px">
     <div class="row">
       <div class="col-sm">
@@ -26,14 +31,20 @@
         </td>
       </tr>
       <tr>
-        <th scope="row">Last update</th>
+        <th>Last update</th>
         <td>
           <%= @course.updated_at %>
         </td>
       </tr>
+      <tr>
+        <th>Type</th>
+        <td>
+          <b><%= @course.public? ? 'public' : 'private' %></b>
+        </td>
+      </tr>
 
       <tr>
-        <th scope="row"><i class="fa fa-eye" aria-hidden="true" title="Count of views"></i></th>
+        <th><i class="fa fa-eye" aria-hidden="true" title="Count of views"></i></th>
         <td>
           <%= @views %>
         </td>

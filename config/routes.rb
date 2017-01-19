@@ -42,6 +42,8 @@ Rails.application.routes.draw do
   resources :courses do
     resources :lessons, except: [:index]
     resources :subscribers, only: [:create, :destroy]
+
+    resource :poster, only: [:update], controller: 'posters'
   end
 
   resources :account_activations, only: [:edit]

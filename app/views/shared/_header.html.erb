@@ -65,21 +65,15 @@
 </nav>
 
 <% if flash[:super_info_notice] %>
-  <div class="alert alert-info" style="margin-bottom: 0; border-radius: 0;">
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-      <span aria-hidden="true">&times;</span>
-    </button>
-    <%= flash[:super_info_notice] %>
-  </div>
+  <%= react_component('SuperResponseBlock', {message: flash[:super_info_notice], type: 'alert-info'}) %>
 <% end %>
 
 <% if flash[:super_danger_notice] %>
-  <div class="alert alert-danger" style="margin-bottom: 0; border-radius: 0;">
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-      <span aria-hidden="true">&times;</span>
-    </button>
-    <%= flash[:super_danger_notice] %>
-  </div>
+  <%= react_component('SuperResponseBlock', {message: flash[:super_danger_notice], type: 'alert-danger'}) %>
+<% end %>
+
+<% if flash[:super_success_notice] %>
+  <%= react_component('SuperResponseBlock', {message: flash[:super_success_notice], type: 'alert-success'}) %>
 <% end %>
 
 

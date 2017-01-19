@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe 'the signin process', :type => :feature do
+describe 'the signin process', :type => :feature, js: true do
   it 'should sign up me if valid data' do
     visit signup_path
     within('#new_user') do

@@ -51,6 +51,12 @@ FactoryGirl.define do
     public true
   end
 
+  factory :lesson do
+    course
+    title 'Test Lesson Title'
+    description 'Test Lesson Description'
+  end
+
   factory :post do
     user
     title 'testPost'

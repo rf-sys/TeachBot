@@ -1,4 +1,4 @@
-<div class="card box-shadow-block">
+<div class="card box-shadow-block animated <%= last_page ? 'slideInLeft' : 'slideInRight' %>">
   <%= image_tag course.poster, class: 'card-img-top img-fluid',
                 alt: 'Poster not found' if course.poster %>
   <div class="card-block">

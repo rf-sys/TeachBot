@@ -2,7 +2,7 @@
   <h1 style="text-align: center;">Public courses</h1>
 
   <div class="card-columns load-fade">
-    <%= render partial: 'course', collection: @courses, cached: true %>
+    <%= render partial: 'course', collection: @courses, cached: true, locals: {last_page: @courses.last_page?} %>
   </div>
 
   <hr>

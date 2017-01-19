@@ -1,15 +1,12 @@
 class CoursesController < ApplicationController
-  include FileHelper::Uploader
+  include FileHelper::Uploader, Services::UseCases::Course::CreateCourseService
+
   before_action :require_user, except: [:index, :show, :rss_feed]
 
   before_action :require_teacher, except: [:index, :show, :rss_feed]
 
   def index
     @courses = Course.where(:public => true).order(updated_at: :desc).page(params[:page]).per(6)
-
-    respond_to do |format|
-      format.html
-    end
   end
 
   def show
@@ -32,24 +29,14 @@ class CoursesController < ApplicationController
   end
 
   def create
-
     course = current_user.courses.new(course_params)
 
-    unless course.valid?
-      return error_message(course.errors.full_messages, 422)
+    if course.save
+      flash[:super_success_notice] = 'Course has been created successfully'
+      redirect_to course
+    else
+      error_message(course.errors.full_messages, 422)
     end
-
-    unless params[:course][:poster].nil?
-      file = ImageUploader.new(course, 'courses_posters', params[:course][:poster], {max_size: 1024})
-      if file.valid?
-        file.save
-        course.poster = file.path + '?updated=' + Time.now.to_i.to_s
-      else
-        return error_message([file.error], 422)
-      end
-    end
-    course.save
-    render :json => {:message => 'Course has been created successfully'}
   end
 
   def edit
@@ -58,26 +45,15 @@ class CoursesController < ApplicationController
   end
 
   def update
-    @course = Course.find(params[:id])
+    course = Course.find(params[:id])
 
-    check_if_author(@course)
+    check_if_author(course)
 
-    request_file = params[:course][:poster]
-
-    file = ImageUploader.new(@course, 'courses_posters', request_file, {max_size: 1024})
-
-    unless validate_file(file, request_file)
-      return error_message([file.error], 422)
-    end
-
-    params[:course][:poster] = file.path + '?updated=' + Time.now.to_i.to_s
-
-    if @course.update(course_params) && file.save
-      render :json => {:message => 'Course has been updated successfully'}
+    if course.update(course_params)
+      redirect_to course
     else
-      error_message(@course.errors.full_messages, 422)
+      error_message(course.errors.full_messages, 422)
     end
-
   end
 
   def rss_feed

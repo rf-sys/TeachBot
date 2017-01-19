@@ -10,7 +10,7 @@ class Post extends React.Component {
 
     render() {
 
-        let date = momentJs(this.props.post.created_at).format('LLL');
+        let date = moment(this.props.post.created_at).format('LLL');
 
         let trash = <i className="fa fa-trash-o trash-icon-post" aria-hidden="true" title="Delete post"
                        onClick={this.destroy}/>;
