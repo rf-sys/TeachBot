@@ -4,13 +4,17 @@ class Course < ApplicationRecord
   has_and_belongs_to_many :subscribers, class_name: 'User'
   has_many :lessons, dependent: :destroy
 
+  scope :where_public, -> { where(:public => true) }
+
+  scope :where_published, -> { where(:published => true) }
+
   scope :courses_with_paginate, -> { page(1).per(2) }
 
   after_create :add_author_as_participant
 
   validates :title, presence: true, length: {minimum: 6, maximum: 30}
   validates :description, presence: true, length: {minimum: 6, maximum: 255}
-  validates :public, inclusion: { in: [true, false] }
+  validates :public, inclusion: {in: [true, false]}
 
   validates :theme, format: {with: /\A#.{6}\z/, message: 'color is invalid'}, allow_blank: true
 

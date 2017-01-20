@@ -1,7 +1,7 @@
 module CustomHelpers
   module Responses
-    def error_message(errors, status)
-       render :json => {:errors => errors}, status: status
+    def error_message(errors = [], status)
+      render :json => {:errors => errors}, status: status
     end
   end
 

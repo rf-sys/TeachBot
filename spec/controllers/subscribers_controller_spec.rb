@@ -19,6 +19,7 @@ RSpec.describe SubscribersController, type: :controller do
 
   it 'declines access for no teacher' do
     # auth user
+    @course.author.remove_role(:teacher)
     auth_user_as(@course.author)
 
     delete :destroy, params: {course_id: @course.id, id: @foreign_user.id}

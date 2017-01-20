@@ -9,12 +9,12 @@ class ApplicationController < ActionController::Base
   # @return [User]
   def current_user
     if (user_id = session[:user_id])
-      cookies.signed[:live_user_id] = session[:user_id] unless cookies[:live_user_id]
+      set_live_id(session[:user_id])
       @current_user ||= get_from_cache(User, user_id) # User.find_by(id: user_id)
     elsif (user_id = cookies.signed[:user_id])
       user = get_from_cache(User, user_id)
-      cookies.signed[:live_user_id] = user.id unless cookies[:live_user_id]
       if user && user.authenticated?(:remember, cookies[:remember_token])
+        set_live_id(user.id)
         log_in user
         @current_user = user
       end
@@ -74,6 +74,16 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  # @param [Course] course
+  def unpublished_and_user_is_author(course)
+    unless course.published
+      unless current_user == course.author
+        return false
+      end
+    end
+    true
+  end
+
 
   protected
 
@@ -86,5 +96,10 @@ class ApplicationController < ActionController::Base
         redirect_to root_url
       end
     end
+  end
+
+  private
+  def set_live_id(id)
+    cookies.signed[:live_user_id] = id unless cookies[:live_user_id]
   end
 end

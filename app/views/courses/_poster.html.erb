@@ -1,0 +1,9 @@
+<% if @course.poster %>
+  <%= image_tag @course.poster, class: 'course-poster', id: 'course_poster_image' %>
+<% else %>
+  <%= image_tag '', class: 'course-poster', id: 'course_poster_image', style: 'display: none' %>
+<% end %>
+
+<% if it_is_current_user(@course.author) %>
+  <%= render 'edit_poster_modal' %>
+<% end %>

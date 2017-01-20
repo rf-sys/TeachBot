@@ -7,8 +7,13 @@ class LessonsController < ApplicationController
     @lesson = Lesson.where(:course_id => params[:course_id]).includes(:course).find(params[:id])
 
     unless have_access_to_private_course(@lesson.course)
+      return deny_access_message 'You dont have access to browse this course'
+    end
+
+    unless unpublished_and_user_is_author(@lesson.course)
       deny_access_message 'You dont have access to browse this course'
     end
+
   end
 
   def new

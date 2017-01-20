@@ -1,0 +1,13 @@
+<%= form_for(@course, url: { action: 'toggle_publish' }, remote: true, html: {id: 'course_status'}) do |f| %>
+  <% if @course.published %>
+    <span class="text-primary">Published</span>&ensp;
+    <% if it_is_current_user(@course.author) %>
+      <%= f.submit 'Unpublish (no one else can visit this course)', class: 'btn btn-outline-secondary btn-sm' %>
+    <% end %>
+  <% else %>
+    <span class="text-warning">No published</span>&ensp;
+    <% if it_is_current_user(@course.author) %>
+      <%= f.submit 'Publish (other users can visit this course)', class: 'btn btn-outline-primary btn-sm' %>
+    <% end %>
+  <% end %>
+<% end %>

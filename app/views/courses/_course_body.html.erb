@@ -1,10 +1,6 @@
 <div class="box-shadow-block">
   <div class="course-top-line background_coloured_element"></div>
-  <%= image_tag @course.poster, class: 'course-poster', id: 'course_poster_image' if @course.poster %>
-
-  <% if it_is_current_user(@course.author) %>
-    <%= render 'edit_poster_modal' %>
-  <% end %>
+  <%= render 'poster' %>
 
   <div style="padding: 0 15px 15px 15px">
     <div class="row">
@@ -40,6 +36,15 @@
         <th>Type</th>
         <td>
           <b><%= @course.public? ? 'public' : 'private' %></b>
+        </td>
+      </tr>
+
+      <tr>
+        <th>
+          Status
+        </th>
+        <td>
+          <%= render 'status' %>
         </td>
       </tr>
 

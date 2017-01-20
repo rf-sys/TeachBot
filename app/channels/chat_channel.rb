@@ -2,7 +2,7 @@
 class ChatChannel < ApplicationCable::Channel
   include CustomHelpers::Cache
   def subscribed
-    @public_chat = get_from_cache(Chat, 'public_chat') {Chat.public_chat}
+    @public_chat = Chat.public_chat
 
     stream_from 'Chat:' + @public_chat.id.to_s
     stream_from "user_#{current_user.id}_new_chat"

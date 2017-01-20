@@ -26,6 +26,10 @@ FactoryGirl.define do
     password 'password'
     activated true
     activation_token User.new_token
+
+    factory :teacher do
+      after(:create) {|user| user.add_role(:teacher)}
+    end
   end
 
   factory :second_user, class: User do
@@ -45,10 +49,11 @@ FactoryGirl.define do
   end
 
   factory :course do
-    author
+    association :author, factory: :teacher
     title 'Test Course Title'
     description 'Test Course Description'
     public true
+    published true
   end
 
   factory :lesson do

@@ -43,7 +43,12 @@ Rails.application.routes.draw do
     resources :lessons, except: [:index]
     resources :subscribers, only: [:create, :destroy]
 
-    resource :poster, only: [:update], controller: 'posters'
+  #  resource :poster, only: [:update], controller: 'posters'
+
+    member do
+      patch 'poster', action: 'update_poster'
+      patch 'publish', action: 'toggle_publish'
+    end
   end
 
   resources :account_activations, only: [:edit]

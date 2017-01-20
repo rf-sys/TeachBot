@@ -15,6 +15,7 @@ const ResponseMessagesBlock = React.createClass({
                 this.setState({list: [message], success: true});
             }.bind(this))
             .on('ajax:error', function (event, response) {
+                console.log(event, response);
                 this.setState({list: [], success: true});
                 this.setState({list: response.responseJSON.errors, success: false});
             }.bind(this));
