@@ -10,7 +10,7 @@ class ConvMessageNotification extends React.Component {
     render() {
         if (this.props.notification.show)
             return (
-                <div className={`alert alert-${this.props.notification.status}`}>
+                <div className={`alert alert-${this.props.notification.status} load-fade`}>
                     <button type="button" className="close" onClick={this.hide.bind(this)}>
                         <span aria-hidden="true">&times;</span>
                     </button>

@@ -5,7 +5,7 @@ class ChatMessage extends React.Component {
 
     render() {
         return (
-            <div className="media">
+            <div className="media animated">
                 <img className="d-flex mr-2 chat_user_avatar" src={this.props.message.user.avatar}
                      alt="Not found"/>
                 <div className="media-body">

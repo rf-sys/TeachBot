@@ -112,9 +112,12 @@ class Conversation extends React.Component {
 
     sendMessage(text) {
         let ajax = $.post(`/chats/${this.props.dialog.id}/messages`, {message: {text: text}});
-        ajax.done((resp) => {
-            this.setState({notification: {message: resp.message, status: 'success', show: true}});
+        ajax.done(() => {
             this.props.updateDialogPosition(this.state.messages[this.state.messages.length - 1]);
+        });
+
+        ajax.fail((resp) => {
+            this.setState({notification: {message: resp.responseJSON.errors, status: 'danger', show: true}});
         });
     }
 

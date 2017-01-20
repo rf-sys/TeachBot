@@ -4,13 +4,16 @@ class ChatMessages extends React.Component {
     }
 
     render() {
-        let messages = this.props.messages.map((message, i) => {
-            return <ChatMessage message={message} key={i}/>
+        let messages = this.props.messages.map((message) => {
+            return <ChatMessage message={message} key={message.id}/>
         });
 
         return (
             <div>
-                {messages}
+                <ReactCSSTransitionGroup transitionName={{enter: "zoomIn", leave: "zoomOut"}}
+                                         transitionEnterTimeout={1000} transitionLeaveTimeout={1000}>
+                    {messages}
+                </ReactCSSTransitionGroup>
             </div>
         )
     }
