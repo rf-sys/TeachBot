@@ -39,6 +39,6 @@ describe 'the signin process', :type => :feature do
       fill_in 'session_password', with: 'password'
     end
     click_button 'Sign in'
-    expect(find('#ResponseMessagesBlock')).to have_content 'User with this credentials not found'
+    expect(find('#ResponseMessagesBlock')).to have_content 'User with provided credentials not found'
   end
 end

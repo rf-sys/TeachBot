@@ -10,6 +10,6 @@ describe 'the signin process', :type => :feature, js: true do
       fill_in 'user_password_confirmation', with: 'password'
     end
     click_button 'Create User'
-    expect(page).to have_content 'Please check your email (okalia@example.com)'
+    expect(page).to have_content 'Please check okalia@example.com to activate your account'
   end
 end
