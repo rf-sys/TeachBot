@@ -8,7 +8,7 @@ json.chat do
     json.user do
       json.extract! @message.user, :id, :username, :avatar
     end
-    json.read check_if_read(@message, current_user)
+    json.read is_read?(@message, current_user)
   end
   json.users @chat.users, :id, :username, :avatar
 end

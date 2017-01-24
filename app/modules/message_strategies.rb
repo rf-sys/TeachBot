@@ -4,7 +4,7 @@ module MessageStrategies
     # MessageCreateStrategy defines "save" logic for messages depends on public or private chat
 
     class MessageCreate
-      include MessagesHelper
+      include MessagesHelper, ChatsHelper
       # @param [Chat] chat
       # @param [Message] message
       def initialize(chat, message, user)

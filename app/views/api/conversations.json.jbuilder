@@ -7,7 +7,7 @@ json.array! @chats do |chat|
       json.last_message do
         json.extract! last_msg, :id, :text, :created_at
         json.user last_msg.user, :id, :username, :avatar
-        json.read check_if_read(last_msg, current_user)
+        json.read is_read?(last_msg, current_user)
       end
     end
   end
