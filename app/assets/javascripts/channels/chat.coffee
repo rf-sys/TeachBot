@@ -12,6 +12,7 @@ App.chat = App.cable.subscriptions.create "ChatChannel",
       when 'public_chat_message' then @appendPulicChatMessage(data)
       when 'members' then @updateParticipants(data)
       when 'new_chat' then @triggerNewChatEvent(data)
+      when 'chat_notification' then @appendChatNotification(data)
 
   appear: ->
     if $('#body_chats_public_chat').length
@@ -42,6 +43,10 @@ App.chat = App.cable.subscriptions.create "ChatChannel",
 
   triggetMessage: (data) ->
     $(document).trigger "chat:#{data.response.message.chat_id}:receive_message", data.response
+
+  appendChatNotification: (data) ->
+    console.log 'notification'
+    $(document).trigger "chat:#{data.chat_id}:notification", data.text
 
 $ ->
   $(this).on 'turbolinks:load', ->

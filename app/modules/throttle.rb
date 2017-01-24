@@ -7,7 +7,12 @@ module Throttle
 
     class Base
       class << self
-        def check_redis_connection(controller)
+
+        def run(controller, key, options = {})
+          self.before(controller, key, options)
+        end
+
+        def check_redis_connection
           begin
             REDIS.info
           rescue Redis::CannotConnectError
@@ -29,18 +34,25 @@ module Throttle
     # use when we register (message) new user
     class RequestInterval < Base
 
-      SIGNUP_INTERVAL = 2 # seconds
+      @format = :seconds
+      @time = 2
+      @interval = 2.send(@format) # seconds
 
-      def self.before(controller)
+      def self.before(controller, key, options = {})
         return true if check_test_env
-        unless check_redis_connection(controller)
+
+        @key = key
+
+        config(options)
+
+        unless check_redis_connection
           return controller.error_message(['Error of connection to the server. Try again'], 403)
         end
 
         remote_ip = controller.request.remote_ip
         if too_many_attempts?(remote_ip)
           mark_ip(remote_ip)
-          send_denied_response(controller, 'Too many attempts. Try in ' + SIGNUP_INTERVAL.to_s + ' seconds')
+          send_denied_response(controller, "Too many attempts. Try in #{output_time}")
         else
           mark_ip(remote_ip)
         end
@@ -48,7 +60,7 @@ module Throttle
 
       # return: bool
       def self.too_many_attempts?(remote_ip)
-        if REDIS.exists("throttle[signup_interval][#{remote_ip}]")
+        if REDIS.exists("throttle[#{@key}][#{remote_ip}]")
           return true
         end
         false
@@ -58,26 +70,41 @@ module Throttle
 
       # message a new cache of the ip
       def self.mark_ip(remote_ip)
-        REDIS.set("throttle[signup_interval][#{remote_ip}]", true, ex: SIGNUP_INTERVAL)
+        REDIS.set("throttle[#{@key}][#{remote_ip}]", true, ex: @interval)
+      end
+
+      def self.config(options)
+        @format = options[:format] if options[:format]
+        @interval = options[:interval].send(@format) if options[:interval]
+        @time = options[:interval] if options[:interval]
+      end
+
+      def self.output_time
+        "#{@time} #{@format}"
       end
 
     end
 
     class SessionLocker < Base
 
-      SESSION_LOCKER_INTERVAL = 2 # minutes
-      MAX_ATTEMPTS = 5
+      @interval = 2 # minutes
+      @max_attempts = 5
 
-      def self.before(controller)
+      def self.before(controller, key, options = {})
         return true if check_test_env
-        unless check_redis_connection(controller)
+
+        @key = key
+
+        config(options)
+
+        unless check_redis_connection
           return controller.error_message(['Error while connecting to the server. Try again'], 403)
         end
 
         remote_ip = controller.request.remote_ip
 
         if too_many_attempts?(remote_ip)
-          send_denied_response(controller, 'Too many attempts. Try in ' + SESSION_LOCKER_INTERVAL.to_s + ' minutes')
+          return send_denied_response(controller, 'Too many attempts. Try in ' + @interval.to_s + ' minutes')
         else
           add_attempt(remote_ip)
         end
@@ -85,11 +112,11 @@ module Throttle
       end
 
       def self.too_many_attempts?(remote_ip)
-        unless REDIS.exists("throttle[login_locker][#{remote_ip}]")
-          REDIS.set("throttle[login_locker][#{remote_ip}]", 0, ex: SESSION_LOCKER_INTERVAL.minutes)
+        unless REDIS.exists("throttle[#{@key}][#{remote_ip}]")
+          REDIS.set("throttle[#{@key}][#{remote_ip}]", 0, ex: @interval.minutes)
         end
 
-        return REDIS.get("throttle[login_locker][#{remote_ip}]").to_i >= MAX_ATTEMPTS
+        return REDIS.get("throttle[#{@key}][#{remote_ip}]").to_i >= @max_attempts
       end
 
       # message a new cache with updated values
@@ -97,7 +124,13 @@ module Throttle
 
         # 'increment' resets expire time in cache...Cache simple doesn't delete after expire time
 
-        REDIS.incr("throttle[login_locker][#{remote_ip}]")
+        REDIS.incr("throttle[#{@key}][#{remote_ip}]")
+      end
+
+      def self.config(options)
+        options.each do |key, val|
+          self.instance_variable_set("@#{key}".to_sym, val)
+        end
       end
 
     end

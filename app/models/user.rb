@@ -42,7 +42,7 @@ class User < ApplicationRecord
   validates :password, length: (6..32), confirmation: true, if: :setting_password?
 
   before_save :downcase_email
-  before_create :create_activation_digest
+ # before_create :create_activation_digest
 
   before_destroy :delete_avatar
   after_create :generate_profile, :assign_default_role
@@ -90,6 +90,14 @@ class User < ApplicationRecord
     UserMailer.account_activation(self, self.activation_token).deliver_later
   end
 
+  # Regenerate activation token and digest and send email
+  def resend_activation_email
+    create_activation_digest
+    self.save
+    send_activation_email
+  end
+
+
 
   def attach_notification(notification)
     self.notifications << notification
@@ -110,7 +118,6 @@ class User < ApplicationRecord
     self.activation_token = User.new_token
     self.activation_digest = User.digest(activation_token)
   end
-
 
   def generate_profile
     self.create_profile

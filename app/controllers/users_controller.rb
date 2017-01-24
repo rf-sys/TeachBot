@@ -1,9 +1,8 @@
+# CRUD for 'User' model
 class UsersController < ApplicationController
   include UsersHelper
   before_action :require_guest, only: [:new, :create]
   before_action :require_user, :profile_owner, only: [:edit, :update, :destroy]
-# before_action Throttle::Interval::RequestInterval, only: [:create, :update] doesn't necessary when we use captcha
-
 
   def show
     @user = get_from_cache(User, params[:id])
@@ -17,7 +16,7 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
     if verify_recaptcha(model: @user) && @user.save
       @user.send_activation_email
-      flash[:super_info_notice] = "Please check your email (#{user_params[:email]}) to activate your account. Email must come during several minutes."
+      flash[:super_info_notice] = activate_account_message(@user.email)
       redirect_to '/'
     else
       error_message(@user.errors.full_messages, 422)
@@ -48,16 +47,22 @@ class UsersController < ApplicationController
     redirect_to '/'
   end
 
-
   private
 
   def user_params
-    params.require(:user).permit(:username, :email, :password, :password_confirmation)
+    params.require(:user).permit(:username, :email, :avatar)
   end
 
   def update_params
     params.require(:user).permit(:username, :email, :avatar,
-                                 profile_attributes: [:facebook, :twitter, :website, :location, :about, :id])
+                                 profile_attributes: profile_attributes)
   end
 
+  def profile_attributes
+    [:facebook, :twitter, :website, :location, :about, :id]
+  end
+
+  def activate_account_message(email)
+    I18n.t 'custom.models.user.messages.need_activate_account', email: email
+  end
 end

@@ -8,11 +8,8 @@ Rails.application.routes.draw do
 
   get 'bot/help'
 
-  get 'account_activations/edit'
-
   # sign up (message user)
   get 'signup' => 'users#new'
-
 
   # sessions (login)
   get 'login' => 'sessions#new'
@@ -33,6 +30,8 @@ Rails.application.routes.draw do
   get 'courses/feed' => 'courses#rss_feed'
 
   # resources
+
+  resources :account_activations, except: [:destroy, :show, :update]
 
   resources :users do
     resources :courses, only: [:index], controller: 'user_controllers/courses'
@@ -59,6 +58,9 @@ Rails.application.routes.draw do
 
   resources :chats do
     resources :messages, only: [:create], controller: 'chat_controllers/messages'
+    member do
+      delete 'leave'
+    end
   end
 
   resources :notifications, only: [:destroy]

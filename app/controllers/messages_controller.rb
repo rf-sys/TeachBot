@@ -74,7 +74,7 @@ class MessagesController < ApplicationController
   def save_and_send_with_cable(chat, message)
     chat.messages << message
     message.unread_users << [chat.users]
-    message_broadcast(message)
+    ChatChannel.send_message(chat.id, message)
     if block_given?
       yield
     end

@@ -11,6 +11,7 @@ class Messages extends React.Component {
         return (
             <div>
                 <ReactCSSTransitionGroup transitionName={{enter: "zoomIn", leave: "zoomOut"}}
+                                         id={`dialog_${this.props.dialog_id}_messages_block`}
                                          transitionEnterTimeout={1000} transitionLeaveTimeout={1000}>
                 {messages}
                 </ReactCSSTransitionGroup>

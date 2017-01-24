@@ -1,6 +1,7 @@
+# Authentication service
 class SessionsController < ApplicationController
   before_action :require_user, only: [:destroy]
-  before_action Throttle::Interval::SessionLocker, only: [:create]
+  before_action :session_locker, :set_user, only: [:create]
   before_action :require_guest, except: [:destroy]
 
   def new
@@ -8,33 +9,46 @@ class SessionsController < ApplicationController
   end
 
   def create
-    user = User.find_by(email: params[:session][:email].downcase)
-
-    unless user
-      return error_message(['User with this credentials not found'], 404)
-    end
-
-    if user.facebook_id
-
-      return error_message(['You can access Facebook account only with facebook login button'], 403)
-    end
-
-    if user.authenticate(params[:session][:password])
-      if user.activated?
-        log_in user
-        params[:session][:remember_me] == '1' ? remember(user) : forget(user)
-        redirect_to root_url
-      else
-
-        return error_message(['Account not activated. Check your email and confirm it'], 404)
-      end
+    if @user.authenticate(params[:session][:password])
+      return log_in_and_redirect(@user) if @user.activated?
+      error_message([account_not_activated], 404)
     else
-      error_message(['User with this credentials not found'], 404)
+      error_message([user_not_found], 404)
     end
   end
 
   def destroy
     log_out if logged_in?
     redirect_to '/'
+  end
+
+  private
+
+  def set_user
+    @user = User.find_by(email: params[:session][:email].downcase)
+    return error_message([user_not_found], 404) unless @user.present?
+    error_message([facebook_login_not_allowed], 403) if @user.facebook_id
+  end
+
+  def session_locker
+    Throttle::Interval::SessionLocker.run(self, 'login_interval', interval: 1)
+  end
+
+  def user_not_found
+    I18n.t 'custom.models.user.messages.not_found'
+  end
+
+  def facebook_login_not_allowed
+    I18n.t 'custom.models.user.messages.facebook_login_not_allowed'
+  end
+
+  def account_not_activated
+    I18n.t 'custom.models.user.messages.account_not_activated'
+  end
+
+  def log_in_and_redirect(user)
+    log_in user
+    params[:session][:remember_me] == '1' ? remember(user) : forget(user)
+    redirect_to root_url
   end
 end

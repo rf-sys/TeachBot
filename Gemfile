@@ -45,6 +45,8 @@ group :development, :test do
   gem 'rack_session_access'
   gem 'poltergeist'
   gem 'phantomjs', :require => 'phantomjs/poltergeist'
+
+  gem 'rubocop', require: false
 end
 
 group :development do

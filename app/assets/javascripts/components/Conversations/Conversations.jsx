@@ -63,13 +63,20 @@ class Conversations extends React.Component {
         this.setState({dialogs: dialogs});
     }
 
+    leave(id) {
+        let dialogs = _.filter(this.state.dialogs, (dialog) => dialog.id != id);
+
+        this.setState({dialogs: dialogs});
+    }
+
     render() {
 
         let sorted_dialogs = this.state.dialogs.sort(this.sortByLastMessage);
 
         let dialogs = sorted_dialogs.map((dialog) => {
             return <Conversation dialog={dialog} key={dialog.id} current_user={this.props.current_user}
-                                 updateDialogPosition={this.updateDialogPosition.bind(this)}/>
+                                 updateDialogPosition={this.updateDialogPosition.bind(this)}
+                                 leave={this.leave.bind(this)}/>
         });
         return (
             <div>

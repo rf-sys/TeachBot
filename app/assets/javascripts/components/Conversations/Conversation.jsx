@@ -6,6 +6,8 @@ class Conversation extends React.Component {
         this.lastMessage = this.lastMessage.bind(this);
         this.getMessages = this.getMessages.bind(this);
         this.belongsToCurrentUser = this.belongsToCurrentUser.bind(this);
+        this.leave = this.leave.bind(this);
+
         this.state = {
             messages: (this.props.dialog.last_message) ? [this.props.dialog.last_message] : [],
             notification: {message: null, status: null, show: false},
@@ -20,7 +22,7 @@ class Conversation extends React.Component {
     componentDidMount() {
         $(document)
             .unbind(`chat:${this.props.dialog.id}:receive_message`)
-            .on(`chat:${this.props.dialog.id}:receive_message`, function (event, response) {
+            .on(`chat:${this.props.dialog.id}:receive_message`, (event, response) => {
                 let messages = this.state.messages.slice();
                 messages.push(response.message);
                 this.setState({messages: messages});
@@ -28,7 +30,7 @@ class Conversation extends React.Component {
                 if (this.props.current_user.id != response.message.user_id)
                     this.props.updateDialogPosition(this.state.messages[this.state.messages.length - 1]);
 
-            }.bind(this));
+            });
 
         $(`#collapse_${this.props.dialog.id}_dialog`).on('show.bs.collapse', function () {
             if (!this.state.loaded_once) {
@@ -116,7 +118,11 @@ class Conversation extends React.Component {
             this.props.updateDialogPosition(this.state.messages[this.state.messages.length - 1]);
         });
 
-        ajax.fail((resp) => {
+        ajax.fail(
+            /**
+             * @param {{errors: object}} resp
+             */
+            (resp) => {
             this.setState({notification: {message: resp.responseJSON.errors, status: 'danger', show: true}});
         });
     }
@@ -133,6 +139,21 @@ class Conversation extends React.Component {
     belongsToCurrentUser() {
         console.log(this.props.dialog.initiator_id, this.props.current_user.id);
         return this.props.dialog.initiator_id == this.props.current_user.id
+    }
+
+    leave(e) {
+        e.preventDefault();
+
+        let ajax = $.ajax({
+            url: `/chats/${this.props.dialog.id}/leave`,
+            type: 'DELETE'
+        });
+
+        ajax.done(() => {
+            $(document).trigger('unread_messages:remove_specific_count', this.props.dialog.unread_messages_count);
+            this.props.leave(this.props.dialog.id);
+        });
+
     }
 
     render() {
@@ -154,6 +175,7 @@ class Conversation extends React.Component {
 
         let services_for_author = (
           <div>
+              <div className="dropdown-divider"></div>
               <a className="dropdown-item" href="#">Add participant</a>
               <a className="dropdown-item" href="#">Remove participant</a>
           </div>
@@ -184,6 +206,8 @@ class Conversation extends React.Component {
                                                 <i className="fa fa-cogs" aria-hidden="true"></i>
                                             </button>
                                             <div className="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                                                <a className="dropdown-item" href="#"
+                                                onClick={this.leave} data-confirm="Are you sure?">Leave dialog</a>
                                                 {this.belongsToCurrentUser() ? services_for_author : ''}
                                             </div>
                                         </div>
@@ -206,7 +230,9 @@ class Conversation extends React.Component {
                         ? older_msg_btn : ''}
                     <div className="card-block">
                         {(this.state.loading_cog) ? loading_cog : ''}
-                        {(this.state.messages.length) ? <Messages messages={this.state.messages}/> : no_messages}
+                            {(this.state.messages.length) ? <Messages messages={this.state.messages}
+                                                                      dialog_id={this.props.dialog.id}/> : no_messages}
+                        <ConversationNotification dialog_id={this.props.dialog.id} />
                         <hr/>
                         <ConvMessageNotification notification={this.state.notification}
                                                  hideNotification={this.hideNotification.bind(this)}/>

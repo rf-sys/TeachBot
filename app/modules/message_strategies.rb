@@ -57,12 +57,12 @@ module MessageStrategies
           unless saved_message?(chat, message)
             return false
           end
-          after_save_events(message)
+          after_save_events(chat, message)
           true
         end
 
-        def after_save_events(message)
-          message_broadcast(message, 'public_chat_message')
+        def after_save_events(chat, message)
+          ChatChannel.send_message(chat.id, message, 'public_chat_message')
         end
       end
 
@@ -85,7 +85,7 @@ module MessageStrategies
             after create a message and further touching is excessive load.
           EXPLANATION
           ActiveRecord::Base.no_touching { message.unread_users << [chat.users] }
-          message_broadcast(message)
+          ChatChannel.send_message(chat.id, message)
           broadcast_new_unread_message(chat.users, user)
         end
       end

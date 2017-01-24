@@ -1,6 +1,6 @@
 class Chat < ApplicationRecord
   has_and_belongs_to_many :users
-  has_many :messages
+  has_many :messages, dependent: :destroy
 
   belongs_to :initiator, foreign_key: 'initiator_id', class_name: 'User'
   belongs_to :recipient, foreign_key: 'recipient_id', class_name: 'User'
