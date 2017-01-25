@@ -1,8 +1,8 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   include SessionsHelper
-  include CustomHelpers::Responses
-  include CustomHelpers::Cache
+  include CustomHelper::Responses
+  include CustomHelper::Cache
   helper_method :current_user, :it_is_current_user
 
   # if no session[:user_id] - check cookie and log_in user with its value (id of the user)
@@ -23,8 +23,14 @@ class ApplicationController < ActionController::Base
 
   def require_user
     unless current_user
-      flash[:danger_notice] = 'You need login to go there'
-      redirect_to root_url
+      respond_to do |format|
+        format.any(:js, :json) { error_message('You need login to go there', 403) }
+        format.html do
+          flash[:danger_notice] = 'You need login to go there'
+          redirect_to root_url
+        end
+      end
+
     end
   end
 

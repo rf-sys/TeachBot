@@ -1,7 +1,7 @@
 json.chat do
   json.id @chat.id
-  json.initiator @chat.initiator_id
-  json.recipient @chat.recipient_id
+  json.initiator_id @chat.initiator_id
+  json.recipient_id @chat.recipient_id
   json.last_message do
     json.id @message.id
     json.text @message.text

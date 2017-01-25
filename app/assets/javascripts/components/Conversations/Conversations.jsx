@@ -1,7 +1,7 @@
 class Conversations extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {dialogs: []};
+        this.state = {dialogs: [], selected_dialog: null};
         this.ChatGeneratorFromInitiator = this.ChatGeneratorFromInitiator.bind(this);
         this.ChatGeneratorFromActionCable = this.ChatGeneratorFromActionCable.bind(this);
         this.generateChat = this.generateChat.bind(this);
@@ -13,7 +13,6 @@ class Conversations extends React.Component {
         this.ChatGeneratorFromActionCable();
         let ajax = $.post('/api/conversations');
         ajax.done((resp) => {
-
             this.setState({dialogs: resp});
         });
     }
@@ -78,6 +77,7 @@ class Conversations extends React.Component {
                                  updateDialogPosition={this.updateDialogPosition.bind(this)}
                                  leave={this.leave.bind(this)}/>
         });
+
         return (
             <div>
                 <ConvFindUsers/>

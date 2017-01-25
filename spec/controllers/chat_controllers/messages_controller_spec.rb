@@ -12,20 +12,20 @@ RSpec.describe ChatControllers::MessagesController, type: :controller do
     end
 
     it 'accept access for auth' do
-      auth_user_as(@chat.initiator)
+      auth_as(@chat.initiator)
       post :create, params: {chat_id: @chat.id, message: {text: 'Test Message'}}
       expect(response).not_to have_http_status(:redirect)
     end
 
     it 'denies access if current user not related to chat' do
       user = create(:third_user)
-      auth_user_as(user)
+      auth_as(user)
       post :create, params: {chat_id: @chat.id, message: {text: 'Test Message'}}
       expect(response).to have_http_status(:forbidden)
     end
 
     it 'validates message' do
-      auth_user_as(@chat.initiator)
+      auth_as(@chat.initiator)
 
       post :create, params: {chat_id: @chat.id, message: {text: ''}}
       expect(response.body).to match(/Text can't be blank/)
@@ -38,7 +38,7 @@ RSpec.describe ChatControllers::MessagesController, type: :controller do
     end
 
     it 'saves message' do
-      auth_user_as(@chat.initiator)
+      auth_as(@chat.initiator)
 
       expect {
         post :create, params: {chat_id: @chat.id, message: {text: 'Test Message'}}
@@ -46,7 +46,7 @@ RSpec.describe ChatControllers::MessagesController, type: :controller do
     end
 
     it "add chat's users to unread_users association of the new message" do
-      auth_user_as(@chat.initiator)
+      auth_as(@chat.initiator)
       post :create, params: {chat_id: @chat.id, message: {text: 'Test Message'}}
 
       expect(response).to have_http_status(:success)

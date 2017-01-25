@@ -5,8 +5,7 @@ RSpec.describe ApiController, type: :controller do
   describe 'POST #unread_messages_count' do
     it 'returns count of unread messages equals 0 if no unread messages' do
       user = create(:user)
-      session[:user_id] = user.id
-
+      auth_as(user)
       post :unread_messages_count
       expect(response.status).to eq(200)
       expect(response.content_type).to eq 'application/json'
@@ -19,7 +18,7 @@ RSpec.describe ApiController, type: :controller do
       user = chat.initiator
       message = create(:message, chat: chat, user: user)
 
-      auth_user_as(user)
+      auth_as(user)
 
       user.unread_messages << [message]
       expect(user.unread_messages.count).to eq (1)
@@ -47,7 +46,8 @@ RSpec.describe ApiController, type: :controller do
       message = create_and_set_unread_message
       expect(message.user.unread_messages).to match_array([message])
 
-      session[:user_id] = message.user.id
+      auth_as(message.user)
+
       post :mark_all_messages_as_read, params: {chat_id: message.chat.id}
       expect(message.user.unread_messages.count).to eq(0)
       expect(response.status).to eq(200)
@@ -74,7 +74,8 @@ RSpec.describe ApiController, type: :controller do
       expect(recipient.unread_messages.count).to eq(5)
       expect(initiator.unread_messages.count).to eq(5)
 
-      session[:user_id] = recipient.id
+      auth_as(recipient)
+
       post :mark_all_messages_as_read, params: {chat_id: chat.id}
 
       expect(Message.all.count).to eq(10)

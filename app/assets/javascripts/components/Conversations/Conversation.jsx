@@ -7,15 +7,20 @@ class Conversation extends React.Component {
         this.getMessages = this.getMessages.bind(this);
         this.belongsToCurrentUser = this.belongsToCurrentUser.bind(this);
         this.leave = this.leave.bind(this);
+        this.toggleEditor = this.toggleEditor.bind(this);
+        this.addParticipant = this.addParticipant.bind(this);
+        this.kick = this.kick.bind(this);
 
         this.state = {
+            participants: this.props.dialog.users,
             messages: (this.props.dialog.last_message) ? [this.props.dialog.last_message] : [],
             notification: {message: null, status: null, show: false},
             next_page: 1,
             total_pages: 1,
             loaded_once: false,
             loading_cog: false,
-            unread_messages_block_show: false
+            unread_messages_block_show: false,
+            conversationParticipantsEditorStatus: false
         }
     }
 
@@ -51,7 +56,7 @@ class Conversation extends React.Component {
     }
 
     setUsersList() {
-        let users = this.props.dialog.users.filter((user) => {
+        let users = this.state.participants.filter((user) => {
             return user.id != this.props.current_user.id
         });
 
@@ -156,6 +161,30 @@ class Conversation extends React.Component {
 
     }
 
+    toggleEditor(e) {
+        e.preventDefault();
+        this.setState({conversationParticipantsEditorStatus: !this.state.conversationParticipantsEditorStatus})
+    }
+
+    addParticipant(user) {
+        let participants = this.state.participants.slice();
+        participants.push(user);
+        this.setState({participants: participants});
+    }
+
+    kick(user) {
+        $.ajax({
+            url: `/chats/${this.props.dialog.id}/kick_participant`,
+            type: 'DELETE',
+            data: {user_id: user.id},
+            success: () => {
+                let participants = this.state.participants.slice();
+                participants = participants.filter((participant) => participant.id != user.id);
+                this.setState({participants: participants});
+            }
+        });
+    }
+
     render() {
         let collapse = `collapse_${this.props.dialog.id}_dialog`;
         let heading = `heading_${this.props.dialog.id}_dialog`;
@@ -176,10 +205,16 @@ class Conversation extends React.Component {
         let services_for_author = (
           <div>
               <div className="dropdown-divider"></div>
-              <a className="dropdown-item" href="#">Add participant</a>
-              <a className="dropdown-item" href="#">Remove participant</a>
+              <a className="dropdown-item" href="#" onClick={this.toggleEditor}>
+                  Participants Editor
+              </a>
           </div>
         );
+
+        let conversationParticipantsEditor = <ConversationParticipantsEditor users={this.state.participants}
+                                                                             addParticipant={this.addParticipant}
+                                                                             conversation={this.props.dialog.id}
+                                                                             kick={this.kick}/>;
 
         return (
             <div className="card" style={{marginBottom: '5px'}}>
@@ -203,7 +238,7 @@ class Conversation extends React.Component {
                                             <button id="btnGroupDrop1" type="button"
                                                     className="btn btn-outline-primary dropdown-toggle"
                                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                <i className="fa fa-cogs" aria-hidden="true"></i>
+                                                <i className="fa fa-cogs" aria-hidden="true"/>
                                             </button>
                                             <div className="dropdown-menu" aria-labelledby="btnGroupDrop1">
                                                 <a className="dropdown-item" href="#"
@@ -237,8 +272,10 @@ class Conversation extends React.Component {
                         <ConvMessageNotification notification={this.state.notification}
                                                  hideNotification={this.hideNotification.bind(this)}/>
                         <SendMessageForm sendMessage={this.sendMessage.bind(this)}/>
+
                     </div>
                 </div>
+                {this.state.conversationParticipantsEditorStatus ? conversationParticipantsEditor : null}
             </div>
         )
     }

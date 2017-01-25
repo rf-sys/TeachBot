@@ -6,4 +6,8 @@ module ChatsHelper
   def user_related_to_chat(chat, user)
     chat.users.include?(user)
   end
+
+  def user_is_initiator(user, chat)
+    chat.initiator_id == user.id
+  end
 end

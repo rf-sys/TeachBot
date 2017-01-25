@@ -25,21 +25,25 @@ RSpec.describe CoursesController, :type => :controller do
     it 'denies access for foreign user' do
       foreign_user = create(:second_user)
       foreign_user.add_role(:teacher)
-      session[:user_id] = foreign_user.id
+
+      auth_as(foreign_user)
+
       patch :update_poster, params: {id: @course.id}
       expect(response.status).to eq(403)
       expect(response.body).to match(/Access denied/)
     end
 
     it 'returns error if file is not presented' do
-      session[:user_id] = @course.author.id
+      auth_as(@course.author)
+
       patch :update_poster, params: {id: @course.id}
       expect(response.status).to eq(422)
       expect(response.body).to match(/File not found/)
     end
 
     it 'returns error if file is invalid' do
-      session[:user_id] = @course.author.id
+      auth_as(@course.author)
+
       file = fixture_file_upload(Rails.root.join('spec', 'fixtures', 'files', 'file.txt'), 'image/png')
       patch :update_poster, params: {id: @course.id, course: {poster: file}}
       expect(response.status).to eq(422)
@@ -47,7 +51,8 @@ RSpec.describe CoursesController, :type => :controller do
     end
 
     it 'returns success if file is valid' do
-      session[:user_id] = @course.author.id
+      auth_as(@course.author)
+
       file = fixture_file_upload(Rails.root.join('spec', 'fixtures', 'files', 'valid_poster.jpg'), 'image/png')
       patch :update_poster, params: {id: @course.id, course: {poster: file}}
       expect(response.status).to eq(200)

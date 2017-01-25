@@ -60,6 +60,8 @@ Rails.application.routes.draw do
     resources :messages, only: [:create], controller: 'chat_controllers/messages'
     member do
       delete 'leave'
+      post 'add_participant'
+      delete 'kick_participant'
     end
   end
 

@@ -7,7 +7,7 @@ RSpec.describe LessonsController, :type => :controller do
       lesson = create(:lesson, course: course)
 
       foreign_user = create(:second_user)
-      session[:user_id] = foreign_user.id
+      auth_as(foreign_user)
 
       get :show, params: {course_id: lesson.course.id, id: lesson.id}
       expect(response.status).to eq(302)
@@ -40,14 +40,14 @@ RSpec.describe LessonsController, :type => :controller do
 
     it 'do redirect if current user is not an author of the course' do
       foreign_user = create(:second_user)
-      session[:user_id] = foreign_user.id
+      auth_as(foreign_user)
 
       post :create, params: @params
       expect(response).to have_http_status(302)
     end
 
     it 'returns validation errors' do
-      session[:user_id] = @course.author.id
+      auth_as(@course.author)
       post :create, params: {course_id: @course.id, lesson: {title: '', description: ''}}
 
       expect(response.body).to match(/Title can't be blank/)
@@ -55,7 +55,7 @@ RSpec.describe LessonsController, :type => :controller do
     end
 
     it 'creates lesson' do
-      session[:user_id] = @course.author.id
+      auth_as(@course.author)
 
       expect {
         post :create, params: @params

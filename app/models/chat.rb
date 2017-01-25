@@ -20,6 +20,16 @@ class Chat < ApplicationRecord
     self.users << [self.initiator, self.recipient]
   end
 
+  def add_participant(user)
+    self.users << user
+    self.touch
+  end
+
+  def kick_participant(user)
+    self.users.delete(user)
+    self.touch
+  end
+
   class << self
     def find_or_initialize_between(initiator, recipient)
       chat = self.between_users(initiator, recipient).first

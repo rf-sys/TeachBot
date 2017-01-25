@@ -82,7 +82,7 @@ class CoursesController < ApplicationController
       return error_message(['File not found'], 422)
     end
 
-    file = FileHelper::Uploader::ImageUploader.new(course, 'courses_posters', params[:course][:poster], {max_size: 1024})
+    file = ImageUploader.new(course, 'courses_posters', params[:course][:poster], {max_size: 1024})
 
     if file.valid?
       file.save
