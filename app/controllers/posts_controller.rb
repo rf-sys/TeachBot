@@ -2,11 +2,11 @@ class PostsController < ApplicationController
   before_action :require_user
 
   def create
-    @post = @current_user.posts.build(post_params)
-    if @post.save
-      render :json => {data: @post}, status: :ok
+    post = current_user.posts.build(post_params)
+    if post.save
+      render :json => {data: post}, status: :ok
     else
-      render :json => {errors: @post.errors.full_messages}, status: :unprocessable_entity
+      error_message(post.errors.full_messages, 422)
     end
   end
 
@@ -14,7 +14,7 @@ class PostsController < ApplicationController
     post = Post.find(params[:id])
 
     unless author_of_the_post(post)
-      return render :json => {errors: 'Access denied'}, status: :forbidden
+      return deny_access_message
     end
 
     post.destroy

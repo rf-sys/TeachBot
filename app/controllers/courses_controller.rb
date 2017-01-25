@@ -1,9 +1,9 @@
 class CoursesController < ApplicationController
-  include FileHelper::Uploader, Services::UseCases::Course::CreateCourseService
+  include FileHelper::Uploader, Services::UseCases::Course::UpdatePosterService
 
   before_action :require_user, except: [:index, :show, :rss_feed]
-
   before_action :require_teacher, except: [:index, :show, :rss_feed]
+  before_action :set_course, except: [:index, :show, :new, :create, :rss_feed]
 
   def index
     @courses = Course.where_public.where_published.order(updated_at: :desc).page(params[:page]).per(6)
@@ -33,7 +33,6 @@ class CoursesController < ApplicationController
 
   def create
     course = current_user.courses.new(course_params)
-
     if course.save
       flash[:super_success_notice] = 'Course has been created successfully'
       redirect_to course
@@ -43,23 +42,20 @@ class CoursesController < ApplicationController
   end
 
   def edit
-    @course = Course.find(params[:id])
     unless it_is_current_user(@course.author)
       error_message(['Access denied'], 403)
     end
   end
 
   def update
-    course = Course.find(params[:id])
-
-    unless it_is_current_user(course.author)
+    unless it_is_current_user(@course.author)
       return error_message(['Access denied'], 403)
     end
 
-    if course.update(course_params)
-      redirect_to course
+    if @course.update(course_params)
+      redirect_to @course
     else
-      error_message(course.errors.full_messages, 422)
+      error_message(@course.errors.full_messages, 422)
     end
   end
 
@@ -72,9 +68,7 @@ class CoursesController < ApplicationController
 
   # update poster of the course
   def update_poster
-    course = Course.find(params[:id])
-
-    unless it_is_current_user(course.author)
+    unless it_is_current_user(@course.author)
       return error_message(['Access denied'], 403)
     end
 
@@ -82,21 +76,13 @@ class CoursesController < ApplicationController
       return error_message(['File not found'], 422)
     end
 
-    file = ImageUploader.new(course, 'courses_posters', params[:course][:poster], {max_size: 1024})
+    update_poster_service = UpdatePoster.new(Repositories::CourseRepository, self)
 
-    if file.valid?
-      file.save
-      path = file.path + '?updated=' + Time.now.to_i.to_s
-      course.update_attribute('poster', path)
-      render :json => {:message => 'Poster has been created successfully', :url => path}, status: :ok
-    else
-      error_message([file.error], 422)
-    end
+    update_poster_service.update(@course, params[:course][:poster])
   end
 
   # toggle "publish" status of the course
   def toggle_publish
-    @course = Course.find(params[:id])
     unless it_is_current_user(@course.author)
       return error_message(['Access denied'], 403)
     end
@@ -107,6 +93,10 @@ class CoursesController < ApplicationController
   end
 
   private
+
+  def set_course
+    @course = Course.find(params[:id])
+  end
 
   def course_params
     params.require(:course).permit(:title, :description, :public, :poster, :theme)
