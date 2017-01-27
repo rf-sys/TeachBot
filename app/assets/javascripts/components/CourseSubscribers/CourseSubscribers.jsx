@@ -10,7 +10,7 @@ class CourseSubscribers extends React.Component {
     }
 
     loadSubscribers() {
-        let ajax = $.post('/api/subscribers', {id: this.props.course});
+        let ajax = $.get(`/courses/${this.props.course}/subscribers`);
         ajax.done(({subscribers}) => {
             this.setState({subscribers: subscribers})
         }).fail((response) => {

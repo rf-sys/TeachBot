@@ -1,1 +1,0 @@
-json.subscribers @course.subscribers.select(:id, :username, :avatar)

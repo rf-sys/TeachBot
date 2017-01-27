@@ -11,7 +11,7 @@ class Conversations extends React.Component {
     componentDidMount() {
         this.ChatGeneratorFromInitiator();
         this.ChatGeneratorFromActionCable();
-        let ajax = $.post('/api/conversations');
+        let ajax = $.get('/chats.json');
         ajax.done((resp) => {
             this.setState({dialogs: resp});
         });

@@ -1,7 +1,20 @@
 class ChatControllers::MessagesController < ApplicationController
   include MessagesHelper, MessageStrategies::MessageCreateStrategy,
           MessageStrategies::MessageCreateStrategy::MessageMakers
+
+  include ChatsHelper
+
   before_action :require_user
+
+  # get messages, related to specific Chat with pagination
+  # @return [Object]
+  def index
+    chat = get_from_cache(Chat, params[:chat_id])
+    unless user_related_to_chat(chat, current_user)
+      error_message(['Forbidden'], 403)
+    end
+    @messages = chat.messages.includes(:unread_users).reverse_order.page(params[:page]).per(2)
+  end
 
   def create
 

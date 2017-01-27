@@ -4,7 +4,6 @@ class User < ApplicationRecord
   require 'sendgrid-ruby'
   include SendGrid
   include BCrypt
-
   # to get 'authenticate method' and 'password='.
   # 'password=' generates password_digest
   include ActiveModel::SecurePassword::InstanceMethodsOnActivation
@@ -42,7 +41,7 @@ class User < ApplicationRecord
   validates :password, length: (6..32), confirmation: true, if: :setting_password?
 
   before_save :downcase_email
- # before_create :create_activation_digest
+  before_create :create_activation_digest
 
   before_destroy :delete_avatar
   after_create :generate_profile, :assign_default_role
@@ -79,7 +78,6 @@ class User < ApplicationRecord
     update_attribute(:remember_digest, nil)
   end
 
-
   # Activates an account.
   def activate
     update_columns(activated: true, activated_at: Time.zone.now)
@@ -97,12 +95,21 @@ class User < ApplicationRecord
     send_activation_email
   end
 
-
-
   def attach_notification(notification)
     self.notifications << notification
   end
 
+  class << self
+    def find_or_create_from_auth_hash(auth_hash)
+      User.where(provider: auth_hash[:provider], uid: auth_hash[:uid]).first_or_create! do |user|
+        user.username = auth_hash[:info][:name]
+        user.email = auth_hash[:info][:email]
+        user.avatar = auth_hash[:info][:image]
+        user.activated = true
+      end
+    end
+
+  end
 
   private
 

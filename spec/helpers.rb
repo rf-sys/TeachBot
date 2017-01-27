@@ -7,3 +7,40 @@ end
 def set_json_request
     request.env['HTTP_ACCEPT'] = 'application/json'
 end
+
+def omniauth_facebook_mock_user
+  OmniAuth.config.mock_auth[:facebook] = OmniAuth::AuthHash.new(
+      {
+          provider: 'facebook',
+          uid: '1235456',
+          info: {
+              name: 'mockuser_facebook',
+              email: 'mockuser@gmail.com',
+              image: 'mock_user_thumbnail_url'
+          },
+          credentials: {
+              token: 'mock_token',
+              secret: 'mock_secret'
+          }
+      }
+  )
+end
+
+
+def omniauth_github_mock_user
+  OmniAuth.config.mock_auth[:github] = OmniAuth::AuthHash.new(
+      {
+          provider: 'github',
+          uid: '1235456',
+          info: {
+              name: 'mockuser_github',
+              email: 'mockuser@gmail.com',
+              image: 'mock_user_thumbnail_url'
+          },
+          credentials: {
+              token: 'mock_token',
+              secret: 'mock_secret'
+          }
+      }
+  )
+end

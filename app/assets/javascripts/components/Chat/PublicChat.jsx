@@ -20,7 +20,7 @@ class PublicChat extends React.Component {
     }
 
     getMessages() {
-        let ajax = $.post(`/api/conversations/${this.props.public_chat}/messages?page=${this.state.next_page}`);
+        let ajax = $.get(`/chats/${this.props.public_chat}/messages?page=${this.state.next_page}`);
         ajax.done((resp) => {
             if (resp.page == 1)
                 this.setState({messages: resp.messages.reverse()});

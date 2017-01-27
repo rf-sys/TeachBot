@@ -44,7 +44,7 @@ class Notifications extends React.Component {
     }
 
     setNotificationsCount() {
-        let ajax = $.post('/api/notifications/count');
+        let ajax = $.post('/notifications/count');
 
         ajax.done((r) => {
             sessionStorage.setItem('notifications:count', r.count);
@@ -62,7 +62,7 @@ class Notifications extends React.Component {
 
     loadNotifications() {
         this.setState({loading: true});
-        let ajax = $.post('/api/notifications');
+        let ajax = $.get('/notifications');
         ajax.done((r) => {
             this.setState({notifications: r.notifications});
         });

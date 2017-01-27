@@ -13,7 +13,7 @@ class Message extends React.Component {
     };
 
     markMessageAsRead() {
-        let ajax = $.post(`/api/messages/read`, {id: this.props.message.id});
+        let ajax = $.post(`/messages/${this.props.message.id}/read`);
 
         ajax.done((resp) => {
             this.setState({read: true});

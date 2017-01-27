@@ -9,6 +9,12 @@ class ChatsController < ApplicationController
   end
 
   def index
+    respond_to do |format|
+      format.any(:js, :json) do
+        @chats = current_user.chats.distinct
+      end
+      format.html {}
+    end
   end
 
   # DELETE - leave from chat

@@ -26,7 +26,6 @@ class MessagesController < ApplicationController
       @chat.create_and_add_participants
       save_and_send_message(@chat, @message) do
         send_new_chat_notification(@chat)
-        broadcast_new_unread_message(@chat.users, current_user)
       end
     else
       save_and_send_message(@chat, @message) do
@@ -34,6 +33,40 @@ class MessagesController < ApplicationController
       end
     end
 
+  end
+
+  def mark_as_read
+    message = get_from_cache(Message, params[:id])
+    chat_id = message.chat_id
+    message_id = message.id
+    if current_user.unread_messages.delete(message)
+      UnreadMessagesChannel.remove_message(current_user, chat_id, message_id)
+      render :json => {status: 'done'}, status: 200
+    else
+      render :json => 'Something went wrong', status: 422
+    end
+  end
+
+  def mark_all_as_read
+    messages = current_user.unread_messages.where(chat_id: params[:chat_id])
+    if current_user.unread_messages.delete(messages)
+      render :json => {status: 'done'}, status: 200
+    else
+      render :json => 'Something went wrong', status: 422
+    end
+  end
+
+  # return all user's unread messages
+  # @return [Array]
+  def unread_messages
+    @messages = current_user.unread_messages.includes(:user).where(:messages => {chat_id: params[:chat_id]})
+  end
+
+  # retrun user's unread messages count
+  # @return [Object]
+  def unread_messages_count
+    count = current_user.unread_messages.count
+    render :json => {count: count}
   end
 
   private
@@ -75,6 +108,7 @@ class MessagesController < ApplicationController
     chat.messages << message
     message.unread_users << [chat.users]
     ChatChannel.send_message(chat.id, message)
+    broadcast_new_unread_message(chat.users, current_user)
     if block_given?
       yield
     end

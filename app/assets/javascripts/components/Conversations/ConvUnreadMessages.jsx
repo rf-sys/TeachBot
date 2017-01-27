@@ -20,7 +20,7 @@ class ConvUnreadMessages extends React.Component {
         $(this.dropdown).toggleClass('show');
 
         if (!this.state.loaded_once) {
-            let ajax = $.post('/api/messages/unread/all', {chat_id: this.props.dialog.id});
+            let ajax = $.post('/messages/unread', {chat_id: this.props.dialog.id});
             ajax.done(
                 /** @param {{ messages: array }} response - a collection of unread messages */
                 (response) => {
@@ -53,7 +53,7 @@ class ConvUnreadMessages extends React.Component {
      */
     markAllAsRead(e) {
         e.preventDefault();
-        let ajax = $.post('/api/messages/read/all', {chat_id: this.props.dialog.id});
+        let ajax = $.post('/messages/read/all', {chat_id: this.props.dialog.id});
 
         ajax.done(
             /** @param {{ status: String }} response */

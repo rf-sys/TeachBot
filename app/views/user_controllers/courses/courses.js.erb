@@ -1,0 +1,10 @@
+$("#courses_paginate_list").append("<%= escape_javascript(render(partial: 'course', collection: @courses)) %>");
+
+// Update pagination link
+<% if @courses.last_page? %>
+$('#pagination_link').html('');
+<% else %>
+$('#pagination_link')
+    .html("<%=j link_to_next_page(@courses, 'More courses', remote: true, class: 'btn btn-block btn-outline-primary',
+                                    params: {action: 'courses'}) %>");
+<% end %>

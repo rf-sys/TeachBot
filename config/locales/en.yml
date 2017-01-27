@@ -26,5 +26,4 @@ en:
         messages:
           need_activate_account: Please check %{email} to activate your account. Email must come during several minutes
           not_found: User with provided credentials not found
-          facebook_login_not_allowed: You can access Facebook account only with facebook login button
           account_not_activated: Account not activated. Check your email and confirm it

@@ -86,10 +86,21 @@ class CoursesController < ApplicationController
     unless it_is_current_user(@course.author)
       return error_message(['Access denied'], 403)
     end
-
     @course.published = !@course.published
-
     @course.save
+  end
+
+  # get user's subscriptions, devided by pagination
+  def subscriptions
+    user = get_from_cache(User, params[:user_id])
+    subscriptions = user.subscriptions.page(params[:page]).per(2)
+    render :partial => 'courses/pagination', locals: {subscriptions: subscriptions}
+  end
+
+  # return courses, created by specific user and divided by pagination
+  def courses
+    @user = get_from_cache(User, params[:user_id])
+    @courses = @user.courses.page(params[:page]).per(2)
   end
 
   private

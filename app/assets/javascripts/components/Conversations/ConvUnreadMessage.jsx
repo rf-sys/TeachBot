@@ -4,9 +4,8 @@ class ConvUnreadMessage extends React.Component {
     }
 
     markMessageAsRead() {
-        $.post(`/api/messages/read`, {id: this.props.message.id});
+        $.post(`/messages/${this.props.message.id}/read`);
     }
-
 
     render() {
         return (

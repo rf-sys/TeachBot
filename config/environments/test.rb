@@ -47,4 +47,6 @@ Rails.application.configure do
   config.development_host = 'http://localhost:3000/'
 
   config.middleware.use RackSessionAccess::Middleware
+
+  OmniAuth.config.test_mode = true
 end

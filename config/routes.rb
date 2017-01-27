@@ -34,15 +34,18 @@ Rails.application.routes.draw do
   resources :account_activations, except: [:destroy, :show, :update]
 
   resources :users do
-    resources :courses, only: [:index], controller: 'user_controllers/courses'
+    resources :courses, only: [:index], controller: 'user_controllers/courses' do
+      collection do
+        get 'subscriptions'
+        get 'all', action: 'courses'
+      end
+    end
     resources :posts, only: [:index], controller: 'user_controllers/posts'
   end
 
   resources :courses do
     resources :lessons, except: [:index]
-    resources :subscribers, only: [:create, :destroy]
-
-  #  resource :poster, only: [:update], controller: 'posters'
+    resources :subscribers, only: [:index, :create, :destroy]
 
     member do
       patch 'poster', action: 'update_poster'
@@ -54,10 +57,19 @@ Rails.application.routes.draw do
 
   resources :posts, only: [:create, :destroy]
 
-  resources :messages, only: [:create]
+  resources :messages, only: [:create] do
+    member do
+      post 'read', action: 'mark_as_read'
+    end
+    collection do
+      post 'read/all', action: 'mark_all_as_read'
+      post 'unread', action: 'unread_messages'
+      post 'unread/count', action: 'unread_messages_count'
+    end
+  end
 
   resources :chats do
-    resources :messages, only: [:create], controller: 'chat_controllers/messages'
+    resources :messages, only: [:index, :create], controller: 'chat_controllers/messages'
     member do
       delete 'leave'
       post 'add_participant'
@@ -65,23 +77,26 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :notifications, only: [:destroy]
+  resources :notifications, only: [:index, :destroy] do
+    collection do
+      post 'count'
+    end
+  end
 
-  get 'oauth/facebook', to: 'api#facebook_oauth'
+  #get 'oauth/facebook', to: 'api#facebook_oauth'
+
+  namespace :auth do
+    get 'facebook', action: 'facebook'
+    get 'facebook/callback', action: 'auth_callback'
+
+    get 'github', action: 'github'
+    get 'github/callback', action: 'auth_callback'
+  end
 
   namespace :api do
-    get 'subscriptions', action: 'subscriptions_pagination'
-    get 'users_course_paginates', action: 'user_courses_pagination'
+   # get 'subscriptions', action: 'subscriptions_pagination'
+   # get 'users_course_paginates', action: 'user_courses_pagination'
     get 'find/user/username', action: 'find_user_by_username'
-    post 'subscribers', action: 'subscribers'
-    post 'conversations', action: 'conversations'
-    post 'conversations/:id/messages', action: 'conversation_messages'
-    post 'notifications/count', action: 'unread_notifications_count'
-    post 'notifications', action: 'notifications'
-    post 'messages/read', action: 'mark_message_as_read'
-    post 'messages/unread/count', action: 'unread_messages_count'
-    post 'messages/unread/all', action: 'unread_messages'
-    post 'messages/read/all', action: 'mark_all_messages_as_read'
   end
 
   mount ActionCable.server => '/cable'

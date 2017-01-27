@@ -25,9 +25,8 @@ class SessionsController < ApplicationController
   private
 
   def set_user
-    @user = User.find_by(email: params[:session][:email].downcase)
-    return error_message([user_not_found], 404) unless @user.present?
-    error_message([facebook_login_not_allowed], 403) if @user.facebook_id
+    @user = User.find_by(email: params[:session][:email].downcase, uid: nil)
+    error_message([user_not_found], 404) unless @user.present?
   end
 
   def session_locker
@@ -36,10 +35,6 @@ class SessionsController < ApplicationController
 
   def user_not_found
     I18n.t 'custom.models.user.messages.not_found'
-  end
-
-  def facebook_login_not_allowed
-    I18n.t 'custom.models.user.messages.facebook_login_not_allowed'
   end
 
   def account_not_activated

@@ -1,4 +1,0 @@
-# Facebook API and related logic
-$(document).bind 'initFacebook', ->
-  $('#facebook_login_btn').click ->
-    window.location = "https://www.facebook.com/v2.8/dialog/oauth?client_id=<%= Rails.application.config.api_keys[:facebook_api_key] %>&redirect_uri=<%= Rails.application.config.development_host %>oauth/facebook"

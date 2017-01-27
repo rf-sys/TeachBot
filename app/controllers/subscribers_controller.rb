@@ -1,5 +1,12 @@
 class SubscribersController < ApplicationController
-  before_action :require_user, :require_teacher
+  before_action :require_user, :require_teacher, except: [:index]
+
+  # return subscribers of the course
+  # @return [Array]
+  def index
+    @course = Course.find(params[:course_id])
+    render json: { subscribers: @course.subscribers.select(:id, :username, :avatar) }
+  end
 
   def create
     course = Course.find(params[:course_id])
@@ -40,5 +47,4 @@ class SubscribersController < ApplicationController
     render :json => {user: user.attributes.slice('id', 'username', 'avatar'), status: 'Done'}
 
   end
-
 end

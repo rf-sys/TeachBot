@@ -97,4 +97,7 @@ gem 'rolify'
 
 gem 'animate_css_on_rails'
 
+gem 'omniauth-facebook'
+gem 'omniauth-github'
+
 ruby '2.3.3'

@@ -96,7 +96,7 @@ class Conversation extends React.Component {
     getMessages() {
         this.setState({loading_cog: true});
 
-        let ajax = $.post(`/api/conversations/${this.props.dialog.id}/messages?page=${this.state.next_page}`);
+        let ajax = $.get(`/chats/${this.props.dialog.id}/messages?page=${this.state.next_page}`);
         ajax.done((resp) => {
             if (resp.page == 1)
                 this.setState({messages: resp.messages.reverse()});

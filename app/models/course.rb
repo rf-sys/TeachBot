@@ -8,7 +8,7 @@ class Course < ApplicationRecord
 
   scope :where_published, -> { where(:published => true) }
 
-  scope :courses_with_paginate, -> { page(1).per(2) }
+  scope :courses_with_paginate, -> (page = 1) { page(page).per(2) }
 
   after_create :add_author_as_participant
 

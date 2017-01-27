@@ -18,7 +18,7 @@ module Services
               @course_repository.update_poster_attribute(course, path)
               @listener.render :json => {:message => 'Poster has been created successfully', :url => path}, status: :ok
             else
-              @listener.error_message([file.error], 422)
+              @listener.error_message([uploader.error], 422)
             end
           end
         end

@@ -14,9 +14,10 @@ module Firstapp
     config.react.addons = true
     config.active_job.queue_adapter = :resque
 
+    # 371444199855931
+
     config.api_keys = {
-        :google_api_key => 'AIzaSyAl3hIWaCvf2w4jFNa5lyRcfHggb7dcFvQ',
-        :facebook_api_key => '371444199855931'
+        :google_api_key => 'AIzaSyAl3hIWaCvf2w4jFNa5lyRcfHggb7dcFvQ'
     }
 
     # Settings in config/environments/* take precedence over those specified here.

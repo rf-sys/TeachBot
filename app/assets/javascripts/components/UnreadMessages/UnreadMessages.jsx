@@ -38,7 +38,7 @@ class UnreadMessages extends React.Component {
      * Get unread messages and change state
      */
     getUnreadMessagesCount() {
-        let ajax = $.post('/api/messages/unread/count');
+        let ajax = $.post('/messages/unread/count');
 
         ajax.done(
             /** @param {{ count: number }} response */

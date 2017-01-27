@@ -2,9 +2,25 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 .fb-btn {
-  background: #3B5998;
-  color: white
+  @extend .btn;
+  border-color: #3B5998;
+  color: #3B5998;
 }
+
 .fb-btn:hover {
-  background: #2a4273;
+  border-color: #2a4273;
+  background-color: #2a4273;
+  color: white;
+}
+
+.gh-btn {
+  @extend .btn;
+  border-color: #444444;
+  color: #444444;
+}
+
+.gh-btn:hover {
+  border-color:  #2B2B2B;
+  background-color:  #2B2B2B;
+  color: white;
 }
