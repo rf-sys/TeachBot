@@ -15,8 +15,8 @@ class ConversationFormNewParticipant extends React.Component {
         if (this.state.username.length) {
             this.setState({loading: true});
 
-            let ajax = $.get('/api/find/user/username', {username: this.state.username});
-            ajax.done(({users}) => {
+            let ajax = $.post('/api/v1/users/find_by_username', {username: this.state.username});
+            ajax.done((users) => {
                 this.setState({users: users})
             }).always(() => {
                 this.setState({loading: false});

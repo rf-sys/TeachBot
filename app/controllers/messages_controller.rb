@@ -47,6 +47,8 @@ class MessagesController < ApplicationController
     end
   end
 
+  # POST - mark all unread messages as read for current_user
+  # @return [Object]
   def mark_all_as_read
     messages = current_user.unread_messages.where(chat_id: params[:chat_id])
     if current_user.unread_messages.delete(messages)
@@ -56,13 +58,13 @@ class MessagesController < ApplicationController
     end
   end
 
-  # return all user's unread messages
+  # POST - return all user's unread messages
   # @return [Array]
   def unread_messages
     @messages = current_user.unread_messages.includes(:user).where(:messages => {chat_id: params[:chat_id]})
   end
 
-  # retrun user's unread messages count
+  # POST - return user's unread messages count
   # @return [Object]
   def unread_messages_count
     count = current_user.unread_messages.count

@@ -1,107 +1,25 @@
 require 'rails_helper'
 
 RSpec.describe ApiController, type: :controller do
-
-  describe 'POST #unread_messages_count' do
-    it 'returns count of unread messages equals 0 if no unread messages' do
+  describe 'POST #user_token' do
+    it 'generates jwt token' do
       user = create(:user)
-      auth_as(user)
-      post :unread_messages_count
-      expect(response.status).to eq(200)
-      expect(response.content_type).to eq 'application/json'
-      expect(response.body).to match({count: 0}.to_json)
+      post :user_token, params: { email: user.email, password: user.password }
+      expect(response).to have_http_status(200)
+      expect(response.body).to match(/token/)
     end
 
-
-    it 'returns count, equals unread messages' do
-      chat = create(:chat)
-      user = chat.initiator
-      message = create(:message, chat: chat, user: user)
-
-      auth_as(user)
-
-      user.unread_messages << [message]
-      expect(user.unread_messages.count).to eq (1)
-      unread_messages_request(1)
-
-      user.unread_messages << [message]
-      expect(user.unread_messages.count).to eq (2)
-      unread_messages_request(2)
+    it 'returns 404 (not found) error if user not found' do
+      user = create(:user)
+      post :user_token, params: { email: 'invalid', password: user.password }
+      expect(response).to have_http_status(404)
     end
 
-    it 'denies access for guests' do
-      post :unread_messages_count
-      expect(response.status).to eq(302)
+    it 'returns 403 (forbidden) if failed authentication' do
+      user = create(:user)
+      post :user_token, params: { email: user.email, password: 'invalid' }
+      expect(response).to have_http_status(403)
     end
-  end
-
-
-  describe 'POST #mark_all_messages_as_read' do
-    it 'denies access for guests' do
-      post :mark_all_messages_as_read
-      expect(response.status).to eq(302)
-    end
-
-    it 'deletes unread_messages from DB' do
-      message = create_and_set_unread_message
-      expect(message.user.unread_messages).to match_array([message])
-
-      auth_as(message.user)
-
-      post :mark_all_messages_as_read, params: {chat_id: message.chat.id}
-      expect(message.user.unread_messages.count).to eq(0)
-      expect(response.status).to eq(200)
-    end
-
-    it 'deletes unread messages of particular user' do
-      chat = create(:chat)
-      initiator = chat.initiator
-      recipient = chat.recipient
-
-      # send messages from initiator to recipient
-      5.times do |i|
-        message = create(:message, chat: chat, user: initiator, text: 'TestMessage1_' + i.to_s)
-        recipient.unread_messages << message
-      end
-
-      # send messages from recipient to initiator
-      5.times do |i|
-        message = create(:message, chat: chat, user: recipient, text: 'TestMessage2_' + i.to_s)
-        initiator.unread_messages << message
-      end
-
-      expect(Message.all.count).to eq(10)
-      expect(recipient.unread_messages.count).to eq(5)
-      expect(initiator.unread_messages.count).to eq(5)
-
-      auth_as(recipient)
-
-      post :mark_all_messages_as_read, params: {chat_id: chat.id}
-
-      expect(Message.all.count).to eq(10)
-      expect(recipient.unread_messages.count).to eq(0)
-      expect(initiator.unread_messages.count).to eq(5)
-
-      expect(response.status).to eq(200)
-
-    end
-  end
-
-
-  private
-
-  def unread_messages_request(count)
-    post :unread_messages_count
-    expect(response.status).to eq(200)
-    expect(response.content_type).to eq 'application/json'
-
-    expect(response.body).to match({count: count}.to_json)
-  end
-
-  def create_and_set_unread_message
-    message = create(:message_with_associations)
-    message.user.unread_messages << message
-    message
   end
 end
 

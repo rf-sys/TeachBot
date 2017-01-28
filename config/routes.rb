@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  post 'user_token' => 'user_token#create'
   get 'courses/index'
 
   get 'cources/index'
@@ -83,23 +84,21 @@ Rails.application.routes.draw do
     end
   end
 
-  #get 'oauth/facebook', to: 'api#facebook_oauth'
-
   namespace :auth do
     get 'facebook', action: 'facebook'
     get 'facebook/callback', action: 'auth_callback'
-
     get 'github', action: 'github'
     get 'github/callback', action: 'auth_callback'
   end
 
   namespace :api do
-   # get 'subscriptions', action: 'subscriptions_pagination'
-   # get 'users_course_paginates', action: 'user_courses_pagination'
-    get 'find/user/username', action: 'find_user_by_username'
+    post 'user_token'
+    namespace :v1 do
+      namespace :users do
+        post 'find_by_username'
+      end
+    end
   end
 
   mount ActionCable.server => '/cable'
-
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end

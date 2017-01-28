@@ -14,10 +14,9 @@ RSpec.describe NotificationsController, type: :controller do
       expect(response.body).to match(/Ok/)
     end
 
-    it 'returns 403 if user is not auth' do
+    it 'redirects if user is not auth' do
       delete_request
-      expect(response).to have_http_status(:forbidden)
-      expect(response.body).to match(/Forbidden/)
+      expect(response).to have_http_status(:redirect)
     end
 
     it 'returns 404 if notification not found' do

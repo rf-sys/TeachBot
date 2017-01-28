@@ -19,8 +19,8 @@ class ConvFindUsers extends React.Component {
             console.log('find');
             this.setState({loading: true});
 
-            let ajax = $.get('/api/find/user/username', {username: this.state.username});
-            ajax.done(({users}) => {
+            let ajax = $.post('/api/v1/users/find_by_username', {username: this.state.username});
+            ajax.done((users) => {
                 this.setState({users: users})
             }).always(() => {
                 this.setState({loading: false});

@@ -99,5 +99,6 @@ gem 'animate_css_on_rails'
 
 gem 'omniauth-facebook'
 gem 'omniauth-github'
+gem 'jwt'
 
 ruby '2.3.3'
