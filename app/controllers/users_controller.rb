@@ -1,5 +1,6 @@
 # CRUD for 'User' model
 class UsersController < ApplicationController
+  include Services::UseCases::User::UpdateUserService
   include UsersHelper
   before_action :require_guest, only: [:new, :create]
   before_action :require_user, :profile_owner, only: [:edit, :update, :destroy]
@@ -28,15 +29,9 @@ class UsersController < ApplicationController
   end
 
   def update
-    @user = User.find(params[:id])
-    form = UpdateForm.new(@user, update_params)
-    updating = Updating.new(form)
-
-    if form.valid? && updating.update
-      success_update
-    else
-      error_message(form.errors, 422)
-    end
+    user = User.find(params[:id])
+    update_user_service = UpdateUser.new(Repositories::UserRepository, self)
+    update_user_service.update(user, update_params)
   end
 
   def destroy
