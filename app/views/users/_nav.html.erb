@@ -9,9 +9,13 @@
 
 
       <% if it_is_current_user @user %>
-        <%= link_to 'My courses', user_courses_path(@user), class: 'dropdown-item' %>
+        <%= link_to user_courses_path(@user), class: 'dropdown-item' do %>
+          <i class="fa fa-book" aria-hidden="true"></i>	&ensp;My courses
+        <% end %>
         <% if @user.has_role?(:teacher) %>
-          <%= link_to 'Create course', new_course_path, class: 'dropdown-item' %>
+          <%= link_to new_course_path, class: 'dropdown-item' do %>
+            <i class="fa fa-file-o" aria-hidden="true"></i>	&ensp;Create course
+          <% end %>
         <% end %>
       <% else %>
         <%= link_to "User's courses", user_courses_path(@user), class: 'dropdown-item' %>

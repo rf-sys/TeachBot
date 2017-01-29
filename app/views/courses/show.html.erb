@@ -29,6 +29,15 @@
           <%= react_component('CourseSubscribers', {
               current_user: current_user.id, course: @course.id, author: @course.author_id
           }) %>
+
+          <% if it_is_current_user(@course.author) %>
+            <div class="list-group" style="margin-top: 15px">
+              <h3>Actions</h3>
+              <%= link_to edit_course_path(@course), class: 'list-group-item list-group-item-action' do %>
+                <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit course
+              <% end %>
+            </div>
+          <% end %>
         </div>
       </div>
     <% else %>

@@ -48,9 +48,10 @@ class ApplicationController < ActionController::Base
   end
 
   def it_is_current_user(user)
-    if (@current_user || current_user) && user
-      current_user.id == user.id
+    if current_user && user
+      return current_user.id == user.id
     end
+    false
   end
 
   def is_owner?(target, key = 'author_id')

@@ -1,19 +1,19 @@
 <%= content_for :head do %>
-    <style>
-      @keyframes type {
-        from {
-          width: 0
-        }
+  <style>
+    @keyframes type {
+      from {
+        width: 0
       }
+    }
 
-      .typing {
-        white-space: nowrap;
-        border-right: 2px solid;
-        overflow: hidden;
-        width: 8ch;
-        animation: type 1s steps(8), brand-blinker .5s step-end infinite alternate;
-      }
-    </style>
+    .typing {
+      white-space: nowrap;
+      border-right: 2px solid;
+      overflow: hidden;
+      width: 8ch;
+      animation: type 1s steps(8), brand-blinker .5s step-end infinite alternate;
+    }
+  </style>
 <% end %>
 
 <section class="jumbotron text-center">
@@ -29,18 +29,9 @@
   </div>
 </section>
 
-<div class="container">
-  <div class="row">
-    <div class="col">
-      <h1 style="text-align: center" class="display-4">Recent lessons</h1>
-    </div>
-
-    <div class="col">
-      <% @courses.in_groups_of(2, false) do |group| %>
-        <div class="row" style="margin-bottom: 10px">
-          <%= render partial: 'course', collection: group, cached: true %>
-        </div>
-      <% end %>
-    </div>
-  </div>
+<h1 class="display-4 text-center">Recent courses</h1>
+<hr>
+<div class="card-deck">
+  <%= render partial: 'courses/course', collection: @courses, cached: true, locals: {last_page: true} %>
 </div>
+<hr>
