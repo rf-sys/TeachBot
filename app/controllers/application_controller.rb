@@ -66,9 +66,10 @@ class ApplicationController < ActionController::Base
         flash[:danger_notice] = 'You need login to go there'
         return redirect_to root_path
       end
-      unless course.subscribers.find_by_id(current_user.id)
+      unless course.subscribers.find_by_id(current_user.id).present?
         return false
       end
+      true
     end
     true
   end

@@ -1,5 +1,5 @@
 class CoursesController < ApplicationController
-  include FileHelper::Uploader, Services::UseCases::Course::UpdatePosterService
+  include Services::UseCases::Course::UpdatePosterService
 
   before_action :require_user, except: [:index, :show, :rss_feed]
   before_action :require_teacher, except: [:index, :show, :rss_feed]
@@ -15,11 +15,11 @@ class CoursesController < ApplicationController
     end
 
     unless have_access_to_private_course(@course)
-      deny_access_message 'You dont have access to browse this course'
+      return deny_access_message 'You dont have access to browse this course'
     end
 
     unless unpublished_and_user_is_author(@course)
-      deny_access_message 'You dont have access to browse this course'
+      return deny_access_message 'Course has not been published yet'
     end
 
     @views = $redis_connection.get("courses/#{@course.id}/visitors") || 0

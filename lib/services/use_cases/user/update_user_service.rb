@@ -4,7 +4,7 @@ module Services
     module User
       module UpdateUserService
         class UpdateUser
-          include FileHelper::Uploader
+          require_dependency 'uploaders/avatar_uploader'
 
           # init adapters
           # @param [Repositories::UserRepository] user_repository
@@ -16,15 +16,15 @@ module Services
 
           # update user's data
           def update(user, params)
-            avatar = nil
+            uploader = nil
             if params[:avatar]
-              avatar = ImageUploader.new(user, 'avatars', params[:avatar], {max_size: 500})
-              return @listener.error_message([avatar.error], 422) unless avatar.valid?
-              params[:avatar] = avatar.path + '?updated=' + Time.now.to_i.to_s
+              uploader = AvatarUploader.new(params[:avatar], user.id)
+              return @listener.error_message([uploader.error], 422) unless uploader.has_valid_file?
+              params[:avatar] = uploader.url
             end
 
             if @user_repository.update(user, params)
-              avatar.try(:save)
+              uploader.try(:store)
               @listener.success_update(user)
             else
               @listener.error_message([user.errors.full_messages], 422)
