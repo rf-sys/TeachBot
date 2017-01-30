@@ -15,7 +15,7 @@ class Chat < ApplicationRecord
   scope :with_users_and_messages, -> { includes(:users, messages: [:user]).distinct }
   scope :public_chat, -> { where(public_chat: true).take }
 
-  def create_and_add_participants
+  def save_and_add_participants
     self.save
     self.users << [self.initiator, self.recipient]
   end

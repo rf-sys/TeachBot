@@ -18,20 +18,15 @@ class MessagesController < ApplicationController
 
     @message = init_message(message_params, @chat)
 
-    unless @message.valid?
-      return error_message(@message.errors.full_messages, 422)
-    end
+    return error_message(@message.errors.full_messages, 422) unless @message.valid?
 
     if @chat.new_record?
-      @chat.create_and_add_participants
-
-      save_and_send_message(@chat, @message) do
-        send_new_chat_notification(@chat)
-      end
+      @chat.save_and_add_participants
+      save_and_send_message(@chat, @message)
+      send_new_chat_notification(@chat)
     else
-      save_and_send_message(@chat, @message) do
-        render json: {response: @message, type: :new_message}
-      end
+      save_and_send_message(@chat, @message)
+      render json: {response: @message, type: :new_message}
     end
 
   end
@@ -81,17 +76,13 @@ class MessagesController < ApplicationController
   # sends notification about new chat to recipient
   # @param [Chat] chat
   def send_new_chat_notification(chat)
-
     recipient = chat.recipient
-
     notification = Notification.generate(
         'New chat',
         'New chat from ' + current_user.username,
         '/chats#dialog=' + chat.id.to_s
     )
-
     recipient.attach_notification(notification)
-
     NotificationsChannel.broadcast_notification_to(recipient, notification)
   end
 
@@ -110,9 +101,6 @@ class MessagesController < ApplicationController
     message.save_with_unread_users(chat)
     ChatChannel.send_message(chat.id, message)
     broadcast_new_unread_message(chat.users, current_user)
-    if block_given?
-      yield
-    end
   end
 
 end

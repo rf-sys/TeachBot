@@ -142,7 +142,6 @@ class Conversation extends React.Component {
      * @return {boolean}
      */
     belongsToCurrentUser() {
-        console.log(this.props.dialog.initiator_id, this.props.current_user.id);
         return this.props.dialog.initiator_id == this.props.current_user.id
     }
 

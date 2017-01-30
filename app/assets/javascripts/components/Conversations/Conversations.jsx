@@ -34,7 +34,7 @@ class Conversations extends React.Component {
     ChatGeneratorFromInitiator() {
         $(document).unbind('chat:new_chat').on('chat:new_chat', function (event, chat) {
             console.log(chat);
-            App.chat.perform('new_chat', {chat: chat});
+            App.chat.perform('send_new_chat', {chat: chat});
             this.generateChat(chat);
 
             $('#modalNewMessage').modal('hide');

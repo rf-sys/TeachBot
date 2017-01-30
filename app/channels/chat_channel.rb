@@ -6,7 +6,7 @@ class ChatChannel < ApplicationCable::Channel
     @public_chat = Chat.public_chat
 
     stream_from 'Chat:' + @public_chat.id.to_s
-    stream_from "user_#{current_user.id}_new_chat"
+    stream_from "user_#{current_user.id}_chats"
 
     current_user.chats.uniq.each do |chat|
       stream_from "Chat:#{chat.id}"
@@ -31,19 +31,19 @@ class ChatChannel < ApplicationCable::Channel
     receive_members
   end
 
-  def new_chat(chat)
-    stream_from "Chat:#{chat['chat']['id']}"
+  def send_new_chat(data)
+    stream_from "Chat:#{data['chat']['id']}"
 
-    recipient = User.find(chat['chat']['recipient_id'])
+    recipient = User.find(data['chat']['recipient_id'])
 
     unless current_user.id == recipient.id
-      ActionCable.server.broadcast "user_#{recipient.id}_new_chat", chat: chat['chat'], type: 'new_chat'
+      ActionCable.server.broadcast "user_#{recipient.id}_chats", chat: data['chat'], type: 'new_chat'
     end
   end
 
   def subscribe_to_chat(data)
     if current_user
-      chat = Chat.find(data['chat_id'])
+      chat = get_from_cache(Chat, data['chat_id'])
       if chat && user_related_to_chat(chat, current_user)
         stream_from "Chat:#{data['chat_id']}"
       end
