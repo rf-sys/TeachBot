@@ -1,6 +1,7 @@
 # Be sure to restart your server when you modify this file. Action Cable runs in a loop that does not support auto reloading.
 class ChatChannel < ApplicationCable::Channel
-  include CustomHelper::Cache
+  include CustomHelper::Cache, ChatsHelper
+
   def subscribed
     @public_chat = Chat.public_chat
 
@@ -30,17 +31,23 @@ class ChatChannel < ApplicationCable::Channel
     receive_members
   end
 
-  def new_chat(data)
-    stream_from "Chat:#{data['chat_id']}"
+  def new_chat(chat)
+    stream_from "Chat:#{chat['chat']['id']}"
 
-    recipient = User.find(data['recipient'])
-    unless current_user == recipient
-      ActionCable.server.broadcast "user_#{recipient.id}_new_chat", chat: data['chat'], type: 'new_chat'
+    recipient = User.find(chat['chat']['recipient_id'])
+
+    unless current_user.id == recipient.id
+      ActionCable.server.broadcast "user_#{recipient.id}_new_chat", chat: chat['chat'], type: 'new_chat'
     end
   end
 
   def subscribe_to_chat(data)
-    stream_from "Chat:#{data['chat_id']}"
+    if current_user
+      chat = Chat.find(data['chat_id'])
+      if chat && user_related_to_chat(chat, current_user)
+        stream_from "Chat:#{data['chat_id']}"
+      end
+    end
   end
 
   class << self
@@ -49,7 +56,7 @@ class ChatChannel < ApplicationCable::Channel
     end
 
     def send_notification_to_chat(chat_id, text, type = 'chat_notification')
-      ActionCable.server.broadcast "Chat:#{chat_id}",  text: text,
+      ActionCable.server.broadcast "Chat:#{chat_id}", text: text,
                                    chat_id: chat_id, type: type
     end
   end

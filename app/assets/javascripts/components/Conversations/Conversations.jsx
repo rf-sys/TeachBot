@@ -33,7 +33,8 @@ class Conversations extends React.Component {
 
     ChatGeneratorFromInitiator() {
         $(document).unbind('chat:new_chat').on('chat:new_chat', function (event, chat) {
-            App.chat.perform('new_chat', {chat_id: chat.id, recipient: chat.recipient, chat: chat});
+            console.log(chat);
+            App.chat.perform('new_chat', {chat: chat});
             this.generateChat(chat);
 
             $('#modalNewMessage').modal('hide');
@@ -44,6 +45,7 @@ class Conversations extends React.Component {
 
     ChatGeneratorFromActionCable() {
         $(document).unbind('chat:new_chat:action_cable').on('chat:new_chat:action_cable', function (event, chat) {
+            console.log('ChatGeneratorFromActionCable');
             this.generateChat(chat);
         }.bind(this))
     }

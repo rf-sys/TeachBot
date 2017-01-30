@@ -9,4 +9,10 @@ class Message < ApplicationRecord
   def create_cache
     Rails.cache.write("#{self.class.name.demodulize.downcase}/#{self.id}/info", self)
   end
+
+  # @param [Chat] chat
+  def save_with_unread_users(chat)
+    chat.messages << self
+    self.unread_users << [chat.users]
+  end
 end

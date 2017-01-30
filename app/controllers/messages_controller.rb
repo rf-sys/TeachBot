@@ -24,6 +24,7 @@ class MessagesController < ApplicationController
 
     if @chat.new_record?
       @chat.create_and_add_participants
+
       save_and_send_message(@chat, @message) do
         send_new_chat_notification(@chat)
       end
@@ -92,7 +93,6 @@ class MessagesController < ApplicationController
     recipient.attach_notification(notification)
 
     NotificationsChannel.broadcast_notification_to(recipient, notification)
-
   end
 
   # generate message
@@ -107,8 +107,7 @@ class MessagesController < ApplicationController
   # @param [Chat] chat
   # @param [Message] message
   def save_and_send_message(chat, message)
-    chat.messages << message
-    message.unread_users << [chat.users]
+    message.save_with_unread_users(chat)
     ChatChannel.send_message(chat.id, message)
     broadcast_new_unread_message(chat.users, current_user)
     if block_given?
