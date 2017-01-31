@@ -4,7 +4,7 @@
 
 .notifications-block {
   width: 350px;
-  height: 400px;
+  max-height: 400px;
   overflow: auto;
   background: white;
   position: absolute;

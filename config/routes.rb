@@ -81,6 +81,7 @@ Rails.application.routes.draw do
   resources :notifications, only: [:index, :destroy] do
     collection do
       post 'count'
+      put 'mark_all_as_read'
     end
   end
 

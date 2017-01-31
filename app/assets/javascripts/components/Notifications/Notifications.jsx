@@ -1,7 +1,16 @@
 class Notifications extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {show: false, notifications: [], count: 0, loaded_once: false, loading: false};
+        this.state = {
+            show: false,
+            notifications: [],
+            current_page: 0,
+            last_page: true,
+            count: 0,
+            loaded_once: false,
+            loading: false,
+            loading_btn: false
+        };
 
         this.loadNotifications = this.loadNotifications.bind(this);
         this.getNotificationsCount = this.getNotificationsCount.bind(this);
@@ -15,9 +24,6 @@ class Notifications extends React.Component {
         $(document).unbind('notifications:receive').on('notifications:receive', (event, data) => {
             return this.addNotification(event, data)
         });
-        /*
-         $(document).unbind('notifications:count:clear').on('notification:count:clear', this.clearNotificationsCount());
-         */
     }
 
     addNotification(event, data) {
@@ -40,7 +46,24 @@ class Notifications extends React.Component {
     }
 
     clearNotificationsCount() {
-        this.setState({count: 0})
+        $.ajax({
+            type: 'PUT',
+            url: '/notifications/mark_all_as_read',
+            success: () => {
+                this.setState({count: 0});
+                sessionStorage.removeItem('notifications:count');
+            }
+        });
+    }
+
+    mark_all_as_read() {
+        let notifications = this.state.notifications.slice();
+
+        notifications.forEach((notification) => {
+            return notification.readed = true;
+        });
+
+        this.setState({notifications: notifications});
     }
 
     setNotificationsCount() {
@@ -58,74 +81,74 @@ class Notifications extends React.Component {
             this.loadNotifications();
 
         this.setState({show: !this.state.show, loaded_once: true});
+
+        if (!this.state.show && this.state.count > 0) this.clearNotificationsCount();
     }
 
     loadNotifications() {
-        this.setState({loading: true});
-        let ajax = $.get('/notifications');
+        if (this.state.current_page == 0) this.setState({loading: true});
+
+        if (this.state.current_page > 0) this.setState({loading_btn: true});
+
+        let page = this.state.current_page + 1;
+
+        let ajax = $.get('/notifications?page=' + page);
         ajax.done((r) => {
-            this.setState({notifications: r.notifications});
+            let notifications = r.notifications;
+
+            if (page > 1) {
+                notifications = this.state.notifications.slice();
+                r.notifications.forEach((notification) => {
+                    notifications.push(notification)
+                })
+            }
+
+            this.setState({notifications: notifications, current_page: r.current_page, last_page: r.last_page});
         });
 
-        ajax.always(() => this.setState({loading: false}));
-    }
-
-    deleteNotificationRequest(notification) {
-        let ajax = $.ajax({
-            url: '/notifications/' + notification.id,
-            type: 'DELETE'
-        });
-
-        ajax.done((r) => {
-            console.log(r);
-            return true
-        });
-
-        ajax.fail((r) => {
-           console.log(r);
-            return true
-        });
-
-        return true
-    };
-
-    deleteNotification(notification) {
-        if (this.deleteNotificationRequest(notification)) {
-            let notifications = this.state.notifications.filter((item) => {
-                return item.id != notification.id
-            });
-
-            sessionStorage.setItem('notifications:count', notifications.length);
-
-            this.setState({notifications: notifications, count: notifications.length});
-
-        }
+        ajax.always(() => this.setState({loading: false, loading_btn: false}));
     }
 
     render() {
         let loading_cog = (
-            <div className="text-xs-center">
+            <div className="text-center">
                 <i className="fa fa-spinner fa-pulse fa-3x fa-fw"/>
                 <span className="sr-only">Loading...</span>
             </div>
         );
 
-        let sorted_notification_items = _.orderBy(this.state.notifications, ['readed', 'created_at'], ['desc', 'desc']);
+        let loading_btn = (
+            <div>
+                <i className="fa fa-spinner fa-pulse fa-3x fa-fw" style={{fontSize: '14px'}}/>
+                <span className="sr-only">Loading...</span> Loading
+            </div>
+        );
+
+        let older_notifications_button = (
+            <button className="btn btn-outline-secondary btn-block"
+                    onClick={this.loadNotifications}>
+                {this.state.loading_btn ? loading_btn : 'Load more'}
+            </button>
+        );
+
+        let sorted_notification_items = _.orderBy(this.state.notifications,
+            ['created_at', 'readed'], ['desc', 'desc']);
+
         let notifications = (
-                <ReactCSSTransitionGroup transitionName={{enter: "zoomIn", leave: "zoomOut"}}
-                                         transitionEnterTimeout={1000} transitionLeaveTimeout={1000}>
-                {sorted_notification_items.map((n, i) => {
-                    return <NotificationItem notification={n} key={i}
-                                             deleteNotification={this.deleteNotification.bind(this)}/>;
+            <div className="list-group">
+                {sorted_notification_items.map((n) => {
+                    return <NotificationItem notification={n} key={n.id}/>;
                 })}
-                </ReactCSSTransitionGroup>
+                {!this.state.last_page ? older_notifications_button : null}
+            </div>
         );
 
         let notifications_block = (
             <div className="notifications-block box-shadow-block">
+
                 {
                     (this.state.loading) ? loading_cog : (this.state.notifications.length) ? notifications :
-                            <div><h2 className="text-xs-center">Notifications not found</h2></div>
+                            <div><p className="lead text-center">No notifications</p></div>
                 }
             </div>
         );

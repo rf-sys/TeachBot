@@ -3,36 +3,27 @@ class NotificationItem extends React.Component {
         super(props)
     }
 
-    deleteNotification() {
-        this.props.deleteNotification(this.props.notification);
+    isFresh() {
+        let created_at = this.props.notification.created_at;
+        return moment().utc().valueOf() < moment(created_at).utc().add(1, 'day')
+
     }
 
     render() {
-        let link = (
-            <div className="col-sm">
-                <a href={this.props.notification.link} className="btn btn-block btn-outline-primary">
-                    Visit&nbsp;
-                    <i className="fa fa-location-arrow" aria-hidden="true"/>
-                </a>
-            </div>
-        );
+        let unread_notification_mark = <small className="text-danger">New!</small>;
+
         return (
-            <div className="animated card card-block">
-                <h4 className="card-title">{this.props.notification.title}</h4>
-                <p className="card-text">
-                    {this.props.notification.text}
-                </p>
-                <div className="row">
-                    {(this.props.notification.link) ? link : ''}
-                    <div className="col-sm">
-                        <button className="btn btn-block btn-outline-danger"
-                                onClick={this.deleteNotification.bind(this)}>
-                            Delete&nbsp;
-                            <i className="fa fa-trash" aria-hidden="true"/>
-                        </button>
-                    </div>
-                </div>
+        <a href={this.props.notification.link}
+           className="animated list-group-item list-group-item-action flex-column align-items-start">
+            <div className="d-flex w-100 justify-content-between">
+                <h5 className="mb-1">{this.props.notification.title}</h5>
+                {this.isFresh() ? unread_notification_mark : null}
             </div>
+            <p className="mb-1">
+                {this.props.notification.text}
+            </p>
+            <small>{moment(this.props.notification.created_at).fromNow()}</small>
+        </a>
         )
     }
 }

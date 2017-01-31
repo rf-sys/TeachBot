@@ -13,7 +13,6 @@ class Chat < ApplicationRecord
   end
 
   scope :with_users_and_messages, -> { includes(:users, messages: [:user]).distinct }
-  scope :public_chat, -> { where(public_chat: true).take }
 
   def save_and_add_participants
     self.save

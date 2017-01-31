@@ -6,10 +6,12 @@ class NotificationsController < ApplicationController
   # return user's notifications
   # @return [Array]
   def index
-    @notifications = Rails.cache.fetch('api/notifications?user=' + current_user.cache_key) do
-      current_user.notifications
-    end
-    render json: { notifications: @notifications }
+    @notifications = current_user.notifications.order(created_at: :desc).page(params[:page] || 1).per(4)
+    render json: {
+        notifications: @notifications,
+        current_page: @notifications.current_page,
+        last_page: @notifications.last_page?
+    }
   end
 
   # destroy notification
@@ -26,7 +28,13 @@ class NotificationsController < ApplicationController
   # @return [Object]
   def count
     count = current_user.notifications.where(notifications: {readed: false}).count
-    render :json => {count: count}
+    render json: {count: count}
+  end
+
+  def mark_all_as_read
+    notifications = current_user.notifications.where(notifications: {readed: false})
+    notifications.update_all(readed: true)
+    render json: {message: 'ok'}
   end
 
   private

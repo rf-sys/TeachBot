@@ -5,7 +5,7 @@ class ChatsController < ApplicationController
   after_action :delete_if_no_participants, only: [:leave]
 
   def public_chat
-    @chat = get_from_cache(Chat, 'public_chat') { Chat.public_chat }
+    @chat = get_from_cache(PublicChat, 'public_chat') { PublicChat.take }
   end
 
   def index

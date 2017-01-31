@@ -32,22 +32,18 @@ class Conversations extends React.Component {
     }
 
     ChatGeneratorFromInitiator() {
-        $(document).unbind('chat:new_chat').on('chat:new_chat', function (event, chat) {
-            console.log(chat);
+        $(document).unbind('chat:new_chat').on('chat:new_chat', (event, chat) => {
             App.chat.perform('send_new_chat', {chat: chat});
             this.generateChat(chat);
-
             $('#modalNewMessage').modal('hide');
             $(`#collapse_${chat.id}_dialog`).collapse('show');
-
-        }.bind(this));
+        });
     }
 
     ChatGeneratorFromActionCable() {
-        $(document).unbind('chat:new_chat:action_cable').on('chat:new_chat:action_cable', function (event, chat) {
-            console.log('ChatGeneratorFromActionCable');
+        $(document).unbind('chat:new_chat:action_cable').on('chat:new_chat:action_cable', (event, chat) => {
             this.generateChat(chat);
-        }.bind(this))
+        })
     }
 
     generateChat(chat) {
@@ -80,12 +76,19 @@ class Conversations extends React.Component {
                                  leave={this.leave.bind(this)}/>
         });
 
+        let no_dialogs_message = (
+            <p className="lead text-center">
+                <b>No dialogs!</b> To create a new one - type a username of the user in the field above and send him a message.
+                Dialog will be created immediately
+            </p>
+        );
+
         return (
             <div>
                 <ConvFindUsers/>
                 <h1 className="text-center">Dialogs</h1>
                 <div id="dialogs_collapse" role="tablist" aria-multiselectable="true">
-                    {dialogs}
+                    {dialogs.length ? dialogs : no_dialogs_message}
                 </div>
             </div>
         )

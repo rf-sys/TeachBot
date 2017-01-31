@@ -1,4 +1,7 @@
 FactoryGirl.define do
+  factory :public_chat do
+    
+  end
   factory :notification do
     user
     title 'TestNotificationTitle'
