@@ -17,8 +17,6 @@ class ConvUnreadMessages extends React.Component {
      * Load unread messages from server if menu has been opened first time
      */
     loadUnreadMessages() {
-        $(this.dropdown).toggleClass('show');
-
         if (!this.state.loaded_once) {
             let ajax = $.post('/messages/unread', {chat_id: this.props.dialog.id});
             ajax.done(
@@ -82,11 +80,11 @@ class ConvUnreadMessages extends React.Component {
         let button_class_toggle = `btn ${(this.state.count) ? 'btn-outline-danger' : 'btn-outline-secondary' } 
         rounded-circle`;
         return (
-            <div className="dropdown" ref={(input) => { this.dropdown = input; }}>
+            <div className="dropdown" ref={(input) => { this.dropdown = input; }} name="unread_messages_dropdown">
                 <button className={button_class_toggle} type="button"
                         id={`chat_${this.props.dialog.id}_unread_messages_dropdown`}
                         onClick={this.loadUnreadMessages.bind(this)}
-                        aria-haspopup="true" aria-expanded="false"
+                        aria-haspopup="true" aria-expanded="false" data-toggle="dropdown"
                         title="Unread messages">
                     {this.state.count}
                 </button>

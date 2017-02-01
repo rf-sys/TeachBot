@@ -10,6 +10,12 @@ class Message < ApplicationRecord
     Rails.cache.write("#{self.class.name.demodulize.downcase}/#{self.id}/info", self)
   end
 
+  def self.new_message(params, attributes = {})
+    message = self.new(params)
+    message.assign_attributes(attributes)
+    message
+  end
+
   # @param [Chat] chat
   def save_with_unread_users(chat)
     chat.messages << self

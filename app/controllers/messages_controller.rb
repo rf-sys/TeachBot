@@ -16,14 +16,14 @@ class MessagesController < ApplicationController
 
     @chat = Chat.find_or_initialize_between(current_user, user)
 
-    @message = init_message(message_params, @chat)
+    @message = Message.new_message(message_params, {user: current_user, chat: @chat})
 
     return error_message(@message.errors.full_messages, 422) unless @message.valid?
 
     if @chat.new_record?
       @chat.save_and_add_participants
-      save_and_send_message(@chat, @message)
       send_new_chat_notification(@chat)
+      save_and_send_message(@chat, @message)
     else
       save_and_send_message(@chat, @message)
       render json: {response: @message, type: :new_message}
@@ -84,14 +84,6 @@ class MessagesController < ApplicationController
     )
     recipient.attach_notification(notification)
     NotificationsChannel.broadcast_notification_to(recipient, notification)
-  end
-
-  # generate message
-  def init_message(params, chat)
-    message = Message.new(params)
-    message.user = current_user
-    message.chat = chat
-    message
   end
 
   # save message and send message through Cable

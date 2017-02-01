@@ -2,7 +2,6 @@ class Notifications extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            show: false,
             notifications: [],
             current_page: 0,
             last_page: true,
@@ -110,13 +109,6 @@ class Notifications extends React.Component {
     }
 
     render() {
-        let loading_cog = (
-            <div className="text-center">
-                <i className="fa fa-spinner fa-pulse fa-3x fa-fw"/>
-                <span className="sr-only">Loading...</span>
-            </div>
-        );
-
         let loading_btn = (
             <div>
                 <i className="fa fa-spinner fa-pulse fa-3x fa-fw" style={{fontSize: '14px'}}/>
@@ -131,46 +123,19 @@ class Notifications extends React.Component {
             </button>
         );
 
-        let sorted_notification_items = _.orderBy(this.state.notifications,
-            ['created_at', 'readed'], ['desc', 'desc']);
-
-        let notifications = (
-            <div className="list-group">
-                {sorted_notification_items.map((n) => {
-                    return <NotificationItem notification={n} key={n.id}/>;
-                })}
-                {!this.state.last_page ? older_notifications_button : null}
-            </div>
-        );
-
-        let notifications_block = (
-            <div className="notifications-block box-shadow-block">
-
-                {
-                    (this.state.loading) ? loading_cog : (this.state.notifications.length) ? notifications :
-                            <div><p className="lead text-center">No notifications</p></div>
-                }
-            </div>
-        );
-        let unread_notifications_count = (
-            <div className="notifications-block_counter_wrapper animated">
-                <div className="live_light notifications-block_counter_inner_live"></div>
-                <div className="animated badge-danger notifications-block_counter_inner_counter">
-                    {this.state.count}
-                </div>
-            </div>
-        );
-
         return (
-            <div className="notifications-bell">
-                <a className="nav-link active" href="#" onClick={this.toggleNotifications.bind(this)}>
-                    <ReactCSSTransitionGroup transitionName={{enter: "zoomIn", leave: "zoomOut"}}
-                                             transitionEnterTimeout={1000} transitionLeaveTimeout={1000}>
-                        {(this.state.count) ? unread_notifications_count : ''}
-                    </ReactCSSTransitionGroup>
+            <div className="dropdown" id="notifications_dropdown">
+                <a className="nav-link active" href="#" onClick={this.toggleNotifications.bind(this)}
+                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i className="fa fa-bell" aria-hidden="true"/>
+                   <NotificationsCounter count={this.state.count}/>
                 </a>
-                {(this.state.show) ? notifications_block : ''}
+                <div className="dropdown-menu dropdown-menu-right dropdown_customize">
+                    <div className="list-group">
+                        <NotificationsList status={this.state.loading} notifications={this.state.notifications} />
+                        {!this.state.last_page ? older_notifications_button : null}
+                    </div>
+                </div>
             </div>
         )
     }

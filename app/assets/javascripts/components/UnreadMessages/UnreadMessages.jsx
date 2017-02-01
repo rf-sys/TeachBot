@@ -21,10 +21,10 @@ class UnreadMessages extends React.Component {
 
         $(document).unbind('unread_messages:remove_specific_count')
             .on('unread_messages:remove_specific_count', (event, count) => {
-            let newCount = this.state.count - count;
-            if (newCount < 0) newCount = 0;
-            this.updateCount(newCount);
-        });
+                let newCount = this.state.count - count;
+                if (newCount < 0) newCount = 0;
+                this.updateCount(newCount);
+            });
 
         let count;
         if (count = sessionStorage.getItem('unread_messages:count')) {
@@ -61,12 +61,9 @@ class UnreadMessages extends React.Component {
 
     render() {
         let template = (
-            <div className="unread_messages_block_counter_wrapper animated hidden-md-down">
-                <div className="live_light notifications-block_counter_inner_live"></div>
-                <div className="animated badge-danger notifications-block_counter_inner_counter">
-                    {this.state.count}
-                </div>
-            </div>
+            <span className="animated badge badge-danger">
+                {this.state.count}
+            </span>
         );
 
         return (

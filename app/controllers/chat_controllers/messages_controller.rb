@@ -17,7 +17,6 @@ class ChatControllers::MessagesController < ApplicationController
   end
 
   def create
-
     chat = get_from_cache(Chat, params[:chat_id])
 
     message = current_user.messages.new(message_params)

@@ -19,5 +19,6 @@
 //= require react_ujs
 //= require lodash
 //= require moment
+//= require wysihtml
 //= require components
 //= require_tree .

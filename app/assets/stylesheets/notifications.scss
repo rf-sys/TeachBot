@@ -25,15 +25,12 @@
 
 }
 .notifications-block_counter_wrapper {
-  position: absolute;
   border-radius: 100%;
-  top: -10px;
   width: 40px;
   height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 100;
 }
 
 .notifications-block_counter_inner {
@@ -55,4 +52,12 @@
   flex-direction: column;
   display: flex;
   justify-content: center;
+}
+
+
+.dropdown_customize {
+  max-height: 500px;
+  overflow: auto;
+  width: 400px;
+  padding: 0;
 }

@@ -79,6 +79,7 @@ source 'https://rails-assets.org' do
   gem 'rails-assets-tether', '>= 1.1.0'
   gem 'rails-assets-moment'
   gem 'rails-assets-lodash'
+  gem 'rails-assets-wysihtml'
 end
 
 # font-awesome
@@ -98,7 +99,9 @@ gem 'rolify'
 gem 'animate_css_on_rails'
 
 gem 'omniauth-facebook'
+
 gem 'omniauth-github'
+
 gem 'jwt'
 
 ruby '2.3.3'
