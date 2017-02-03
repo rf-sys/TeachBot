@@ -42,7 +42,7 @@ class ApplicationController < ActionController::Base
   end
 
   def profile_owner
-    unless current_user.id === params[:id].to_i
+    unless current_user.slug == params[:id]
       deny_access_message
     end
   end

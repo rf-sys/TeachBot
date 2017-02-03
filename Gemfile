@@ -28,7 +28,7 @@ gem 'redis', '~> 3.0'
 # Use ActiveModel has_secure_password
 gem 'bcrypt', '~> 3.1.7'
 
-gem 'resque'
+gem 'sidekiq'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
@@ -103,5 +103,7 @@ gem 'omniauth-facebook'
 gem 'omniauth-github'
 
 gem 'jwt'
+
+gem 'friendly_id'
 
 ruby '2.3.3'

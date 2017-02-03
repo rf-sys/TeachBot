@@ -12,7 +12,7 @@ module Firstapp
     config.autoload_paths << "#{Rails.root}/lib"
     config.cache_store = :file_store, "#{Rails.root}/tmp/cache/file_store"
     config.react.addons = true
-    config.active_job.queue_adapter = :resque
+    config.active_job.queue_adapter = :sidekiq
 
     # 371444199855931
 

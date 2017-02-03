@@ -24,13 +24,13 @@ RSpec.describe MessagesController, type: :controller do
 
       auth_as(initiator)
 
-      post :create, params: { user_id: recipient, message: { text: ''  } }
+      post :create, params: { user_id: recipient.id, message: { text: ''  } }
       expect(response.body).to match(/Text can't be blank/)
 
       text = 'Test Message'
       50.times { text += 'Test Message' }
 
-      post :create, params: { user_id: recipient, message: { text: text  } }
+      post :create, params: { user_id: recipient.id, message: { text: text  } }
       expect(response.body).to match(/Text is too long/)
     end
 

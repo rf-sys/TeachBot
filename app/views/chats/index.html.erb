@@ -2,7 +2,9 @@
   <div class="row">
     <div class="col-md">
       <%= react_component('ModalNewMessage') %>
-      <%= react_component('Conversations', current_user: current_user.attributes.slice('id', 'username', 'avatar')) %>
+      <%= react_component('Conversations',
+                          current_user: current_user.attributes.slice('id', 'username', 'avatar', 'slug'))
+      %>
     </div>
   </div>
 </div>

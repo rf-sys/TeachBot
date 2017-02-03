@@ -66,7 +66,7 @@ class Conversation extends React.Component {
 
         return users.map((user, i) => {
             return (
-                <a href={`/users/${user.id}`} key={i} target="_blank">
+                <a href={`/users/${user.slug}`} key={i} target="_blank">
                     <img src={user.avatar} alt="not found" className="rounded-circle small_chat_user_avatar"/>
                     &nbsp;
                     {user.username}

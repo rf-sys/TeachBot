@@ -1,1 +1,0 @@
-Resque.redis = $redis_connection

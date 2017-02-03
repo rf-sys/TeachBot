@@ -1,4 +1,7 @@
 class User < ApplicationRecord
+  extend FriendlyId
+  friendly_id :username, use: :slugged
+
   rolify
   require 'validators/EmailValidator'
   require 'sendgrid-ruby'
@@ -46,11 +49,15 @@ class User < ApplicationRecord
   before_destroy :delete_avatar
   after_create :generate_profile, :assign_default_role
   after_commit :clean_users_caches
-  after_update :touch_chats
+  after_update :touch_chats, :set_slug
 
 
   def assign_default_role
     self.add_role(:user) if self.roles.blank?
+  end
+
+  def set_slug
+    self.slug = self.username.parameterize
   end
 
   # delete avatar before delete user
@@ -100,6 +107,13 @@ class User < ApplicationRecord
   end
 
   class << self
+    def generate_slug
+      users = self.all
+      users.each do |user|
+        user.update(slug: user.username.parameterize)
+      end
+    end
+
     def find_or_create_from_auth_hash(auth_hash)
       User.where(provider: auth_hash[:provider], uid: auth_hash[:uid]).first_or_create! do |user|
         user.username = auth_hash[:info][:name]

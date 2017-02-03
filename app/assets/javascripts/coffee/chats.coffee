@@ -3,5 +3,4 @@
 # You can use CoffeeScript in this file: http://coffeescript.org/
 $ ->
   $(document).on 'click', "div[name='unread_messages_dropdown'] .dropdown-menu", (e) ->
-    console.log(123)
     e.stopPropagation()
