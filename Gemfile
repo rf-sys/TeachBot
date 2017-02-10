@@ -106,4 +106,6 @@ gem 'jwt'
 
 gem 'friendly_id'
 
+gem 'activerecord-import', '~> 0.17.1'
+
 ruby '2.3.3'

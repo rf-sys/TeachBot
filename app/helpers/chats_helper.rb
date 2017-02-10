@@ -4,7 +4,6 @@ module ChatsHelper
   # @param [User] user
   # @return boolean
   def user_related_to_chat(chat, user)
-    return true if chat.public_chat
     chat.users.include?(user)
   end
 

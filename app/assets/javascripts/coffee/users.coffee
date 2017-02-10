@@ -39,10 +39,8 @@ $ ->
           reader.readAsDataURL(this.files[0]);
 
     $('#edit_user_form')
-      .on 'ajax:success', (e, response) ->
-        update_header(e, response)
-        $(document).trigger('RMB:success', response.message)
-
+      .on 'ajax:error', (e, response) ->
+        $(document).scrollTop 0
       .on 'ajax:aborted:file', (event, elements) ->
         upload_with_avatar(event, elements)
         false
@@ -50,7 +48,3 @@ $ ->
     $ '#new_user'
       .bind 'ajax:error', ->
         grecaptcha.reset()
-
-  $(this).whenExist '#body_users_new', ->
-    $('#new_user').on 'ajax:error', (event, data) ->
-      $(document).trigger 'RMB:ajax', { status: 422, data: data.responseJSON.error }

@@ -4,10 +4,6 @@ class ChatsController < ApplicationController
   before_action :set_chat, only: [:leave, :add_participant, :kick_participant]
   after_action :delete_if_no_participants, only: [:leave]
 
-  def public_chat
-    @chat = get_from_cache(PublicChat, 'public_chat') { PublicChat.take }
-  end
-
   def index
     respond_to do |format|
       format.any(:js, :json) do
@@ -29,11 +25,11 @@ class ChatsController < ApplicationController
     user = User.find(params[:user_id])
 
     unless user_is_initiator(current_user, @chat)
-      return deny_access_message('You are not an author of the conversation')
+      return invalid_request_message(['You are not an author of the conversation'], 403)
     end
 
     if user_related_to_chat(@chat, user)
-      return deny_access_message('User is already in chat')
+      return invalid_request_message(['User is already in chat'], 403)
     end
 
     @chat.add_participant(user)
@@ -46,11 +42,11 @@ class ChatsController < ApplicationController
     user = User.find(params[:user_id])
 
     unless user_is_initiator(current_user, @chat)
-      return deny_access_message('You are not an author of the conversation')
+      return invalid_request_message(['You are not an author of the conversation'], 403)
     end
 
     if user == current_user
-      return deny_access_message('Author cannot kick yourself')
+      return invalid_request_message(['Author cannot kick yourself'], 403)
     end
 
     @chat.kick_participant(user)

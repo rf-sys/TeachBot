@@ -14,7 +14,7 @@ class PostsController < ApplicationController
     post = Post.find(params[:id])
 
     unless author_of_the_post(post)
-      return deny_access_message
+      return invalid_request_message(['Access denied'], 403)
     end
 
     post.destroy

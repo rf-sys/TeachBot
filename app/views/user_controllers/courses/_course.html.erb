@@ -8,6 +8,11 @@
         <% if course.author_id == current_user.id %>
           <%= link_to 'Edit', edit_course_path(course), class: 'btn btn-sm btn-outline-success' %>
         <% end %>
+        <% if course.author_id == current_user.id %>
+          <%= link_to 'Delete', course_path(course), method: :delete,
+                      data: { confirm: 'Are you sure that you want to delete this course?'},
+                      class: 'btn btn-sm btn-outline-danger' %>
+        <% end %>
       <% end %>
     </small>
   </div>

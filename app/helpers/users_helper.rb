@@ -5,11 +5,7 @@ module UsersHelper
   end
 
   def success_update(user)
-    render :json => {
-        :message => 'User has been updated successfully',
-        data: {
-            :username => user.username
-        }
-    }
+    flash[:success_notice] = 'Success update'
+    redirect_to user_path(user)
   end
 end

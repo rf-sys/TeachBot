@@ -1,7 +1,22 @@
 class Course < ApplicationRecord
+  extend FriendlyId
+  friendly_id :title, use: :slugged
 
   belongs_to :author, class_name: 'User', touch: true
-  has_and_belongs_to_many :subscribers, class_name: 'User'
+
+  # be as polymorphic
+  has_many :accesses, as: :accessable
+
+  # get users through polymorphic relationship
+  has_many :participants, through: :accesses, source: :user, dependent: :destroy
+
+  # be as polymorphic
+  has_many :subscriptions, as: :subscribeable
+
+  # get users through polymorphic relationship
+  has_many :subscribers, through: :subscriptions, source: :user, dependent: :destroy
+
+
   has_many :lessons, dependent: :destroy
 
   scope :where_public, -> { where(:public => true) }
@@ -10,26 +25,25 @@ class Course < ApplicationRecord
 
   scope :courses_with_paginate, -> (page = 1) { page(page).per(2) }
 
-  after_create :add_author_as_participant
-
   validates :title, presence: true, length: {minimum: 6, maximum: 30}
   validates :description, presence: true, length: {minimum: 6, maximum: 255}
   validates :public, inclusion: {in: [true, false]}
 
   validates :theme, format: {with: /\A#.{6}\z/, message: 'color is invalid'}, allow_blank: true
 
-  before_destroy :clean_all_courses_cache
-  after_update_commit :clean_all_courses_cache
+  after_save :clean_slug_cache, :clean_recent_courses_cache
 
   private
 
-  def add_author_as_participant
-    self.subscribers << self.author
+  def should_generate_new_friendly_id?
+    title_changed?
   end
 
-  def clean_all_courses_cache
-    Rails.cache.delete('course/index/all')
+  def clean_recent_courses_cache
+    Rails.cache.delete('courses/recent_courses')
   end
 
-
+  def clean_slug_cache
+    Rails.cache.delete("course/#{slug_was}/info")
+  end
 end

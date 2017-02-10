@@ -1,21 +1,3 @@
-<%= content_for :head do %>
-  <style>
-    @keyframes type {
-      from {
-        width: 0
-      }
-    }
-
-    .typing {
-      white-space: nowrap;
-      border-right: 2px solid;
-      overflow: hidden;
-      width: 8ch;
-      animation: type 1s steps(8), brand-blinker .5s step-end infinite alternate;
-    }
-  </style>
-<% end %>
-
 <section class="jumbotron text-center">
   <div class="container">
     <h1 class="jumbotron-heading typing" style="width: 180px;
@@ -27,7 +9,16 @@
 
 <h1 class="display-4 text-center">Recent courses</h1>
 <hr>
-<div class="card-deck">
-  <%= render partial: 'courses/course', collection: @courses, cached: true, locals: {last_page: true} %>
-</div>
-<hr>
+<% if @courses.present? %>
+  <div class="card-deck">
+    <% @courses.each do |course| %>
+      <div class="col-3">
+        <% cache course do %>
+          <%= render partial: 'courses/course', locals: {course: course, last_page: true} %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  <h2 class="text-center">No recent public courses</h2>
+<% end %>

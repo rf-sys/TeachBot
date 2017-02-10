@@ -10,7 +10,7 @@ class NotificationItem extends React.Component {
     }
 
     render() {
-        let unread_notification_mark = <small className="text-danger">New!</small>;
+        let unread_notification_mark = <small className="text-danger font-weight-bold">New!</small>;
 
         return (
         <a href={this.props.notification.link}

@@ -4,10 +4,9 @@ class UsersController < ApplicationController
   include UsersHelper
   before_action :require_guest, only: [:new, :create]
   before_action :require_user, :profile_owner, only: [:edit, :update, :destroy]
-  before_action
+  before_action :set_user, except: [:new, :create]
 
   def show
-    @user = User.friendly.find(params[:id])
   end
 
   def new
@@ -26,24 +25,24 @@ class UsersController < ApplicationController
   end
 
   def edit
-    @user = User.friendly.find(params[:id])
   end
 
   def update
-    user = User.friendly.find(params[:id])
     update_user_service = UpdateUser.new(Repositories::UserRepository, self)
-    update_user_service.update(user, update_params)
+    update_user_service.update(@user, update_params)
   end
 
   def destroy
-    @user = User.friendly.find(params[:id])
-    @user.destroy
     session[:user_id] = nil
     flash[:success_notice] = 'User has been deleted.'
     redirect_to '/'
   end
 
   private
+
+  def set_user
+    @user = get_from_cache(User, params[:id]) { User.friendly.find(params[:id]) }
+  end
 
   def user_params
     params.require(:user).permit(:username, :email, :password, :password_confirmation)

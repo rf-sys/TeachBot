@@ -1,11 +1,11 @@
+// from gems
 @import "bootstrap";
-@import "global";
 @import "animate.min";
-
-// font-awesome gem
-
 @import "font-awesome-sprockets";
 @import "font-awesome";
+
+// custom
+@import "global";
 @import "users";
 @import "lessons";
 @import "sessions";
@@ -14,3 +14,4 @@
 @import "notifications";
 @import "unread_messages";
 @import "messages";
+@import "main";

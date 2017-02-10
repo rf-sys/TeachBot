@@ -3,44 +3,23 @@ class ChatChannel < ApplicationCable::Channel
   include CustomHelper::Cache, ChatsHelper
 
   def subscribed
-    @public_chat = PublicChat.take
-
-    stream_from 'Chat:' + @public_chat.id.to_s
     stream_from "user_#{current_user.id}_chats"
-
     current_user.chats.uniq.each do |chat|
       stream_from "Chat:#{chat.id}"
     end
   end
 
-  # user has left the chat
-  def unsubscribed
-    $redis_connection.srem('participants', current_user.to_json)
-    receive_members
-  end
-
-  # user has been joined to the chat
-  def appear
-    $redis_connection.sadd('participants', current_user.to_json)
-    receive_members
-  end
-
-  # user has left the chat
-  def leave
-    $redis_connection.srem('participants', current_user.to_json)
-    receive_members
-  end
-
+  # calls from the client to add a new chat block in chats page
   def send_new_chat(data)
     stream_from "Chat:#{data['chat']['id']}"
-
     recipient = User.find(data['chat']['recipient_id'])
-
     unless current_user.id == recipient.id
       ActionCable.server.broadcast "user_#{recipient.id}_chats", chat: data['chat'], type: 'new_chat'
     end
   end
 
+  # add streaming from chat to current_user if user is related to this chat
+  # check is necessary because it is called from the client
   def subscribe_to_chat(data)
     if current_user
       chat = get_from_cache(Chat, data['chat_id'])
@@ -51,40 +30,31 @@ class ChatChannel < ApplicationCable::Channel
   end
 
   class << self
-    def send_message(chat_id, message, type = 'message')
-      ActionCable.server.broadcast "Chat:#{chat_id}", response: json_message(message), type: type
-    end
-
+    # send events (like '%username% left the chat') into the chat
     def send_notification_to_chat(chat_id, text, type = 'chat_notification')
       ActionCable.server.broadcast "Chat:#{chat_id}", text: text,
                                    chat_id: chat_id, type: type
+    end
+
+    # send message into the chat
+    def send_message(chat_id, message)
+      ActionCable.server.broadcast "Chat:#{chat_id}", response: chat_message(message), type: 'message'
     end
   end
 
   private
 
-  # use in public chat to receive active members
-  def receive_members
-    members = $redis_connection.smembers('participants')
-    members.map! { |item| JSON.parse(item) }
-
-    ActionCable.server.broadcast "Chat:#{@public_chat.id}", members: members, type: 'members'
-  end
-
-  class << self
-    # json response format for new messages
-    # @param [Message] message
-    def json_message(message)
-      {
-          message: {
-              id: message.id,
-              text: message.text,
-              chat_id: message.chat_id,
-              created_at: message.created_at,
-              user: message.user.attributes.slice('id', 'username', 'avatar'),
-              read: false
-          }
-      }
-    end
+  # template for private messages
+  def self.chat_message(message)
+    {
+        message: {
+            id: message.id,
+            text: message.text,
+            chat_id: message.chat_id,
+            created_at: message.created_at,
+            user: message.user.attributes.slice('id', 'username', 'avatar', 'slug'),
+            read: false
+        }
+    }
   end
 end

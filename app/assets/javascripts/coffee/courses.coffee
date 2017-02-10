@@ -6,6 +6,8 @@
 $ ->
   $(this).whenExist "body[id^='body_courses_']", ->
 
+    $('[data-toggle="tooltip"]').tooltip()
+
     $("#courses_index_subscriptions").on 'ajax:success', (event, response, status) ->
       $("#courses_index_subscriptions").html(response)
 
@@ -16,19 +18,10 @@ $ ->
           $("#course_preview_poster").hide().fadeIn(300).attr 'src', e.target.result
         reader.readAsDataURL(this.files[0]);
 
-    $('#new_course')
-      .on 'ajax:aborted:file', (event, elements) ->
-        request_with_poster(event, elements)
-        false
-
-    $("form[id^='edit_course_']")
+    $("form[id^='edit_course_poster']")
       .on 'ajax:aborted:file', (event, elements) ->
         request_with_poster(event, elements, 'PATCH')
         false
-      .on 'ajax:success', (event, response) ->
-        $(document).trigger('RMB:success', response.message)
-
-    $("form[id^='edit_course_poster']")
       .on 'ajax:success', (event, response) ->
         $("#course_poster_image").hide().fadeIn(300).attr 'src', response.url
 

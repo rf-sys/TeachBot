@@ -91,7 +91,7 @@ class Notifications extends React.Component {
 
         let page = this.state.current_page + 1;
 
-        let ajax = $.get('/notifications?page=' + page);
+        let ajax = $.getJSON('/notifications?page=' + page);
         ajax.done((r) => {
             let notifications = r.notifications;
 

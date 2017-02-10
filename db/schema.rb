@@ -10,10 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170202171548) do
+ActiveRecord::Schema.define(version: 20170208125601) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "accesses", force: :cascade do |t|
+    t.integer  "user_id"
+    t.string   "accessable_type"
+    t.integer  "accessable_id"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+    t.index ["accessable_type", "accessable_id"], name: "index_accesses_on_accessable_type_and_accessable_id", using: :btree
+    t.index ["user_id"], name: "index_accesses_on_user_id", using: :btree
+  end
 
   create_table "chats", force: :cascade do |t|
     t.datetime "created_at",                   null: false
@@ -40,16 +50,9 @@ ActiveRecord::Schema.define(version: 20170202171548) do
     t.string   "poster"
     t.string   "theme",       default: "#0275d8"
     t.boolean  "published",   default: false
+    t.string   "slug"
     t.index ["author_id"], name: "index_courses_on_author_id", using: :btree
-  end
-
-  create_table "courses_users", force: :cascade do |t|
-    t.integer  "course_id"
-    t.integer  "user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["course_id"], name: "index_courses_users_on_course_id", using: :btree
-    t.index ["user_id"], name: "index_courses_users_on_user_id", using: :btree
+    t.index ["slug"], name: "index_courses_on_slug", unique: true, using: :btree
   end
 
   create_table "friendly_id_slugs", force: :cascade do |t|
@@ -70,7 +73,9 @@ ActiveRecord::Schema.define(version: 20170202171548) do
     t.text     "description"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
+    t.string   "slug"
     t.index ["course_id"], name: "index_lessons_on_course_id", using: :btree
+    t.index ["slug"], name: "index_lessons_on_slug", unique: true, using: :btree
   end
 
   create_table "messages", force: :cascade do |t|
@@ -125,6 +130,16 @@ ActiveRecord::Schema.define(version: 20170202171548) do
     t.index ["name"], name: "index_roles_on_name", using: :btree
   end
 
+  create_table "subscriptions", force: :cascade do |t|
+    t.integer  "user_id"
+    t.string   "subscribeable_type"
+    t.integer  "subscribeable_id"
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+    t.index ["subscribeable_type", "subscribeable_id"], name: "index_subscriptions_on_subscribeable_type_and_subscribeable_id", using: :btree
+    t.index ["user_id"], name: "index_subscriptions_on_user_id", using: :btree
+  end
+
   create_table "unread_messages_users", id: false, force: :cascade do |t|
     t.integer "message_id"
     t.integer "user_id"
@@ -155,7 +170,9 @@ ActiveRecord::Schema.define(version: 20170202171548) do
     t.index ["user_id", "role_id"], name: "index_users_roles_on_user_id_and_role_id", using: :btree
   end
 
+  add_foreign_key "accesses", "users"
   add_foreign_key "messages", "chats"
   add_foreign_key "messages", "users"
   add_foreign_key "notifications", "users"
+  add_foreign_key "subscriptions", "users"
 end

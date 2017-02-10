@@ -1,7 +1,6 @@
 class User < ApplicationRecord
   extend FriendlyId
   friendly_id :username, use: :slugged
-
   rolify
   require 'validators/EmailValidator'
   require 'sendgrid-ruby'
@@ -26,14 +25,23 @@ class User < ApplicationRecord
 
   has_and_belongs_to_many :chats
 
-  has_and_belongs_to_many :subscriptions, class_name: 'Course'
+  has_many :accesses
 
-  has_and_belongs_to_many :paginate_subscriptions, -> { limit(2) }, class_name: 'Course'
+  has_many :accessed_courses, through: :accesses, source: :accessable, dependent: :destroy,
+           source_type: 'Course'
+
+  has_many :subscriptions
+
+  has_many :subscriptions_to_courses, through: :subscriptions, source: :subscribeable, dependent: :destroy,
+      source_type: 'Course'
 
   has_and_belongs_to_many :unread_messages, join_table: 'unread_messages_users', class_name: 'Message'
 
   scope :select_profile_attr, -> { select(:id, :username, :email, :avatar, :updated_at) }
   scope :find_with_profile, -> (id) { includes(:profile).find(id) }
+  scope :course_subscribers, -> (course) do
+    includes(:subscriptions).where(subscriptions: {subscribeable_type: 'Course', subscribeable_id: course.id})
+  end
 
   attr_accessor :remember_token, :activation_token
   accepts_nested_attributes_for :profile, reject_if: :all_blank
@@ -44,20 +52,20 @@ class User < ApplicationRecord
   validates :password, length: (6..32), confirmation: true, if: :setting_password?
 
   before_save :downcase_email
+
   before_create :create_activation_digest
 
   before_destroy :delete_avatar
-  after_create :generate_profile, :assign_default_role
-  after_commit :clean_users_caches
-  after_update :touch_chats, :set_slug
 
+  after_create :generate_profile, :assign_default_role
+
+  after_update :touch_chats
+
+  after_save :clean_user_courses_cache
+  after_save :clean_slug_cache
 
   def assign_default_role
     self.add_role(:user) if self.roles.blank?
-  end
-
-  def set_slug
-    self.slug = self.username.parameterize
   end
 
   # delete avatar before delete user
@@ -98,22 +106,15 @@ class User < ApplicationRecord
   # Regenerate activation token and digest and send email
   def resend_activation_email
     create_activation_digest
-    self.save
+    save
     send_activation_email
   end
 
   def attach_notification(notification)
-    self.notifications << notification
+    notifications << notification
   end
 
   class << self
-    def generate_slug
-      users = self.all
-      users.each do |user|
-        user.update(slug: user.username.parameterize)
-      end
-    end
-
     def find_or_create_from_auth_hash(auth_hash)
       User.where(provider: auth_hash[:provider], uid: auth_hash[:uid]).first_or_create! do |user|
         user.username = auth_hash[:info][:name]
@@ -126,6 +127,10 @@ class User < ApplicationRecord
   end
 
   private
+
+  def should_generate_new_friendly_id?
+    username_changed?
+  end
 
   def setting_password?
     password || password_confirmation
@@ -144,8 +149,12 @@ class User < ApplicationRecord
     self.create_profile
   end
 
-  def clean_users_caches
-    Rails.cache.delete("user/#{self.id}/courses")
+  def clean_user_courses_cache
+    Rails.cache.delete("user/#{id}/courses")
+  end
+
+  def clean_slug_cache
+    Rails.cache.delete("user/#{slug_was}/info")
   end
 
   # touch all chats, user belongs to

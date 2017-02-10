@@ -10,7 +10,7 @@ class NotificationsController < ApplicationController
     render json: {
         notifications: @notifications,
         current_page: @notifications.current_page,
-        last_page: @notifications.last_page?
+        last_page: @notifications.any? ? @notifications.last_page? : true
     }
   end
 

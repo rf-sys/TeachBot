@@ -50,7 +50,6 @@ RSpec.describe ChatControllers::MessagesController, type: :controller do
       post :create, params: {chat_id: @chat.id, message: {text: 'Test Message'}}
 
       expect(response).to have_http_status(:success)
-      expect(response.body).to match(/Message has been sent/)
       expect(Message.last.unread_users.count).to eq(2)
     end
   end

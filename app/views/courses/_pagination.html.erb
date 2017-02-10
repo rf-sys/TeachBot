@@ -3,5 +3,5 @@
 </div>
 <div id="paginator" class="row justify-content-center">
   <%= paginate subscriptions, theme: 'simple_bootstrap_paginator', remote: true,
-               params: {action: 'subscriptions'} %>
+               params: {action: 'subscriptions', user_id: @user.id} %>
 </div>

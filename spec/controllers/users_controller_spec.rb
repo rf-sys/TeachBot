@@ -3,6 +3,17 @@ require 'rails_helper'
 RSpec.describe UsersController, :type => :controller do
   include ActiveJob::TestHelper
 
+  describe 'GET #show' do
+    it 'returns user' do
+      user = create(:user)
+
+      get :show, params: {id: user.slug}
+
+      expect(response).to have_http_status(200)
+      expect(assigns(:user)).to eq(user)
+    end
+  end
+
   describe 'POST #create' do
     it 'adds confirmation email into job queue' do
       expect {
@@ -35,16 +46,43 @@ RSpec.describe UsersController, :type => :controller do
 
     it 'does not save invalid user' do
       expect {
-      post :create, params: {
+        post :create, params: {
+            user: {
+                username: '',
+                email: '',
+                password: '',
+                password_confirmation: ''
+            }
+        }
+        expect(response).to have_http_status(422)
+      }.to change(User, :count).by(0)
+    end
+  end
+
+  describe 'PUT/PATCH #update' do
+    it 'updates user' do
+      user = create(:user)
+      auth_as(user)
+      patch :update, params: {
+          id: user.friendly_id,
           user: {
-              username: '',
-              email: '',
-              password: '',
-              password_confirmation: ''
+              username: 'updated_username',
+              email: user.email,
+              profile_attributes: {
+                  website: '',
+                  facebook: '',
+                  twitter: '',
+                  about: 'Test user about',
+                  location: '',
+                  id: user.id
+              }
           }
       }
-      expect(response).to have_http_status(422)
-      }.to change(User, :count).by(0)
+      user.reload
+
+      expect(response).to have_http_status(302)
+      expect(user.username).to eq('updated_username')
+      expect(user.profile.about).to eq('Test user about')
     end
   end
 end

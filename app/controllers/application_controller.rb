@@ -1,7 +1,6 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   include SessionsHelper
-  include CustomHelper::Responses
   include CustomHelper::Cache
   helper_method :current_user, :it_is_current_user
 
@@ -30,7 +29,6 @@ class ApplicationController < ActionController::Base
           redirect_to root_url
         end
       end
-
     end
   end
 
@@ -42,8 +40,8 @@ class ApplicationController < ActionController::Base
   end
 
   def profile_owner
-    unless current_user.slug == params[:id]
-      deny_access_message
+    unless current_user.friendly_id == params[:id]
+      invalid_request_message(['Access denied'], 403)
     end
   end
 
@@ -61,49 +59,25 @@ class ApplicationController < ActionController::Base
     true
   end
 
-  def have_access_to_private_course(course)
-    unless course.public
-      unless current_user
-        flash[:danger_notice] = 'You need login to go there'
-        return redirect_to root_path
-      end
-      unless course.subscribers.find_by_id(current_user.id).present?
-        return false
-      end
-      true
-    end
-    true
-  end
-
   def require_teacher
-    unless @current_user.has_role? :teacher
+    unless current_user.has_role? :teacher
       flash[:danger_notice] = 'You are not a teacher'
       redirect_to root_path
     end
   end
 
-  # @param [Course] course
-  def unpublished_and_user_is_author(course)
-    unless course.published
-      unless current_user == course.author
-        return false
-      end
-    end
-    true
-  end
-
-
-  protected
-
-  def deny_access_message(msg = 'Access denied')
+  def invalid_request_message(errors = [], status)
     respond_to do |format|
-      format.js { error_message([msg], 403) }
-      format.json { error_message([msg], 403) }
+      format.any(:js, :json) { error_message(errors, status) }
       format.html do
-        flash[:danger_notice] = msg
+        flash[:danger_notice] = errors.first
         redirect_to root_url
       end
     end
+  end
+
+  def error_message(errors = [], status)
+    render :json => {:errors => errors}, status: status
   end
 
   private

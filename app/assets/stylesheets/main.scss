@@ -1,0 +1,13 @@
+@keyframes type {
+  from {
+    width: 0
+  }
+}
+
+.typing {
+  white-space: nowrap;
+  border-right: 2px solid;
+  overflow: hidden;
+  width: 8ch;
+  animation: type 1s steps(8), brand-blinker .5s step-end infinite alternate;
+}

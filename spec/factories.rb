@@ -1,7 +1,9 @@
 FactoryGirl.define do
-  factory :public_chat do
-    
+  factory :subscription do
+    user nil
+    subscribeable ""
   end
+
   factory :notification do
     user
     title 'TestNotificationTitle'
@@ -29,7 +31,6 @@ FactoryGirl.define do
     password 'password'
     activated true
     activation_token User.new_token
-
     factory :teacher do
       after(:create) {|user| user.add_role(:teacher)}
     end
@@ -57,6 +58,13 @@ FactoryGirl.define do
     description 'Test Course Description'
     public true
     published true
+
+    factory :private_course do
+      public false
+    end
+    factory :unpublished_course do
+      published false
+    end
   end
 
   factory :lesson do

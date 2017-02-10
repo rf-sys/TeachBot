@@ -54,7 +54,32 @@
           <%= @views %>
         </td>
       </tr>
+      <tr>
+        <td>
+          <% if current_user %>
+            <%= react_component('SubscribeToCourseBtn', {
+                course_id: @course.id,
+                subscribed: current_user.subscriptions_to_courses.include?(@course)
+            }) %>
+          <% end %>
+        </td>
+        <td>Subscribers: <%= @course.subscribers.size %></td>
+      </tr>
       </tbody>
     </table>
   </div>
 </div>
+
+<h2 style="text-align: center; margin: 15px">Related lessons</h2>
+
+<div class="box-shadow-block" style="margin-top: 15px;">
+  <%= render partial: 'lesson', collection: @course.lessons, cached: true %>
+</div>
+
+<% if it_is_current_user(@course.author) %>
+  <div class="box-shadow-block">
+    <h2 style="text-align: center; padding: 10px">
+      <%= link_to 'Create a new lesson', new_course_lesson_path(@course), class: 'text_coloured_element' %>
+    </h2>
+  </div>
+<% end %>

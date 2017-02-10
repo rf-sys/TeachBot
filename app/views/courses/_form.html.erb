@@ -1,5 +1,5 @@
 <%= react_component('ResponseMessagesBlock') %>
-<%= form_for(@course, remote: true, authenticity_token: true) do |f| %>
+<%= form_for(@course, remote: true) do |f| %>
   <div class="form-group">
     <%= f.label :title %>
     <%= f.text_field :title, class: 'form-control', placeholder: 'Type the title of the course', required: 'true' %>
@@ -14,13 +14,13 @@
   <div class="form-group">
     <div class="form-check">
       <label class="form-check-label">
-        <%= f.check_box :public, {class: 'form-check-input', checked: true} %>
+        <%= f.check_box :public, {class: 'form-check-input'} %>
         Public course
       </label>
     </div>
     <small>
       Remove the check flag if you want to create a private course
-      (Only you and course's subscribers can view a content of this course)
+      (Only you and course's participants can view a content of the course)
     </small>
   </div>
 

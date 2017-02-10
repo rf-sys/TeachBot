@@ -1,0 +1,11 @@
+<%= content_for :head do %>
+  <meta id="course_theme_color" content="<%= @course.theme %>">
+<% end %>
+
+<%= render partial: 'nav', locals: {lesson: @lesson, course: @course} %>
+
+<div class="container-fluid">
+  <h1><%= @lesson.title %></h1>
+  <hr>
+  <%= sanitize @lesson.description, tags: %w(b p i strong u s sub sup h1, img), attributes: %w(src) %>
+</div>

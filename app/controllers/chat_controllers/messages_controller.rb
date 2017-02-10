@@ -1,8 +1,5 @@
 class ChatControllers::MessagesController < ApplicationController
-  include MessagesHelper, MessageStrategies::MessageCreateStrategy,
-          MessageStrategies::MessageCreateStrategy::MessageMakers
-
-  include ChatsHelper
+  include MessagesHelper, ChatsHelper
 
   before_action :require_user
 
@@ -10,27 +7,29 @@ class ChatControllers::MessagesController < ApplicationController
   # @return [Object]
   def index
     chat = get_from_cache(Chat, params[:chat_id])
+
     unless user_related_to_chat(chat, current_user)
-      error_message(['Forbidden'], 403)
+      return error_message(['Forbidden'], 403)
     end
+
     @messages = chat.messages.includes(:unread_users).reverse_order.page(params[:page]).per(2)
   end
 
   def create
     chat = get_from_cache(Chat, params[:chat_id])
 
-    message = current_user.messages.new(message_params)
-
-    strategy = MessageCreate.new(chat, message, current_user)
-
-    unless strategy.have_access_to_chat?
-      return error_message('Forbidden', 403)
+    unless user_related_to_chat(chat, current_user)
+      return error_message(['Forbidden'], 403)
     end
 
-    if strategy.public_chat?
-      save_message(strategy, PublicMessageMaker.new)
+    message = current_user.messages.new_message(message_params, chat: chat)
+
+    if message.save
+      ActiveRecord::Base.no_touching { message.unread_users << [chat.users] }
+      ChatChannel.send_message(chat.id, message)
+      broadcast_new_unread_message(chat.users, current_user)
     else
-      save_message(strategy, PrivateMessageMaker.new) { render :json => {:message => 'Message has been sent'} }
+      error_message(message.errors.full_messages, 422)
     end
   end
 

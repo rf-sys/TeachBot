@@ -7,7 +7,7 @@
 <div class="modal fade" id="edit_poster_modal" tabindex="-1" role="dialog" aria-labelledby="edit_poster_modal_Label" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <%= form_for(@course, url: poster_course_path(@course.id),
-                 remote: true, html: {id: 'edit_course_poster'}) do |f| %>
+                 remote: true, authenticity_token: true, html: {id: 'edit_course_poster'}) do |f| %>
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="edit_poster_modal_Label">Edit poster</h5>

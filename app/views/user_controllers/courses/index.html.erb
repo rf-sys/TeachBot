@@ -5,39 +5,10 @@
   <div class="tab-pane active load-fade" id="profile" role="tabpanel">
     <div class="container-fluid" style="margin-top: 15px">
       <div class="row">
-        <div class="col-md-8">
-          <% if @user.paginate_courses.present? %>
-            <h1 style="text-align: center;">Public courses</h1>
-            <hr>
-            <div id="courses_index_courses">
-              <div class="list-group load-fade" id="courses_paginate_list">
-                <%= render partial: 'course', collection: @user.paginate_courses %>
-              </div>
-
-              <div id="pagination_link" style="margin-top: 5px">
-                <%= link_to_next_page(@user.paginate_courses.courses_with_paginate, 'More courses', remote: true,
-                                      class: 'btn btn-block btn-outline-primary',
-                                      params: {action: 'courses'}) %>
-              </div>
-            </div>
-          <% else %>
-            <h2>No one course has been found.</h2>
-          <% end %>
-        </div>
-        <div class="col-md-4">
-          <h1 style="text-align: center;">Subscriptions</h1>
+        <div class="col-md-12">
+          <h1 style="text-align: center;">Courses</h1>
           <hr>
-          <% if @user.paginate_subscriptions.present? %>
-            <div id="courses_index_subscriptions">
-              <%= render partial: 'courses/pagination',
-                         locals: {subscriptions: @user.paginate_subscriptions.courses_with_paginate} %>
-            </div>
-          <% else %>
-            <p class="lead">
-              No subscriptions. Subscriptions need to be able to visit private courses.
-            </p>
-          <% end %>
-
+          <%= react_component('UserCourses', {user: @user.id, current_user: current_user.try(:id)}) %>
         </div>
       </div>
 
