@@ -59,8 +59,6 @@ class UserCourses extends React.Component {
     }
 
     render() {
-
-
         let not_found = (
             <div className="text-center">
                 <h2>Courses not found</h2>

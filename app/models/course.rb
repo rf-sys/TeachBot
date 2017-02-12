@@ -11,7 +11,7 @@ class Course < ApplicationRecord
   has_many :participants, through: :accesses, source: :user, dependent: :destroy
 
   # be as polymorphic
-  has_many :subscriptions, as: :subscribeable
+  has_many :subscriptions, as: :subscribeable, dependent: :destroy
 
   # get users through polymorphic relationship
   has_many :subscribers, through: :subscriptions, source: :user, dependent: :destroy

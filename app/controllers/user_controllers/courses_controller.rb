@@ -19,7 +19,7 @@ class UserControllers::CoursesController < ApplicationController
       return error_message(['Forbidden'], 403)
     end
 
-    user.courses.delete(course)
+    user.courses.destroy(course)
     render json: {status: 'Ok'}
   end
 end

@@ -1,7 +1,17 @@
-<h1>UserControllers::Subscriptions#index</h1>
-<p>Find me in app/views/user_controllers/subscriptions/index.html.erb</p>
-<div class="col-md-4">
-  <h1 style="text-align: center;">Subscriptions</h1>
-  <hr>
-  <%= react_component('Subscriptions', {user: @user.id, current_user: current_user.try(:id)}) %>
+<%= render 'users/nav' %>
+
+<!-- Tab panes -->
+<div class="tab-content">
+  <div class="tab-pane active load-fade" id="profile" role="tabpanel">
+    <div class="container-fluid" style="margin-top: 15px">
+      <div class="row">
+        <div class="col-md-12">
+          <h1 style="text-align: center;">My subscriptions</h1>
+          <hr>
+          <%= react_component('Subscriptions', {user: @user.id, current_user: current_user.try(:id)}) %>
+        </div>
+      </div>
+
+    </div>
+  </div>
 </div>

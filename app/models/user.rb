@@ -21,18 +21,17 @@ class User < ApplicationRecord
   has_many :paginate_courses, -> { order('created_at ASC').limit(2) },
            class_name: 'Course', foreign_key: 'author_id'
 
-  has_many :notifications
+  has_many :notifications, dependent: :destroy
 
   has_and_belongs_to_many :chats
 
-  has_many :accesses
+  has_many :accesses, dependent: :destroy
 
-  has_many :accessed_courses, through: :accesses, source: :accessable, dependent: :destroy,
-           source_type: 'Course'
+  has_many :accessed_courses, through: :accesses, source: :accessable, source_type: 'Course'
 
-  has_many :subscriptions
+  has_many :subscriptions, dependent: :destroy
 
-  has_many :subscriptions_to_courses, through: :subscriptions, source: :subscribeable, dependent: :destroy,
+  has_many :subscriptions_to_courses, through: :subscriptions, source: :subscribeable,
       source_type: 'Course'
 
   has_and_belongs_to_many :unread_messages, join_table: 'unread_messages_users', class_name: 'Message'
@@ -55,7 +54,7 @@ class User < ApplicationRecord
 
   before_create :create_activation_digest
 
-  before_destroy :delete_avatar
+  before_destroy :delete_avatar, :delete_unread_messages
 
   after_create :generate_profile, :assign_default_role
 
@@ -73,6 +72,10 @@ class User < ApplicationRecord
     if File.file?(Rails.root.join('public', 'assets/images/avatars', "#{self.id}.jpg"))
       FileUtils.rm(Rails.root.join('public', 'assets/images/avatars', "#{self.id}.jpg"))
     end
+  end
+
+  def delete_unread_messages
+    self.unread_messages.destroy_all
   end
 
   # generate and store token to the database

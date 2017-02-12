@@ -16,27 +16,22 @@ class Subscription extends React.Component {
 
     render() {
         let unsubscribe_button = (
-            <button className="btn btn-sm btn-outline-danger" onClick={this.unsubscribe}>
-                Unsubscribe
-            </button>
+            <a href='#' className="card-link text-danger" onClick={this.unsubscribe}>Unsubscribe</a>
         );
 
         return (
-            <div className="list-group-item list-group-item-action flex-column align-items-start">
-                <div className="d-flex w-100 justify-content-between">
-                    <h5 className="mb-1">{this.props.subscription.title}</h5>
-                    <small>
-                        <a href={`/courses/${this.props.subscription.slug}`} className="btn btn-sm btn-outline-info">
-                            Visit course
-                        </a>
-                        {this.belongsToUser() ? unsubscribe_button : null}
-                    </small>
-                </div>
 
-                <p className="mb-1">
-                    {this.props.subscription.description}
-                </p>
+            <div className="card animated fadeIn" style={{margin: '5px'}}>
+                <div className="card-block">
+                    <h4 className="card-title">{this.props.subscription.title}</h4>
+                    <p className="card-text">
+                        {this.props.subscription.description}
+                    </p>
+                    <a href={`/courses/${this.props.subscription.slug}`} className="card-link">Visit</a>
+                    {this.belongsToUser() ? unsubscribe_button : null}
+                </div>
             </div>
+
         )
     }
 }

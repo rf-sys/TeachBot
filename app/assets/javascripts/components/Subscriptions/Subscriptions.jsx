@@ -4,6 +4,7 @@ class Subscriptions extends React.Component {
         this.state = {subscriptions: [], current_page: 0, total_pages: 1, loading: true};
         this.getSubscriptions = this.getSubscriptions.bind(this);
         this.unsubscribe = this.unsubscribe.bind(this);
+        this.renderSubscriptions = this.renderSubscriptions.bind(this);
     }
 
     componentDidMount() {
@@ -36,14 +37,29 @@ class Subscriptions extends React.Component {
         })
     }
 
-    render() {
-        let subscriptions = this.state.subscriptions.map((subscription) => {
-            return <Subscription subscription={subscription} key={subscription.id}
-                                 user={this.props.user} current_user={this.props.current_user}
-                                 unsubscribe={this.unsubscribe}/>
-        });
+    renderSubscriptions() {
+        let subscriptions_chunk = _.chunk(this.state.subscriptions, 2);
 
-        let not_found = <h2 className="text-center">No subscriptions</h2>;
+
+        return subscriptions_chunk.map((chunk, i) => {
+            return (
+                <div className="card-deck" key={i}>
+                    {chunk.map((subscription) => {
+                        return <Subscription subscription={subscription} key={subscription.id}
+                                             user={this.props.user} current_user={this.props.current_user}
+                                             unsubscribe={this.unsubscribe}/>
+                    })}
+                </div>
+            )
+        });
+    }
+
+    render() {
+        let not_found = (
+            <div className="text-center">
+                <h2>Subscriptions not found</h2>
+            </div>
+        );
 
         let loading = (
             <div className="text-center">
@@ -54,16 +70,13 @@ class Subscriptions extends React.Component {
 
         let content = (
             <div>
-                <div className="list-group" style={{marginBottom: '5px'}}>
-                    {subscriptions.length ? subscriptions : not_found}
-                </div>
+                {!_.isEmpty(this.state.subscriptions) ? this.renderSubscriptions() : not_found}
                 <Paginator current_page={this.state.current_page}
                            total_pages={this.state.total_pages}
                            action={this.getSubscriptions}
                 />
             </div>
         );
-
         return (
             <div>
                 {this.state.loading ? loading : content}

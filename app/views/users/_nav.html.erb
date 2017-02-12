@@ -24,6 +24,11 @@
   </li>
   <% if it_is_current_user @user %>
     <li class="nav-item">
+      <%= link_to 'Subscriptions', user_subscriptions_path(@user),
+                  class: 'nav-link ' + (controller_name == 'subscriptions' ? 'active' : '') %>
+    </li>
+
+    <li class="nav-item">
       <%= link_to 'Settings', edit_user_path(@user), class: 'nav-link ' + (action_name == 'edit' ? 'active' : '') %>
     </li>
   <% end %>
