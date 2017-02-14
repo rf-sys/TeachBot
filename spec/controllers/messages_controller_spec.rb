@@ -12,10 +12,11 @@ RSpec.describe MessagesController, type: :controller do
     end
 
     it 'accept access for auth' do
-      auth_as(create(:user))
-
-      post :create
-      expect(response).not_to have_http_status(:redirect) # returns no matter what error, but no redirect
+      initiator = create(:user)
+      recipient = create(:second_user)
+      auth_as(initiator)
+      post :create, params: {user_id: recipient.id, message: {text: 'Test message'}}
+      expect(response).to have_http_status(:success)
     end
 
     it 'returns error when message validation fail' do
@@ -37,7 +38,7 @@ RSpec.describe MessagesController, type: :controller do
     it 'returns error if recipient of the message not found' do
       auth_as(create(:user))
 
-      post :create, params: { user_id: 123456 }
+      post :create, params: { user_id: 123456, message: {text: 'Test Message'} }
       expect(response).to have_http_status(:not_found)
       expect(response.body).to match(/Recipient not found/)
     end

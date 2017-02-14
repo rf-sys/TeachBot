@@ -1,34 +1,18 @@
 class MessagesController < ApplicationController
   before_action :require_user
   include MessagesHelper
+  include Services::UseCases::Message::CreateMessageService
 
-  # calls when we use modal window to send message to user, with which we haven't got a chat yet.
-  # Logic:
-  # 1. try to find user, otherwise - return json with error
-  # 2. try to find or init a new chat between found and current users if this chat already exists or not respectively
-  # 3. try to validate (saved in further) message; return json error if no valid
-  # 4. if found chat is new - save this chat and add participants, save message and send notifications
-  # 5. if found chat already exists - attach message to this chat and send notification about new message with Cable
+  # handle modal window of sending new message to user
   def create
-    unless (user = User.find_by_id(params[:user_id]))
-      return error_message(['Recipient not found'], 404)
-    end
-
-    @chat = Chat.find_or_initialize_between(current_user, user)
-
-    @message = Message.new_message(message_params, {user: current_user, chat: @chat})
-
-    return error_message(@message.errors.full_messages, 422) unless @message.valid?
-
-    if @chat.new_record?
-      @chat.save_and_add_participants
-      send_new_chat_notification(@chat)
-      save_and_send_message(@chat, @message)
-    else
-      save_and_send_message(@chat, @message)
-      render json: {response: @message, type: :new_message}
-    end
-
+    # I'm not sure about this approach to organize code with hexagonal.
+    # Hexagonal fit very well with one single model,
+    # but when more than one, classic examples actually don't work very well
+    create_message_service = CreateMessage.new(self)
+    create_message_service.assign_recipient(params[:user_id])
+    @chat = create_message_service.set_chat_between_users(current_user)
+    @message = create_message_service.assign_message(current_user, message_params)
+    create_message_service.create
   end
 
   def mark_as_read
@@ -67,12 +51,6 @@ class MessagesController < ApplicationController
     render :json => {count: count}
   end
 
-  private
-
-  def message_params
-    params.require(:message).permit(:text)
-  end
-
   # sends notification about new chat to recipient
   # @param [Chat] chat
   def send_new_chat_notification(chat)
@@ -89,10 +67,15 @@ class MessagesController < ApplicationController
   # save message and send message through Cable
   # @param [Chat] chat
   # @param [Message] message
-  def save_and_send_message(chat, message)
-    message.save_with_unread_users(chat)
+  def send_message(chat, message)
     ChatChannel.send_message(chat.id, message)
     broadcast_new_unread_message(chat.users, current_user)
+  end
+
+  private
+
+  def message_params
+    params.require(:message).permit(:text)
   end
 
 end

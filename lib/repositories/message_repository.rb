@@ -16,5 +16,9 @@ module Repositories
     def valid?(message)
       message.valid?
     end
+
+    def save_with_unread_users(message, chat)
+      message.save_with_unread_users(chat)
+    end
   end
 end
