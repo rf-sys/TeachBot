@@ -1,6 +1,7 @@
 class NotificationItem extends React.Component {
     constructor(props) {
-        super(props)
+        super(props);
+        this.redirectByLink = this.redirectByLink.bind(this);
     }
 
     isFresh() {
@@ -9,11 +10,16 @@ class NotificationItem extends React.Component {
 
     }
 
+    redirectByLink(e) {
+        e.preventDefault();
+        Turbolinks.visit(this.props.notification.link);
+    }
+
     render() {
         let unread_notification_mark = <small className="text-danger font-weight-bold">New!</small>;
 
         return (
-        <a href={this.props.notification.link}
+        <a href={this.props.notification.link} onClick={this.redirectByLink}
            className="animated list-group-item list-group-item-action flex-column align-items-start">
             <div className="d-flex w-100 justify-content-between">
                 <h5 className="mb-1">{this.props.notification.title}</h5>

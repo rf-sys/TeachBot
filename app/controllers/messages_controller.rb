@@ -58,7 +58,7 @@ class MessagesController < ApplicationController
     notification = Notification.generate(
         'New chat',
         'New chat from ' + current_user.username,
-        '/chats#dialog=' + chat.id.to_s
+        '/chats?chat=' + chat.id.to_s
     )
     recipient.attach_notification(notification)
     NotificationsChannel.broadcast_notification_to(recipient, notification)

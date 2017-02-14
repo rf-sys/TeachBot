@@ -47,12 +47,10 @@ class Chat extends React.Component {
     }
 
     openIfHash() {
-        let expression = /#chat=(\w+)/;
-        let hash = window.location.hash;
-        let chat_id = hash.replace(expression, '$1');
+        let chat_it = getUrlParameter('chat');
 
-        if (chat_id.length)
-            $(`#collapse_${chat_id}_chat`).collapse('show')
+        if (chat_it)
+            $(`#collapse_${chat_it}_chat`).collapse('show')
     }
 
     setUsersList() {
