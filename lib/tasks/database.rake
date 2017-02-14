@@ -32,7 +32,7 @@ namespace :database do
     @courses = Course.all
 
     @courses.each do |course|
-      course.update_attribute('subscribers_count', course.subscribers.size)
+      course.update_attribute('subscriptions_count', course.subscribers.size)
     end
   end
 end

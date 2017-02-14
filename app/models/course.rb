@@ -31,7 +31,9 @@ class Course < ApplicationRecord
 
   validates :theme, format: {with: /\A#.{6}\z/, message: 'color is invalid'}, allow_blank: true
 
-  after_save :clean_slug_cache, :clean_recent_courses_cache
+  after_save :clean_old_slug_cache, :clean_recent_courses_cache
+
+  before_commit :clean_cache_by_slug
 
   private
 
@@ -43,7 +45,11 @@ class Course < ApplicationRecord
     Rails.cache.delete('courses/recent_courses')
   end
 
-  def clean_slug_cache
+  def clean_old_slug_cache
     Rails.cache.delete("course/#{slug_was}/info")
+  end
+
+  def clean_cache_by_slug
+    Rails.cache.delete("course/#{friendly_id}/info")
   end
 end

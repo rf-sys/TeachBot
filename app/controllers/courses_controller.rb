@@ -106,13 +106,13 @@ class CoursesController < ApplicationController
     if course_in_subscriptions?(@course)
       return error_message(['Subscription exists already'], 403)
     end
-    current_user.subscriptions_to_courses << @course
+    @course.subscribers << current_user
     head :ok
   end
 
   # unsubscribe current user from course
   def unsubscribe
-    current_user.subscriptions_to_courses.delete(@course)
+    @course.subscribers.destroy current_user
     head :ok
   end
 

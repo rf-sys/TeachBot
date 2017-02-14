@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170208125601) do
+ActiveRecord::Schema.define(version: 20170214144145) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -45,12 +45,13 @@ ActiveRecord::Schema.define(version: 20170208125601) do
     t.string   "title"
     t.string   "description"
     t.boolean  "public"
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
+    t.datetime "created_at",                              null: false
+    t.datetime "updated_at",                              null: false
     t.string   "poster"
-    t.string   "theme",       default: "#0275d8"
-    t.boolean  "published",   default: false
+    t.string   "theme",               default: "#0275d8"
+    t.boolean  "published",           default: false
     t.string   "slug"
+    t.integer  "subscriptions_count", default: 0
     t.index ["author_id"], name: "index_courses_on_author_id", using: :btree
     t.index ["slug"], name: "index_courses_on_slug", unique: true, using: :btree
   end
