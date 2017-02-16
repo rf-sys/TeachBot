@@ -4,7 +4,7 @@ class CoursesController < ApplicationController
 
   before_action :require_user, except: [:index, :show, :rss_feed]
   before_action :require_teacher, except: [:index, :show, :rss_feed, :subscribe, :unsubscribe]
-  before_action :set_course, except: [:index, :show, :new, :create, :rss_feed]
+  before_action :set_course, :require_owner, except: [:index, :show, :new, :create, :rss_feed]
 
   def index
     @courses = Course.where_public.where_published.order(updated_at: :desc).page(params[:page]).per(6)
@@ -38,33 +38,22 @@ class CoursesController < ApplicationController
       flash[:super_success_notice] = 'Course has been created successfully'
       redirect_to course
     else
-      error_message(course.errors.full_messages, 422)
+      invalid_request_message(course.errors.full_messages, 422)
     end
   end
 
   def edit
-    unless it_is_current_user(@course.author)
-      error_message(['Access denied'], 403)
-    end
   end
 
   def update
-    unless it_is_current_user(@course.author)
-      return error_message(['Access denied'], 403)
-    end
-
     if @course.update(course_params)
       redirect_to @course
     else
-      error_message(@course.errors.full_messages, 422)
+      invalid_request_message(@course.errors.full_messages, 422)
     end
   end
 
   def destroy
-    unless it_is_current_user(@course.author)
-      return error_message(['Access denied'], 403)
-    end
-
     @course.destroy
     flash[:success_notice] = 'Course has been deleted'
     redirect_to courses_path
@@ -79,12 +68,8 @@ class CoursesController < ApplicationController
 
   # update poster of the course
   def update_poster
-    unless it_is_current_user(@course.author)
-      return error_message(['Access denied'], 403)
-    end
-
     unless params.fetch(:course, {}).fetch(:poster, false)
-      return error_message(['File not found'], 422)
+      return invalid_request_message(['File not found'], 422)
     end
 
     update_poster_service = UpdatePoster.new(Repositories::CourseRepository, self)
@@ -94,9 +79,6 @@ class CoursesController < ApplicationController
 
   # toggle "publish" status of the course
   def toggle_publish
-    unless it_is_current_user(@course.author)
-      return error_message(['Access denied'], 403)
-    end
     @course.published = !@course.published
     @course.save
   end
@@ -104,7 +86,7 @@ class CoursesController < ApplicationController
   # subscribe current user to course
   def subscribe
     if course_in_subscriptions?(@course)
-      return error_message(['Subscription exists already'], 403)
+      return invalid_request_message(['Subscription exists already'], 403)
     end
     @course.subscribers << current_user
     head :ok
@@ -128,5 +110,11 @@ class CoursesController < ApplicationController
 
   def course_in_subscriptions?(course)
     current_user.subscriptions_to_courses.include?(course)
+  end
+
+  def require_owner
+    unless it_is_current_user(@course.author)
+      invalid_request_message(['Access denied'], 403)
+    end
   end
 end

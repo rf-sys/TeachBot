@@ -29,12 +29,22 @@ RSpec.describe CoursesController, :type => :controller do
       auth_as(foreign_user)
 
       patch :update_poster, params: {id: @course.id}
+      expect(response.status).to eq(302)
+
+      set_json_request
+
+      patch :update_poster, params: {id: @course.id}
       expect(response.status).to eq(403)
       expect(response.body).to match(/Access denied/)
     end
 
     it 'returns error if file is not presented' do
       auth_as(@course.author)
+
+      patch :update_poster, params: {id: @course.id}
+      expect(response.status).to eq(302)
+
+      set_json_request
 
       patch :update_poster, params: {id: @course.id}
       expect(response.status).to eq(422)
