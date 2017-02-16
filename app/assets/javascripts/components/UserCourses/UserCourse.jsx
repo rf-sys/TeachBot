@@ -16,7 +16,8 @@ class UserCourse extends React.Component {
 
     render() {
         let delete_link = (
-            <a href="#" className="card-link text-danger" onClick={this.destroy}>Delete</a>
+            <a href="#" className="card-link text-danger" onClick={this.destroy}
+            data-confirm="Are you sure that you want to delete this course ?">Delete</a>
         );
 
         let type = `Access: ${this.props.course.public ? 'free' : 'limited (only for appointed participants)'}`;
@@ -34,24 +35,6 @@ class UserCourse extends React.Component {
                     {this.belongsToUser() ? delete_link : null}
                 </div>
             </div>
-
-            /*
-             <div className="list-group-item list-group-item-action flex-column align-items-start">
-             <div className="d-flex w-100 justify-content-between">
-             <h5 className="mb-1">{this.props.course.title}</h5>
-             <small>
-             <a href={`/courses/${this.props.course.slug}`} className="btn btn-sm btn-outline-info">
-             Visit course
-             </a>
-             {this.belongsToUser() ? delete_button : null}
-             </small>
-             </div>
-
-             <p className="mb-1">
-             {this.props.course.description}
-             </p>
-             </div>
-             */
         )
     }
 }

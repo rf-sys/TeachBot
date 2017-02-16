@@ -6,7 +6,14 @@
           <li class="list-inline-item">
             <%= link_to user_courses_path(current_user), class: 'text-white' do %>
               <i class="fa fa-book" aria-hidden="true"></i>
-              <span>My courses</span>
+              <span>Courses</span>
+            <% end %>
+          </li>
+
+          <li class="list-inline-item">
+            <%= link_to user_subscriptions_path(current_user), class: 'text-white' do %>
+              <i class="fa fa-list-ul" aria-hidden="true"></i>
+              <span>Subscriptions</span>
             <% end %>
           </li>
 
