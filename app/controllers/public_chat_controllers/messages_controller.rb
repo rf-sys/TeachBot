@@ -3,7 +3,7 @@ class PublicChatControllers::MessagesController < ApplicationController
   before_action :require_user, only: [:create]
 
   def index
-    @messages = @public_chat.messages.order(created_at: :desc).page(params[:page] || 1).per(4)
+    @messages = @public_chat.messages.includes(:user).order(created_at: :desc).page(params[:page] || 1).per(4)
   end
 
   def create
@@ -13,7 +13,7 @@ class PublicChatControllers::MessagesController < ApplicationController
       PublicChatChannel.send_message(message)
       head :no_content
     else
-      error_message(maker.errors, 422)
+      error_message(message.errors.full_messages, 422)
     end
   end
 
