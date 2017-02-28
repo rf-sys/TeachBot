@@ -13,3 +13,22 @@
 .visit_lesson_icon {
   font-size: 48px;
 }
+
+form.new_lesson, form.edit_lesson {
+  #lesson_title, #lesson_description, iframe,
+  #lesson_title:focus, #lesson_description:focus,
+  textarea:focus {
+    outline: none !important;
+    border: none !important;
+  }
+
+  #lesson_title, #lesson_title:focus {
+    @extend h1
+  }
+
+  #lesson_html_content {
+    min-height: 100px;
+    outline: none;
+    border: none;
+  }
+}

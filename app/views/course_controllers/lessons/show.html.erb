@@ -6,6 +6,9 @@
 
 <div class="container-fluid">
   <h1><%= @lesson.title %></h1>
+  <p class="lead">
+    <%= @lesson.description %>
+  </p>
   <hr>
-  <%= sanitize @lesson.description, tags: %w(b p i strong u s sub sup h1, img), attributes: %w(src) %>
+  <%= sanitize @lesson.content %>
 </div>

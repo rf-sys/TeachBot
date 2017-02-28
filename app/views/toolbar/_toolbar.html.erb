@@ -1,0 +1,50 @@
+<div id="wysihtml_toolbar">
+  <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups" style="margin-bottom: 10px">
+    <div class="btn-group mr-2" role="group" aria-label="First group">
+
+      <%= render 'toolbar/commands/bold' %>
+
+      <%= render 'toolbar/commands/italic' %>
+
+      <%= render 'toolbar/commands/paragraph' %>
+
+      <%= render 'toolbar/commands/justifyLeft' %>
+
+      <%= render 'toolbar/commands/justifyCenter' %>
+
+      <%= render 'toolbar/commands/justifyRight' %>
+
+      <%= render 'toolbar/commands/code' %>
+
+      <%= render 'toolbar/commands/blockquote' %>
+
+      <%= render 'toolbar/commands/headers' %>
+
+    </div>
+
+    <div class="btn-group mr-2" role="group" aria-label="Second group">
+
+      <%= render 'toolbar/commands/insertImage' %>
+
+      <%= render 'toolbar/commands/createLink' %>
+
+      <%= render 'toolbar/commands/insertUnorderedList' %>
+
+      <%= render 'toolbar/commands/insertOrderedList' %>
+
+    </div>
+
+    <div class="btn-group" role="group" aria-label="Third group">
+
+      <%= render 'toolbar/commands/insertDivider' %>
+
+    </div>
+  </div>
+
+  <%# dialogs react on commands %>
+
+  <%= render 'toolbar/dialogs/insertImage' %>
+
+  <%= render 'toolbar/dialogs/createLink' %>
+
+</div>

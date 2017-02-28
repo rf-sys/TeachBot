@@ -28,7 +28,8 @@
           <% end %>
         </div>
 
-        <%= f.submit 'Sign in', class: 'btn btn-outline-primary pull-xs-right', id: 'login_btn' %> or
+        <%= f.submit 'Sign in', class: 'btn btn-outline-primary pull-xs-right', id: 'login_btn',
+                    data: {disable_with: 'Loading...'}%> or
 
         <%= link_to auth_facebook_path, class: 'btn fb-btn', role: 'button', id: 'facebook_oauth_btn' do %>
           <i class="fa fa-facebook-official" aria-hidden="true"></i> Login with Facebook

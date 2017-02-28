@@ -1,26 +1,36 @@
 <%= react_component('ResponseMessagesBlock') %>
-<%= form_for @lesson, url: course_lessons_path(@course), remote: true do |f| %>
-  <div class="form-group">
-    <%= f.label :title %>
-    <%= f.text_field :title, class: 'form-control', placeholder: 'Type the title of the course', required: 'true' %>
-    <small>Title of your course</small>
-  </div>
-  <div class="form-group">
-    <div id="toolbar">
-      <a data-wysihtml5-command="insertImage">link</a>
-      <div data-wysihtml5-dialog="insertImage" style="display: none;">
-        Link: <input data-wysihtml5-dialog-field="src" value="http://">
-        <a data-wysihtml5-dialog-action="save">OK</a>
-        <a data-wysihtml5-dialog-action="cancel">Cancel</a>
+<%= form_for [@course, @lesson], remote: true do |f| %>
+  <div class="container-fluid">
+    <div class="form-group">
+      <%= f.text_field :title, class: 'form-control', placeholder: 'Title of the lesson...', required: 'true' %>
+    </div>
+
+    <div class="form-group">
+      <%= f.text_area :description, class: 'form-control', placeholder: 'Short description of the lesson...',
+                      required: 'true' %>
+    </div>
+
+    <hr>
+    <div style="margin-bottom: 10px">
+      <div class="d-inline-block">
+        <%= render 'toolbar/toolbar' %>
       </div>
     </div>
-    <%= f.label :description %>
-    <%= f.text_area :description, class: 'form-control', placeholder: 'Type the description of the course', required: 'true' %>
-    <small>Description of your course</small>
-  </div>
 
-  <%= f.submit class: 'btn btn-outline-primary pull-xs-right',
-               id: 'create_user_btn',
-               data: {disable_with: 'Loading...'}
-  %>
+    <div class="form-group">
+      <div id="lesson_html_content" style="padding: 0.5rem 0.75rem;">
+        <%= sanitize @lesson.content if @lesson.content.present? %>
+      </div>
+      <%= f.hidden_field :content %>
+    </div>
+
+    <hr>
+    <div>
+      <%= f.submit class: 'btn btn-outline-primary btn-lg',
+                   id: 'lesson_form_btn',
+                   data: {disable_with: 'Loading...', confirm: 'Are you sure?'}
+      %>
+
+    </div>
+  </div>
 <% end %>

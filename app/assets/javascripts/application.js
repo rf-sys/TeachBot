@@ -20,6 +20,7 @@
 //= require lodash
 //= require moment
 //= require wysihtml
+//= require autosize
 //= require coffee/global
 //= require components
 //= require_tree .
