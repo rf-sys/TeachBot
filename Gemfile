@@ -80,13 +80,14 @@ source 'https://rails-assets.org' do
   gem 'rails-assets-moment'
   gem 'rails-assets-lodash'
   gem 'rails-assets-wysihtml'
+  gem 'rails-assets-autosize'
 end
 
 # font-awesome
 gem 'font-awesome-sass'
 
 # google captcha
-gem 'recaptcha', '3.4.0'
+gem 'recaptcha'
 
 # mailer service (production)
 gem 'sendgrid-ruby'
