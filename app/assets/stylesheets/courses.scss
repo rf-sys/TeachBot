@@ -19,10 +19,11 @@
 .course-poster {
   width: 100%;
   height: auto;
+  box-shadow: 0 0 5px;
 }
 
 .course-poster-preview {
-  height: 250px;
+  //height: 250px;
   width: 100%;
   margin-bottom: 5px
 }
@@ -30,4 +31,9 @@
 .course-subscriber-avatar {
   height: 50px;
   width: 50px;
+}
+
+#upload_poster_modal .cropper-container {
+  width: 100%;
+  height: auto;
 }

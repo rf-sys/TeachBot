@@ -4,27 +4,10 @@
 
 # --- exec after page loading ---
 $ ->
+
   $(this).whenExist "body[id^='body_courses_']", ->
-
-    $('[data-toggle="tooltip"]').tooltip()
-
     $("#courses_index_subscriptions").on 'ajax:success', (event, response, status) ->
       $("#courses_index_subscriptions").html(response)
-
-    $("#course_poster").change ->
-      if this.files && this.files[0]
-        reader = new FileReader();
-        reader.onload = (e) ->
-          $("#course_preview_poster").hide().fadeIn(300).attr 'src', e.target.result
-        reader.readAsDataURL(this.files[0]);
-
-    $("form[id^='edit_course_poster']")
-      .on 'ajax:aborted:file', (event, elements) ->
-        request_with_poster(event, elements, 'PATCH')
-        false
-      .on 'ajax:success', (event, response) ->
-        $("#course_poster_image").hide().fadeIn(300).attr 'src', response.url
-
 
     if $('#course_theme_color').length
       color = $('#course_theme_color').attr 'content'
@@ -32,19 +15,3 @@ $ ->
       $('.text_coloured_element').attr 'style', "color: #{color} !important"
 
 
-# --- send form with file (poster) ---
-request_with_poster = (event, elements, type = 'POST') ->
-  Form = new FormData(event.target)
-  $.ajax
-    url: event.currentTarget.action
-    type: type
-    data: Form
-    contentType: false
-    processData: false
-    success: (response) ->
-      $(event.target).trigger 'ajax:success', response
-
-    error: (response) ->
-      $(event.target).trigger 'ajax:error', response
-
-  false

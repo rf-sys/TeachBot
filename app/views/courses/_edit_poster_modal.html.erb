@@ -1,13 +1,16 @@
 <!-- Button trigger modal -->
-<button type="button" class="btn btn-outline-primary btn-block btn-sm" data-toggle="modal" data-target="#edit_poster_modal" style="border-radius: 0">
-  Edit poster
+<button type="button" class="list-group-item list-group-item-action"
+        data-toggle="modal" data-target="#edit_poster_modal" style="border-radius: 0">
+  <i class="fa fa-picture-o" aria-hidden="true"></i>&ensp;Edit poster
 </button>
 
-<!-- Modal -->
-<div class="modal fade" id="edit_poster_modal" tabindex="-1" role="dialog" aria-labelledby="edit_poster_modal_Label" aria-hidden="true">
-  <div class="modal-dialog" role="document">
+
+<!-- modal upload -->
+<div class="modal fade" id="edit_poster_modal"
+     tabindex="-1" role="dialog" aria-labelledby="edit_poster_modal_Label" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
     <%= form_for(@course, url: poster_course_path(@course.id),
-                 remote: true, authenticity_token: true, html: {id: 'edit_course_poster'}) do |f| %>
+                 remote: true, authenticity_token: true, html: { id: 'edit_course_poster' }) do |f| %>
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="edit_poster_modal_Label">Edit poster</h5>
@@ -19,15 +22,18 @@
           <%= react_component('ResponseMessagesBlock') %>
           <div class="form-group">
             <%= f.label :poster %>
-            <%= image_tag (@course.poster || ''), id: 'course_preview_poster', class: 'course-poster-preview',
-                          style: (@course.poster.nil? ? 'display: none' : '') %>
-            <%= f.file_field :poster, class: 'form-control-file', required: :true %>
-            <!--<small class="form-text text-muted">Poster of this course.</small> -->
+
+            <div>
+              <img id="course_preview_poster" src="" class="course-poster-preview" style="display: none">
+            </div>
+            <hr>
+
+            <%= file_field :course, :poster, class: 'form-control-file' %>
           </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <%= f.submit 'Upload poster', class: 'btn btn-primary' %>
+          <%= f.submit 'Upload poster', class: 'btn btn-primary', id: 'upload_poster_btn' %>
         </div>
       </div>
     <% end %>

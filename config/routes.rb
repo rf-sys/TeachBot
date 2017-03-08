@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  get 'subscriptions/create'
+
+  get 'subscriptions/destroy'
+
   require 'constraints/admin_constraint'
   require 'sidekiq/web'
 
@@ -27,11 +31,6 @@ Rails.application.routes.draw do
 
   root 'main#index'
 
-  get 'conversations', to: 'chats#index'
-
-  # rss
-  get 'courses/feed' => 'courses#rss_feed'
-
   # resources
 
   resources :account_activations, except: [:destroy, :show, :update]
@@ -55,10 +54,12 @@ Rails.application.routes.draw do
     member do
       patch 'poster', action: 'update_poster'
       patch 'publish', action: 'toggle_publish'
-      post 'subscribe'
-      delete 'unsubscribe'
     end
   end
+
+  resources :subscriptions, only: [:create, :destroy]
+
+  resources :rss, only: [:index]
 
   resources :account_activations, only: [:edit]
 
