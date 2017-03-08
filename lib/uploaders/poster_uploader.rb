@@ -1,19 +1,35 @@
-require_dependency 'services/file_uploader'
+require_dependency 'services/uploaders/aws_uploader'
 
-class PosterUploader < FileUploader
-  def path
-   'public/assets/images/courses_posters/'
+class PosterUploader < AwsUploader
+
+  def extension
+    'jpg'
   end
 
-  def url
-   '/assets/images/courses_posters/' + name + '?updated=' + Time.now.to_i.to_s
+  def file_url
+    "uploads/courses_posters/#{@file_name}.#{extension}"
   end
 
   def available_formats
-   %w(.png .jpg .jpeg .bmp .gif)
+    %w(png jpg jpeg bmp gif)
   end
 
   def max_size
-   1024
+    2048
+  end
+
+  def max_height
+    558
+  end
+
+  def max_width
+    1536
+  end
+
+  def validators
+    check_formats
+    check_size
+    check_height
+    check_width
   end
 end

@@ -20,7 +20,7 @@ module Services
             if params[:avatar]
               uploader = AvatarUploader.new(params[:avatar], user.id)
               return @listener.error_message([uploader.error], 422) unless uploader.has_valid_file?
-              params[:avatar] = uploader.url
+              params[:avatar] = uploader.aws_url
             end
 
             if @user_repository.update(user, params)

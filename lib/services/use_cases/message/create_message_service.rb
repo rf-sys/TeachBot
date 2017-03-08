@@ -40,7 +40,7 @@ module Services
             end
 
             if @chat.new_record?
-              @chat_repository.save_with_participants(@chat)
+              @chat_repository.save(@chat)
               @message_repository.save_with_unread_users(@message, @chat)
               @listener.send_new_chat_notification(@chat)
               @listener.send_message(@chat, @message)

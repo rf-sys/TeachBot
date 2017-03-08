@@ -1,19 +1,25 @@
-require_dependency 'services/file_uploader'
+require_dependency 'services/uploaders/aws_uploader'
 
-class AvatarUploader < FileUploader
-  def path
-    'public/assets/images/avatars/'
+class AvatarUploader < AwsUploader
+
+  def extension
+    'jpg'
   end
 
-  def url
-    '/assets/images/avatars/' + name + '?updated=' + Time.now.to_i.to_s
+  def file_url
+    "uploads/avatars/#{@file_name}.#{extension}"
   end
 
   def available_formats
-    %w(.png .jpg .jpeg .bmp .gif)
+    %w(png jpg jpeg bmp gif)
   end
 
   def max_size
     500
+  end
+
+  def validators
+    check_formats
+    check_size
   end
 end
