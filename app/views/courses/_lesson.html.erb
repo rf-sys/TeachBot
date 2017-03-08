@@ -1,19 +1,17 @@
-<div class="row flex-items-xs-left align-items-center visit-lesson-block">
-  <div class="col-md-1 col-sm-12 flex-xs-middle" style="text-align: center">
-    <a href="<%= course_lesson_path(@course, lesson) %>">
-      <i class="fa fa-arrow-circle-o-right text_coloured_element visit_lesson_icon" aria-hidden="true"></i>
-    </a>
-  </div>
-  <div class="col-sm-12 col-md-11">
-    <div class="row">
-      <div class="col-sm"><h2><%= lesson.title %></h2></div>
-    </div>
-    <div class="row">
-      <div class="col-sm"><%= lesson.description %></div>
-    </div>
-    <div class="row">
-      <div class="col-sm"><%= lesson.created_at %></div>
-    </div>
+<div class="card lesson_block" id="lesson_<%= lesson.id %>">
+  <div class="card-block">
+    <h3 class="card-title"><%= lesson.title %></h3>
+    <p class="card-text"><%= lesson.description %></p>
+    <p>
+      <small><%= lesson.created_at %></small>
+    </p>
+    <%= link_to 'Visit', course_lesson_path(@course, lesson), class: 'btn btn-outline-primary' %>
+
+    <% if it_is_current_user(@course.author) %>
+      <%= link_to 'Edit', edit_course_lesson_path(@course, lesson), class: 'btn btn-outline-warning' %>
+      <%= button_to 'Destroy', course_lesson_path(@course, lesson), method: :delete,
+                    remote: true, data: { confirm: 'Are you sure?', disable_with: 'Deleting...' },
+                    class: 'btn btn-outline-danger', form_class: 'd-inline' %>
+    <% end %>
   </div>
 </div>
-<hr>

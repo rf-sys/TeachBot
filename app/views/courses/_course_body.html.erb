@@ -71,8 +71,8 @@
 
 <h2 style="text-align: center; margin: 15px">Related lessons</h2>
 
-<div class="box-shadow-block" style="margin-top: 15px;">
-  <%= render partial: 'lesson', collection: @course.lessons, cached: true %>
+<div style="margin-top: 15px;">
+  <%= render partial: 'lesson', collection: @course.lessons %>
 </div>
 
 <% if it_is_current_user(@course.author) %>

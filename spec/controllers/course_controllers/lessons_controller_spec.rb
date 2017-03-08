@@ -154,4 +154,50 @@ RSpec.describe CourseControllers::LessonsController, type: :controller do
 
     end
   end
+
+  describe 'DELETE #destroy' do
+    before :each do
+      @course = create(:course)
+      @lesson = create(:lesson, course: @course)
+      expect(Lesson.count).to eq(1)
+    end
+
+    it 'denies access for guests' do
+      delete :destroy, params: {course_id: @course.id, id: @lesson.id}
+
+      expect(response).to have_http_status(302)
+
+      set_json_request
+
+      delete :destroy, params: {course_id: @course.id, id: @lesson.id}
+      expect(response).to have_http_status(403)
+
+      expect(Lesson.count).to eq(1)
+    end
+
+    it 'denies access for no author' do
+      auth_as(create(:second_user))
+      delete :destroy, params: {course_id: @course.id, id: @lesson.id}
+
+      expect(response).to have_http_status(302)
+
+      set_json_request
+      delete :destroy, params: {course_id: @course.id, id: @lesson.id}
+
+      expect(response).to have_http_status(403)
+      expect(Lesson.count).to eq(1)
+    end
+
+    it 'accepts access for author' do
+      auth_as(@course.author)
+
+      set_js_request
+
+      delete :destroy, params: {course_id: @course.id, id: @lesson.id}
+
+      expect(response).to have_http_status(200)
+
+      expect(Lesson.count).to eq(0)
+    end
+  end
 end

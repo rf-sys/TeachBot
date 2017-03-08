@@ -8,6 +8,10 @@ def set_json_request
     request.env['HTTP_ACCEPT'] = 'application/json'
 end
 
+def set_js_request
+  request.env['HTTP_ACCEPT'] = ' application/javascript'
+end
+
 def omniauth_facebook_mock_user
   OmniAuth.config.mock_auth[:facebook] = OmniAuth::AuthHash.new(
       {

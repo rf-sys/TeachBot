@@ -5,7 +5,7 @@ module CourseControllers
     before_action :require_user, except: [:show]
     before_action :set_course
     before_action :require_author, except: [:show]
-    before_action :set_lesson, only: [:edit, :update]
+    before_action :set_lesson, only: [:edit, :update, :destroy]
 
     def show
       unless access_to_course?(@course, current_user)
@@ -38,6 +38,15 @@ module CourseControllers
         redirect_to course_lesson_path(@course, @lesson)
       else
         fail_response(@lesson.errors.full_messages, 422)
+      end
+    end
+
+    def destroy
+      @lesson.destroy
+
+      respond_to do |format|
+        format.html { redirect_to @course }
+        format.js {}
       end
     end
 
