@@ -71,6 +71,7 @@ RSpec.configure do |config|
 
   config.append_after(:each) do
     DatabaseCleaner.clean
+    $bucket.clear!
   end
 
   # The different available types are documented in the features, such as in
