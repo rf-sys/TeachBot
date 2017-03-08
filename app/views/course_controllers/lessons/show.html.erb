@@ -1,8 +1,10 @@
 <%= content_for :head do %>
   <meta id="course_theme_color" content="<%= @course.theme %>">
+  <meta name="lesson_url" content="<%= course_lesson_url(@course, @lesson) %>">
+  <meta name="lesson_id" content="<%= @lesson.id %>">
 <% end %>
 
-<%= render partial: 'nav', locals: {lesson: @lesson, course: @course} %>
+<%= render partial: 'nav', locals: { lesson: @lesson, course: @course } %>
 
 <div class="container-fluid">
   <h1><%= @lesson.title %></h1>
@@ -11,4 +13,8 @@
   </p>
   <hr>
   <%= sanitize @lesson.content %>
+
+  <hr>
+  <h2 class="text-center">Comments</h2>
+  <div id="disqus_thread" style="margin-top: 15px"></div>
 </div>
