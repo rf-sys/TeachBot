@@ -1,3 +1,4 @@
+# represents main page of the application
 class MainController < ApplicationController
   def index
     @courses = Rails.cache.fetch('courses/recent_courses') do

@@ -2,7 +2,7 @@ class UserControllers::CoursesController < ApplicationController
   before_action :require_user, only: [:destroy]
 
   def index
-    @user = get_from_cache(User, params[:user_id]) { User.friendly.find(params[:user_id]) }
+    @user = fetch_cache(User, params[:user_id]) { User.friendly.find(params[:user_id]) }
     respond_to do |format|
       format.html {}
       format.any(:js, :json) do
@@ -12,10 +12,10 @@ class UserControllers::CoursesController < ApplicationController
   end
 
   def destroy
-    user = get_from_cache(User, params[:user_id])
-    course = get_from_cache(Course, params[:id])
+    user = fetch_cache(User, params[:user_id])
+    course = fetch_cache(Course, params[:id])
 
-    unless is_owner?(course)
+    unless owner?(course)
       return error_message(['Forbidden'], 403)
     end
 

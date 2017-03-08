@@ -14,8 +14,10 @@ class Chat < ApplicationRecord
 
   scope :with_users_and_messages, -> { includes(:users, messages: [:user]).distinct }
 
-  def save_and_add_participants
-    self.save
+  after_create :add_participants
+
+
+  def add_participants
     self.users << [self.initiator, self.recipient]
   end
 

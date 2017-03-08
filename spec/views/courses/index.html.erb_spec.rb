@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe 'courses/index.html.erb', type: :view do
   before :each do
-    assign(:courses, Course.where_public.where_published.order(updated_at: :desc).page(params[:page]).per(6))
+    assign(:courses, Course.public_and_published.page(params[:page]).per(6))
   end
 
   it 'renders public and published courses' do

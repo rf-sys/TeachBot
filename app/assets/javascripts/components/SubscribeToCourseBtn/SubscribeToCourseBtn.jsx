@@ -11,7 +11,9 @@ class SubscribeToCourseBtn extends React.Component {
     }
 
     subscribe() {
-        let ajax = $.post(`/courses/${this.props.course_id}/subscribe`);
+        let ajax = $.post(`/subscriptions`, {
+            id: this.props.course_id
+        });
 
         ajax.done(() => {
             this.setState({subscribed: true});
@@ -20,7 +22,7 @@ class SubscribeToCourseBtn extends React.Component {
 
     unsubscribe() {
         let ajax = $.ajax({
-           url: `/courses/${this.props.course_id}/unsubscribe`,
+           url: `/subscriptions/${this.props.course_id}`,
            method: 'DELETE',
            DataType: 'json'
         });

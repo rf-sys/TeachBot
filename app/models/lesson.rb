@@ -4,6 +4,10 @@ class Lesson < ApplicationRecord
 
   belongs_to :course, touch: true
 
+  scope :belongs_to_public_and_published_courses, -> do
+    includes(:course).where(courses: { public: true, published: true })
+  end
+
   validates :title, presence: true, length: {maximum: 50}
   validates :description, presence: true, length: {maximum: 255} # temporarily
   validates :content, presence: true, length: {maximum: 5000}

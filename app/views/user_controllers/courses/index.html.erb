@@ -8,7 +8,11 @@
         <div class="col-md-12">
           <h1 style="text-align: center;">Courses</h1>
           <hr>
-          <%= react_component('UserCourses', {user: @user.id, current_user: current_user.try(:id)}) %>
+          <%= react_component('UserCourses', {
+              user: @user.id,
+              current_user: current_user.try(:id),
+              is_teacher: current_user ? current_user.has_role?(:teacher) : nil
+          }) %>
         </div>
       </div>
     </div>

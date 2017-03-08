@@ -2,6 +2,15 @@ class Message < ApplicationRecord
   has_and_belongs_to_many :unread_users, join_table: 'unread_messages_users', class_name: 'User'
   belongs_to :user
   belongs_to :chat, touch: true
+
+  scope :for_public_chat, -> (chat) do
+    where(chat: chat).includes(:user).order(created_at: :desc)
+  end
+
+  scope :for_chat_id, -> (chat_id) do
+    where(chat_id: chat_id)
+  end
+
   validates :text, length: {maximum: 255}, presence: true
 
   after_create :create_cache

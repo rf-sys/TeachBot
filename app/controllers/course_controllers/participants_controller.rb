@@ -31,15 +31,15 @@ class CourseControllers::ParticipantsController < ApplicationController
   private
 
   def set_course
-    @course = get_from_cache(Course, params[:course_id])
+    @course = fetch_cache(Course, params[:course_id])
   end
 
   def set_user
-    @user = get_from_cache(User, params[:id])
+    @user = fetch_cache(User, params[:id])
   end
 
   def require_owner
-    unless is_owner?(@course)
+    unless owner?(@course)
       render :json => {status: 'Access denied'}, status: :forbidden
     end
   end

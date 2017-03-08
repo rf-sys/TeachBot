@@ -1,21 +1,24 @@
 require 'rails_helper'
 
 describe 'the signin process', :type => :feature do
+  before :each do
+    @user = create(:user)
+  end
 
   it 'signs me in as valid user', js: true do
-    user = create(:user)
     visit login_path
+    sleep(1)
     within('#login_form') do
       fill_in 'session_email', with: 'testuser@gmail.com'
       fill_in 'session_password', with: 'password'
     end
     click_button 'Sign in'
-    expect(page).to have_content 'You have been logged in as: ' + user.username
+    expect(page).to have_content 'You have been logged in as: ' + @user.username
   end
 
   it 'i cannot signs with invalid data', js: true do
-    create(:user)
     visit login_path
+    sleep(1)
     within('#login_form') do
       fill_in 'session_email', with: 'INVALIDEMAIL@example.com'
       fill_in 'session_password', with: 'password'

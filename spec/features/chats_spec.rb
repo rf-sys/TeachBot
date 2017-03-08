@@ -8,7 +8,7 @@ describe 'Chats', :type => :feature, js: true do
   end
 
   it 'creates chat' do
-    visit conversations_path
+    visit chats_path
     expect(page).to have_content('Chat')
     fill_in 'Username...', with: @recipient.username
     page.has_css?('table.table')

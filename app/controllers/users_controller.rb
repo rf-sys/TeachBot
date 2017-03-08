@@ -6,8 +6,7 @@ class UsersController < ApplicationController
   before_action :require_user, :profile_owner, only: [:edit, :update, :destroy]
   before_action :set_user, except: [:new, :create]
 
-  def show
-  end
+  def show; end
 
   def new
     @user = User.new
@@ -24,11 +23,11 @@ class UsersController < ApplicationController
     end
   end
 
-  def edit
-  end
+  def edit; end
 
   def update
-    update_user_service = UpdateUser.new(Repositories::UserRepository, self)
+    user_repository = Repositories::UserRepository
+    update_user_service = UpdateUser.new(user_repository, self)
     update_user_service.update(@user, update_params)
   end
 
@@ -41,11 +40,14 @@ class UsersController < ApplicationController
   private
 
   def set_user
-    @user = get_from_cache(User, params[:id]) { User.friendly.find(params[:id]) }
+    @user = fetch_cache(User, params[:id], 'slug') do
+      User.friendly.find(params[:id])
+    end
   end
 
   def user_params
-    params.require(:user).permit(:username, :email, :password, :password_confirmation)
+    params.require(:user).permit(:username, :email, :password,
+                                 :password_confirmation)
   end
 
   def update_params

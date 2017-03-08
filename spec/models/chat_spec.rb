@@ -2,30 +2,14 @@ require 'rails_helper'
 
 RSpec.describe Chat, type: :model do
   describe '#between_users' do
-    it 'returns chat between initiator and recipient users' do
+    it 'returns chat between initiator and recipient' do
       user = create(:user)
+      second_user = create(:second_user)
 
-     5.times do |i|
-       another_user = create(:user, username: 'TestUser_' + i.to_s, email: "testuser_#{i}@gmail.com")
-       chat = create(:chat, initiator: user, recipient: another_user)
-       chat.users << [user, another_user]
-     end
+      # create chat between two users
+      chat = Chat.create(initiator: user, recipient: second_user, public_chat: false)
 
-      Chat.first.users << create(:user, username: 'TestUser_third', email: 'testuser_third@gmail.com')
-
-      expect(Chat.first.users.count).to eq(3)
-
-      another_user = User.limit(2).last # get the second user
-
-      chat = Chat.between_users(user, another_user).take
-
-      expect(chat.present?).to eq(false)
-
-      Chat.first.users.delete(User.find_by_username('TestUser_third'))
-
-      chat = Chat.between_users(user, another_user).take
-
-      expect(chat.present?).to eq(true)
+      expect(Chat.between_users(user, second_user).take).to eq chat
     end
   end
 end

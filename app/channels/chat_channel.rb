@@ -22,7 +22,7 @@ class ChatChannel < ApplicationCable::Channel
   # check is necessary because it is called from the client
   def subscribe_to_chat(data)
     if current_user
-      chat = get_from_cache(Chat, data['chat_id'])
+      chat = fetch_cache(Chat, data['chat_id'])
       if chat && user_related_to_chat(chat, current_user)
         stream_from "Chat:#{data['chat_id']}"
       end

@@ -1,14 +1,15 @@
+# Oauth
 class AuthController < ApplicationController
   before_action :require_guest
 
   def facebook
-    redirect_to "https://www.facebook.com/v2.8/dialog/oauth?" \
+    redirect_to 'https://www.facebook.com/v2.8/dialog/oauth?' \
                 "client_id=#{ENV['FACEBOOK_APP_ID']}&" \
                 "redirect_uri=#{auth_facebook_callback_url}"
   end
 
   def github
-    redirect_to "https://github.com/login/oauth/authorize?" \
+    redirect_to 'https://github.com/login/oauth/authorize?' \
                 "client_id=#{ENV['GITHUB_APP_ID']}" \
                 "redirect_uri=#{auth_github_callback_url}" \
                 "state=#{SecureRandom.hex}"
@@ -19,7 +20,7 @@ class AuthController < ApplicationController
     user = User.find_or_create_from_auth_hash(auth_hash)
     log_in(user)
     redirect_to root_path
-  rescue Exception => e
+  rescue StandardError => e
     flash[:danger_notice] = e.message
     redirect_to root_url
   end

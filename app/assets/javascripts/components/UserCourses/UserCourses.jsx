@@ -58,11 +58,19 @@ class UserCourses extends React.Component {
         });
     }
 
+    is_authUser() {
+        return this.props.current_user == this.props.user
+    }
+
+    can_create_new_course() {
+        return this.is_authUser() && this.props.is_teacher;
+    }
+
     render() {
         let not_found = (
             <div className="text-center">
-                <h2>Courses not found</h2>
-                {this.props.current_user == this.props.user ? <a href="/courses/new">Create a new one</a> : null}
+                <h2>No courses</h2>
+                {this.can_create_new_course() ? <a href="/courses/new">Create a new one</a> : null}
             </div>
         );
 
@@ -92,5 +100,6 @@ class UserCourses extends React.Component {
 
 UserCourses.propTypes = {
     user: React.PropTypes.number, // target user id
-    current_user: React.PropTypes.number // auth user id
+    current_user: React.PropTypes.number, // auth user id,
+    is_teacher: React.PropTypes.bool
 };

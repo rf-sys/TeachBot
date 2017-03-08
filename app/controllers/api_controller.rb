@@ -1,3 +1,4 @@
+# base class for api inheritance
 class ApiController < ApplicationController
   require_dependency 'services/json_web_token.rb'
   before_action :default_format
@@ -11,51 +12,41 @@ class ApiController < ApplicationController
   def user_token
     user = User.find_by(email: params[:email], uid: nil)
 
-    unless user
-      return head :not_found
-    end
+    return head :not_found unless user
 
-    unless user.authenticate(params[:password])
-      return head :forbidden
-    end
+    return head :forbidden unless user.authenticate(params[:password])
 
-    render json: {token: JsonWebToken.encode(payload(user))}
+    render json: { token: JsonWebToken.encode(payload(user)) }
   end
 
   # authenticate jwt token
   def authenticate_jwt
     return true if current_user
 
-    unless sub_present?
-      return error_message(['Unauthorized'], 401)
-    end
+    return error_message(['Unauthorized'], 401) unless sub_present?
 
     user = User.find(decoded_jwt_token['sub'])
 
-    unless user
-      return error_message(['Unauthorized'], 401)
-    end
+    return error_message(['Unauthorized'], 401) unless user
 
   rescue StandardError
     return error_message(['Unauthorized'], 401)
   end
 
   private
+
   def payload(user)
     {
-        iss: Rails.application.config.development_host,
-        sub: user.id,
-        aud: 'users',
-        exp: Time.now.to_i + 1.day
+      iss: Rails.application.config.development_host,
+      sub: user.id,
+      aud: 'users',
+      exp: Time.now.to_i + 1.day
     }
   end
 
   def jwt_token
-    if request.headers['Authorization'].present?
-      request.headers['Authorization'].split(' ').last
-    else
-      nil
-    end
+    return unless request.headers['Authorization'].present?
+    request.headers['Authorization'].split(' ').last
   end
 
   def decoded_jwt_token

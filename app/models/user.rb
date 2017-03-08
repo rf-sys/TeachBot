@@ -42,6 +42,11 @@ class User < ApplicationRecord
     includes(:subscriptions).where(subscriptions: {subscribeable_type: 'Course', subscribeable_id: course.id})
   end
 
+  scope :where_username_like, -> (username) do
+    where('username LIKE ?', "%#{username}%").limit(10)
+  end
+
+  scope :public_fields, -> { select(:id, :username, :avatar) }
   attr_accessor :remember_token, :activation_token
   accepts_nested_attributes_for :profile, reject_if: :all_blank
 
@@ -61,7 +66,6 @@ class User < ApplicationRecord
   after_update :touch_chats
 
   after_save :clean_user_courses_cache
-  after_save :clean_slug_cache
 
   def assign_default_role
     self.add_role(:user) if self.roles.blank?
@@ -126,7 +130,6 @@ class User < ApplicationRecord
         user.activated = true
       end
     end
-
   end
 
   private
@@ -154,10 +157,6 @@ class User < ApplicationRecord
 
   def clean_user_courses_cache
     Rails.cache.delete("user/#{id}/courses")
-  end
-
-  def clean_slug_cache
-    Rails.cache.delete("user/#{slug_was}/info")
   end
 
   # touch all chats, user belongs to

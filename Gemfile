@@ -74,13 +74,14 @@ gem 'figaro'
 
 gem 'bootstrap', '~> 4.0.0.alpha6'
 
-# tether need to bootstrap
 source 'https://rails-assets.org' do
+  # tether need for bootstrap
   gem 'rails-assets-tether', '>= 1.1.0'
   gem 'rails-assets-moment'
   gem 'rails-assets-lodash'
   gem 'rails-assets-wysihtml'
   gem 'rails-assets-autosize'
+  gem 'rails-assets-cropperjs'
 end
 
 # font-awesome
@@ -95,18 +96,30 @@ gem 'sendgrid-ruby'
 # pagination gem
 gem 'kaminari'
 
+# roles access support
 gem 'rolify'
 
+# animate.css support
 gem 'animate_css_on_rails'
 
+# facebook oauth
 gem 'omniauth-facebook'
 
+# github oauth
 gem 'omniauth-github'
 
+# jwt support
 gem 'jwt'
 
+# replace 'id' in url with recognized string
 gem 'friendly_id'
 
+# to insert a bunch of new records with one query
 gem 'activerecord-import', '~> 0.17.1'
 
+# validate image files
+gem 'fastimage'
+
+gem 'aws-sdk', '~> 2'
+# specify active ruby version
 ruby '2.3.3'

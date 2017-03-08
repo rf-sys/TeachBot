@@ -21,6 +21,7 @@
 //= require moment
 //= require wysihtml
 //= require autosize
+//= require cropperjs
 //= require coffee/global
 //= require components
 //= require_tree .

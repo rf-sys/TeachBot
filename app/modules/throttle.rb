@@ -1,8 +1,5 @@
 module Throttle
 
-  REDIS = $redis_connection
-
-
   module Interval
 
     class Base
@@ -14,7 +11,7 @@ module Throttle
 
         def check_redis_connection
           begin
-            REDIS.info
+            $redis_connection.info
           rescue Redis::CannotConnectError
             return false
           end
@@ -60,7 +57,7 @@ module Throttle
 
       # return: bool
       def self.too_many_attempts?(remote_ip)
-        if REDIS.exists("throttle[#{@key}][#{remote_ip}]")
+        if $redis_connection.exists("throttle[#{@key}][#{remote_ip}]")
           return true
         end
         false
@@ -70,7 +67,7 @@ module Throttle
 
       # message a new cache of the ip
       def self.mark_ip(remote_ip)
-        REDIS.set("throttle[#{@key}][#{remote_ip}]", true, ex: @interval)
+        $redis_connection.set("throttle[#{@key}][#{remote_ip}]", true, ex: @interval)
       end
 
       def self.config(options)
@@ -112,11 +109,11 @@ module Throttle
       end
 
       def self.too_many_attempts?(remote_ip)
-        unless REDIS.exists("throttle[#{@key}][#{remote_ip}]")
-          REDIS.set("throttle[#{@key}][#{remote_ip}]", 0, ex: @interval.minutes)
+        unless $redis_connection.exists("throttle[#{@key}][#{remote_ip}]")
+          $redis_connection.set("throttle[#{@key}][#{remote_ip}]", 0, ex: @interval.minutes)
         end
 
-        return REDIS.get("throttle[#{@key}][#{remote_ip}]").to_i >= @max_attempts
+        return $redis_connection.get("throttle[#{@key}][#{remote_ip}]").to_i >= @max_attempts
       end
 
       # message a new cache with updated values
@@ -124,7 +121,7 @@ module Throttle
 
         # 'increment' resets expire time in cache...Cache simple doesn't delete after expire time
 
-        REDIS.incr("throttle[#{@key}][#{remote_ip}]")
+        $redis_connection.incr("throttle[#{@key}][#{remote_ip}]")
       end
 
       def self.config(options)

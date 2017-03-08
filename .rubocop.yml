@@ -1,0 +1,7 @@
+Rails:
+  Enabled: true
+Style/GlobalVars:
+  AllowedVariables: [$redis_connection]
+Style/AlignHash:
+  EnforcedHashRocketStyle: table
+  EnforcedColonStyle: table

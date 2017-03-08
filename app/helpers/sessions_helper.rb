@@ -2,7 +2,6 @@ module SessionsHelper
   # Logs in the given user.
   def log_in(user)
     session[:user_id] = user.id
-    cookies.signed[:live_user_id] = session[:user_id]
     flash[:info_notice] = 'You have been logged in as: ' + user.username
   end
 
@@ -25,7 +24,6 @@ module SessionsHelper
     user.forget
     cookies.delete(:user_id)
     cookies.delete(:remember_token)
-    cookies.delete(:live_user_id)
   end
 
   # Returns true if the user is logged in, false otherwise.

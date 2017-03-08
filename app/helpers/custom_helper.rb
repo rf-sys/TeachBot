@@ -8,9 +8,9 @@ module CustomHelper
   module Cache
     # flexible cache to prevent repeating Rails.cache.fetch
     # @param [ApplicationRecord] klass
-    def get_from_cache(klass, id, option = 'info')
+    def fetch_cache(klass, id, key = 'id')
       class_name = klass.name.demodulize.downcase
-      Rails.cache.fetch("#{class_name}/#{id}/#{option}") do
+      Rails.cache.fetch("#{class_name}/#{id}/#{key}") do
         if block_given?
           yield
         else

@@ -6,8 +6,8 @@ module Repositories
       Chat.find_or_initialize_between(first_user, second_user)
     end
 
-    def save_with_participants(chat)
-      chat.save_and_add_participants
+    def save(chat)
+      chat.save
     end
   end
 end

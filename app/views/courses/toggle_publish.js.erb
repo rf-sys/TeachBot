@@ -1,1 +1,4 @@
 $("form[id='course_status']").replaceWith('<%= j render 'courses/status' %>');
+$('[data-toggle="popover"]').popover({
+    trigger: 'focus'
+});

@@ -21,7 +21,7 @@ class UserControllers::SubscriptionsController < ApplicationController
   def destroy
     return error_message(['Access denied'], 403) unless it_is_current_user(@user)
 
-    course = get_from_cache(Course, params[:id])
+    course = fetch_cache(Course, params[:id])
     @user.subscriptions_to_courses.destroy(course)
     render json: {status: 'Ok'}
   end
@@ -29,6 +29,6 @@ class UserControllers::SubscriptionsController < ApplicationController
   private
 
   def set_user
-    @user = get_from_cache(User, params[:user_id]) { User.friendly.find(params[:user_id]) }
+    @user = fetch_cache(User, params[:user_id]) { User.friendly.find(params[:user_id]) }
   end
 end

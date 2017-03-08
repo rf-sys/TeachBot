@@ -17,6 +17,18 @@ RSpec.describe CourseControllers::LessonsController, type: :controller do
       expect(response.status).to eq(403)
     end
 
+    it 'denies access if auth user isn\'t author and the course is unpublished' do
+      course = create(:unpublished_course)
+      lesson = create(:lesson, course: course)
+
+      foreign_user = create(:second_user)
+      auth_as(foreign_user)
+
+      get :show, params: {course_id: lesson.course.id, id: lesson.id}
+      expect(response.status).to eq(302)
+
+    end
+
     it 'returns success if public course' do
       course = create(:course)
       lesson = create(:lesson, course: course)
@@ -33,7 +45,8 @@ RSpec.describe CourseControllers::LessonsController, type: :controller do
           course_id: @course.id,
           lesson: {
               title: 'Test Lesson Title',
-              description: 'Test Lesson Description'
+              description: 'Test Lesson Description',
+              content: 'Test Lesson Content'
           }
       }
     end
@@ -62,6 +75,83 @@ RSpec.describe CourseControllers::LessonsController, type: :controller do
       }.to change(Lesson, :count).by(1)
 
       expect(response).to have_http_status(302)
+    end
+  end
+
+  describe 'PUT/PATCH #update' do
+    before :each do
+      @course = create(:course, public: true)
+
+      @lesson = create(:lesson, course: @course)
+
+      @update_params = {
+          course_id: @course.id,
+          id: @lesson.friendly_id,
+
+          lesson: {
+              title: 'UPDATED LESSON TITLE'
+          }
+      }
+    end
+
+    it 'updates lesson' do
+      auth_as(@course.author)
+
+      put :update, params: @update_params
+
+      expect(response).to have_http_status(302) # expect redirect to the show action after success
+
+      @lesson.reload # update database record to see changes
+
+      expect(@lesson.title).to eq(@update_params[:lesson][:title])
+    end
+
+    it 'denies access for no author of the course (lesson belongs to course)' do
+      foreign_user = create(:second_user)
+      auth_as(foreign_user)
+
+      put :update, params: @update_params
+
+      expect(response).to have_http_status(302) # expect redirect to the home page
+
+      set_json_request
+
+      put :update, params: @update_params
+
+      expect(response).to have_http_status(403) # expect 403 error if json request
+
+      @lesson.reload # update database record to see changes
+
+      expect(@lesson.title).not_to eq(@update_params[:lesson][:title])
+    end
+
+    it 'raises validation errors' do
+      auth_as(@course.author)
+
+      @update_params[:lesson][:title] = ''
+
+
+      # html request format
+      put :update, params: @update_params
+
+      expect(response).to have_http_status(302) # expect redirect to the home page is no json request
+
+      @lesson.reload # update database record to see changes
+
+      expect(@lesson.title).not_to eq(@update_params[:lesson][:title])
+
+
+      set_json_request
+
+      # json request format
+      put :update, params: @update_params
+
+      expect(response).to have_http_status(422) # expect redirect to the home page is no json request
+
+      @lesson.reload # update database record to see changes
+
+      expect(@lesson.title).not_to eq(@update_params[:lesson][:title])
+
     end
   end
 end

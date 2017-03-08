@@ -3,12 +3,12 @@ class PublicChatControllers::MessagesController < ApplicationController
   before_action :require_user, only: [:create]
 
   def index
-    @messages = @public_chat.messages.includes(:user).order(created_at: :desc).page(params[:page] || 1).per(4)
+    page = params[:page]
+    @messages = Message.for_public_chat(@public_chat).paginate(page, 5)
   end
 
   def create
     message = current_user.messages.new_message(message_params, chat_id: @public_chat.id)
-
     if message.save
       PublicChatChannel.send_message(message)
       head :no_content
@@ -20,7 +20,7 @@ class PublicChatControllers::MessagesController < ApplicationController
   private
 
   def set_public_chat
-    @public_chat = get_from_cache(PublicChat, 'public_chat') { PublicChat.take }
+    @public_chat = fetch_cache(PublicChat, 'public_chat') { PublicChat.take }
   end
 
   def message_params

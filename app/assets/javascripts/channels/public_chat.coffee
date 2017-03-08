@@ -30,6 +30,8 @@ App.public_chat = App.cable.subscriptions.create "PublicChatChannel",
 
   triggetMessage: (data) ->
     $(document).trigger "public_chat:receive_message", data.response
+    $('#chat_block').animate({ scrollTop: 9999 }, 'slow');
+    @perform 'appear'
 
 $ ->
   $(this).on 'turbolinks:load', ->

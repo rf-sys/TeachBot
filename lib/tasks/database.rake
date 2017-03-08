@@ -17,8 +17,8 @@ namespace :database do
     end
   end
 
-  task fill_up_users_wtih_data: :environment do
-    1000.times { |i|
+  task fill_up_users_with_data: :environment do
+    100.times { |i|
       User.create(
           username: "devusername-#{i}",
           email: "devemail-#{i}@mail.ru",
@@ -26,13 +26,5 @@ namespace :database do
           activated: false,
       )
     }
-  end
-
-  task fill_up_subscribers_count_courses_table: :environment do
-    @courses = Course.all
-
-    @courses.each do |course|
-      course.update_attribute('subscriptions_count', course.subscribers.size)
-    end
   end
 end

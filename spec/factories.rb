@@ -71,6 +71,7 @@ FactoryGirl.define do
     course
     title 'Test Lesson Title'
     description 'Test Lesson Description'
+    content 'Test Lesson Content'
   end
 
   factory :post do

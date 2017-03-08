@@ -4,7 +4,6 @@ RSpec.describe ChatControllers::MessagesController, type: :controller do
   describe 'POST #create' do
     before :each do
       @chat = create(:chat)
-      @chat.users << [@chat.initiator, @chat.recipient]
     end
     it 'denies access for guests' do
       post :create, params: {chat_id: @chat.id}

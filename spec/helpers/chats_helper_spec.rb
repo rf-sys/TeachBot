@@ -4,7 +4,6 @@ RSpec.describe ChatsHelper, type: :helper do
   describe '#user_related_to_chat' do
     it 'returns true if user is included into the chat' do
       chat = create(:chat)
-      chat.users << [chat.initiator, chat.recipient]
 
       related = user_related_to_chat(chat, chat.initiator)
 
@@ -13,9 +12,10 @@ RSpec.describe ChatsHelper, type: :helper do
 
     it "returns false if user isn't included into the chat" do
       chat = create(:chat)
-      chat.users << [chat.initiator]
 
-      related = user_related_to_chat(chat, chat.recipient)
+      foreign_user = create(:third_user)
+
+      related = user_related_to_chat(chat, foreign_user)
 
       expect(related).to eq(false)
     end
