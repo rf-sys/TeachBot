@@ -10,6 +10,8 @@
   <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
 
+  <link rel="alternate" type="application/rss+xml" title="Codingfish RSS Feed" href="<%= rss_index_path %>">
+
   <%= yield :head %>
 
 </head>
