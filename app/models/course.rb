@@ -19,11 +19,15 @@ class Course < ApplicationRecord
 
   has_many :lessons, dependent: :destroy
 
-  scope :where_public, -> { where(:public => true) }
-
-  scope :where_published, -> { where(:published => true) }
+  scope :public_and_published, -> do
+    where(public: true, published: true)
+  end
 
   scope :courses_with_paginate, -> (page = 1) { page(page).per(2) }
+
+  scope :public_params, -> do
+    select(:title, :description, :poster, :updated_at)
+  end
 
   validates :title, presence: true, length: {minimum: 6, maximum: 30}
   validates :description, presence: true, length: {minimum: 6, maximum: 255}
@@ -32,7 +36,8 @@ class Course < ApplicationRecord
   validates :theme, format: {with: /\A#.{6}\z/, message: 'color is invalid'}, allow_blank: true
 
   after_save :clean_old_slug_cache
-  before_commit :clean_cache_by_slug, :clean_recent_courses_cache
+
+  after_commit :clean_recent_courses_cache
 
   private
 
@@ -46,9 +51,5 @@ class Course < ApplicationRecord
 
   def clean_old_slug_cache
     Rails.cache.delete("course/#{slug_was}/info")
-  end
-
-  def clean_cache_by_slug
-    Rails.cache.delete("course/#{friendly_id}/info")
   end
 end

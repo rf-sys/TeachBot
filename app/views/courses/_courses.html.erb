@@ -1,0 +1,11 @@
+<% if @courses.present? %>
+  <div class="card-columns load-fade">
+    <%= render partial: 'course', collection: @courses, cached: true %>
+  </div>
+<% else %>
+  <h2 class="text-center">No public courses</h2>
+<% end %>
+
+<div style="display: flex; justify-content: center" class="text-center" id="index_courses_pagination">
+  <%= paginate @courses, theme: 'simple_bootstrap_paginator', remote: true %>
+</div>

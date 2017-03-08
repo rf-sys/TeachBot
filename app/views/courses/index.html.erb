@@ -1,16 +1,74 @@
 <div class="container-fluid" style="margin-top: 15px">
   <h1 style="text-align: center;">Public courses</h1>
   <hr>
-  <% if @courses.present? %>
-    <div class="card-columns load-fade">
-      <%= render partial: 'course', collection: @courses, cached: true, locals: {last_page: @courses.last_page?} %>
+
+  <div class="row">
+    <div class="col-lg" id="index_courses">
+      <%= render partial: 'courses' %>
     </div>
-  <% else %>
-    <h2 class="text-center">No public courses</h2>
-  <% end %>
 
+    <div class="col-lg-3" id="courses_advanced_search_block">
+      <h3 class="text-center">Search panel</h3>
+      <%= form_tag(courses_path, remote: true, method: :get, id: 'courses_search_form') do %>
 
-  <div style="display: flex; justify-content: center" class="text-center">
-    <%= paginate @courses, theme: 'simple_bootstrap_paginator' %>
+        <div class="form-group">
+          <%= label_tag(:find, 'Find text in the course:') %>
+
+          <%= text_field_tag(:find, nil, class: 'form-control',
+                             placeholder: 'Type the word or phrase that interesting you')
+          %>
+
+        </div>
+        <div class="form-group">
+          <%= label_tag(:find_by, 'Find text in the course by selected field') %>
+
+          <%= select_tag(:find_by, options_for_select(
+              [
+                  ['Title - find by title of the course', :title],
+                  ['Description - find by courses short description', :description]
+              ]
+          ), class: 'form-control') %>
+
+        </div>
+
+        <div class="form-group">
+          <%= label_tag(:order, 'Order found courses by selected field:') %>
+
+          <%= select_tag(:order, options_for_select(
+              [
+                  ['Date of creation', :created_at],
+                  ['Poster - courses with poster will be in priority', :poster],
+                  ['Title - order by title of the course', :title],
+                  ['Description - find by courses short description', :description]
+              ]
+          ), class: 'form-control') %>
+        </div>
+
+        <div class="form-group">
+          <%= label_tag(:order_type, 'Change order format you want to see:') %>
+
+          <%= select_tag(:order_type, options_for_select(
+              [
+                  ['Ascending', :asc],
+                  ['Descending', :desc]
+              ]
+          ), class: 'form-control') %>
+        </div>
+
+        <div class="form-group">
+          <%= label_tag :per, 'How many courses will be displayed per-page:' %>
+          <div style="width: 65px">
+            <%= number_field_tag('per', nil, class: 'form-control', value: 6, min: 1) %>
+          </div>
+
+        </div>
+
+        <div style="margin-top: 15px">
+          <%= submit_tag 'Find courses',
+                         class: 'btn btn-outline-primary btn-block',
+                         data: { disable_with: 'Loading...' }%>
+        </div>
+      <% end %>
+    </div>
   </div>
 </div>

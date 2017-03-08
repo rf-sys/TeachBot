@@ -1,26 +1,32 @@
+# represents RESTful of the courses
 class CoursesController < ApplicationController
   include Services::UseCases::Course::UpdatePosterService
   include CoursesHelper
+  require_dependency 'services/query_master.rb'
 
-  before_action :require_user, except: [:index, :show, :rss_feed]
-  before_action :require_teacher, except: [:index, :show, :rss_feed, :subscribe, :unsubscribe]
-  before_action :set_course, :require_owner, except: [:index, :show, :new, :create, :rss_feed]
+  before_action :require_user, except: [:index, :show]
+  before_action :require_teacher, except: [:index, :show]
+  before_action :set_course, except: [:index, :new, :create]
+  before_action :require_owner, except: [:index, :show, :new, :create]
+  before_action :prepare_params, only: [:index]
 
   def index
-    @courses = Course.where_public.where_published.order(updated_at: :desc).page(params[:page]).per(6)
+    page = params[:page] || 1
+    per = params[:per] || 6
+    master = QueryMaster.new(Course)
+
+    @courses = master.query(request).public_and_published.paginate(page, per)
+
+    respond_to do |format|
+      format.json { render json: @courses }
+      format.js {}
+      format.html {}
+    end
   end
 
   def show
-    @course = get_from_cache(Course, params[:id]) do
-      Course.includes(:author).friendly.find(params[:id])
-    end
-
-    unless have_access_to_private_course(@course)
-      return invalid_request_message(['You dont have access to browse this course'], 403)
-    end
-
-    unless unpublished_and_user_is_author(@course)
-      return invalid_request_message(['Course has not been published yet'], 403)
+    unless access_to_course?(@course, current_user)
+      return fail_response(['You dont have access to browse this course'], 403)
     end
 
     @views = $redis_connection.get("courses/#{@course.id}/visitors") || 0
@@ -38,18 +44,17 @@ class CoursesController < ApplicationController
       flash[:super_success_notice] = 'Course has been created successfully'
       redirect_to course
     else
-      invalid_request_message(course.errors.full_messages, 422)
+      fail_response(course.errors.full_messages, 422)
     end
   end
 
-  def edit
-  end
+  def edit; end
 
   def update
     if @course.update(course_params)
       redirect_to @course
     else
-      invalid_request_message(@course.errors.full_messages, 422)
+      fail_response(@course.errors.full_messages, 422)
     end
   end
 
@@ -59,20 +64,15 @@ class CoursesController < ApplicationController
     redirect_to courses_path
   end
 
-  def rss_feed
-    @courses = Course.where(:public => true)
-    respond_to do |format|
-      format.rss { render :layout => false }
-    end
-  end
-
   # update poster of the course
   def update_poster
-    unless params.fetch(:course, {}).fetch(:poster, false)
-      return invalid_request_message(['File not found'], 422)
+    unless params.fetch(:course, {}).fetch(:poster, false).present?
+      return fail_response(['File not found'], 422)
     end
 
-    update_poster_service = UpdatePoster.new(Repositories::CourseRepository, self)
+    repository = Repositories::CourseRepository
+
+    update_poster_service = UpdatePoster.new(repository, self)
 
     update_poster_service.update(@course, params[:course][:poster])
   end
@@ -83,38 +83,27 @@ class CoursesController < ApplicationController
     @course.save
   end
 
-  # subscribe current user to course
-  def subscribe
-    if course_in_subscriptions?(@course)
-      return invalid_request_message(['Subscription exists already'], 403)
-    end
-    @course.subscribers << current_user
-    head :ok
-  end
-
-  # unsubscribe current user from course
-  def unsubscribe
-    @course.subscribers.destroy current_user
-    head :ok
-  end
-
   private
 
   def set_course
-    @course = Course.friendly.find(params[:id])
+    @course = fetch_cache(Course, params[:id], 'slug') do
+      Course.friendly.find(params[:id])
+    end
   end
 
   def course_params
-    params.require(:course).permit(:title, :description, :public, :poster, :theme)
-  end
-
-  def course_in_subscriptions?(course)
-    current_user.subscriptions_to_courses.include?(course)
+    params.require(:course).permit(:title, :description, :public, :theme)
   end
 
   def require_owner
-    unless it_is_current_user(@course.author)
-      invalid_request_message(['Access denied'], 403)
-    end
+    return if it_is_current_user(@course.author)
+    fail_response(['Access denied'], 403)
+  end
+
+  def prepare_params
+    request.params[:find_by] = 'title' unless params[:find_by].present?
+    request.params[:order] = 'title' unless params[:order].present?
+    request.params[:order_type] = 'asc' unless params[:order_type].present?
+    params[:per] = 6 if params[:per].to_i < 1
   end
 end
