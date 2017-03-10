@@ -2,7 +2,8 @@
   <% if @course.published %>
     <span class="text-primary">Published</span>&ensp;
     <% if it_is_current_user(@course.author) %>
-      <%= f.submit 'Unpublish', class: 'btn btn-outline-secondary btn-sm' %>
+      <%= f.submit 'Unpublish', class: 'btn btn-outline-warning btn-sm', data: {disable_with: 'Loading...'}
+      %>
 
       <button type="button" class="btn btn-outline-info btn-sm" data-container="body"
               data-toggle="popover" data-placement="right"
@@ -13,7 +14,7 @@
   <% else %>
     <span class="text-warning">No published</span>&ensp;
     <% if it_is_current_user(@course.author) %>
-      <%= f.submit 'Publish', class: 'btn btn-outline-primary btn-sm' %>
+      <%= f.submit 'Publish', class: 'btn btn-outline-primary btn-sm', data: {disable_with: 'Loading...'} %>
 
       <button type="button" class="btn btn-outline-info btn-sm" data-container="body"
               data-toggle="popover" data-placement="right"
