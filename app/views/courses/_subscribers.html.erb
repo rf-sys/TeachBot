@@ -1,0 +1,15 @@
+<td>
+  <% if current_user %>
+    <%= react_component('SubscribeToCourseBtn', {
+        course_id: @course.id,
+        subscribed: current_user.subscriptions_to_courses.include?(@course)
+    }) %>
+  <% else %>
+    <i class="fa fa-rss" aria-hidden="true" title="subscribers count"></i> Subscribers:
+  <% end %>
+</td>
+<td>
+  <%= react_component('SubscribersCounter', {
+      subscribers_count: @course.subscriptions.size
+  }) %>
+</td>

@@ -3,15 +3,25 @@
     <h3 class="card-title"><%= lesson.title %></h3>
     <p class="card-text"><%= lesson.description %></p>
     <p>
-      <small><%= lesson.created_at %></small>
+      <small><%= lesson.created_at.to_formatted_s(:long_ordinal) %></small>
     </p>
-    <%= link_to 'Visit', course_lesson_path(@course, lesson), class: 'btn btn-outline-primary' %>
+    <%= link_to course_lesson_path(@course, lesson), class: 'btn btn-outline-primary' do %>
+      Visit <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
+    <% end %>
+
+
+
+
 
     <% if it_is_current_user(@course.author) %>
-      <%= link_to 'Edit', edit_course_lesson_path(@course, lesson), class: 'btn btn-outline-warning' %>
-      <%= button_to 'Destroy', course_lesson_path(@course, lesson), method: :delete,
+      <%= link_to edit_course_lesson_path(@course, lesson), class: 'btn btn-outline-warning' do %>
+        Edit <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+      <% end %>
+      <%= button_to course_lesson_path(@course, lesson), method: :delete,
                     remote: true, data: { confirm: 'Are you sure?', disable_with: 'Deleting...' },
-                    class: 'btn btn-outline-danger', form_class: 'd-inline' %>
+                    class: 'btn btn-outline-danger', form_class: 'd-inline' do %>
+        Destroy <i class="fa fa-trash" aria-hidden="true"></i>
+      <% end %>
     <% end %>
   </div>
 </div>

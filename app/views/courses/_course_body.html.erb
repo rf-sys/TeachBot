@@ -28,7 +28,7 @@
       <tr>
         <th>Last update</th>
         <td>
-          <%= @course.updated_at %>
+          <%= @course.updated_at.to_formatted_s(:long_ordinal) %>
         </td>
       </tr>
       <tr>
@@ -50,19 +50,11 @@
       <tr>
         <th><i class="fa fa-eye" aria-hidden="true" title="Count of views"></i></th>
         <td>
-          <%= @views %>
+          <b><%= @views %></b>
         </td>
       </tr>
       <tr>
-        <td>
-          <% if current_user %>
-            <%= react_component('SubscribeToCourseBtn', {
-                course_id: @course.id,
-                subscribed: current_user.subscriptions_to_courses.include?(@course)
-            }) %>
-          <% end %>
-        </td>
-        <td>Subscribers: <%= @course.subscriptions.size %></td>
+        <%= render 'subscribers' %>
       </tr>
       </tbody>
     </table>
