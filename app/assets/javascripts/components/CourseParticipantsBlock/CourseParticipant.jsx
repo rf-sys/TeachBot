@@ -9,10 +9,10 @@ class CourseParticipant extends React.Component {
         return (
             <a href={url} className="list-group-item list-group-item-action">
                 <div className="row justify-content-around">
-                    <div className="col-3">
+                    <div className="col-4">
                         <img src={this.props.participant.avatar} className="course-subscriber-avatar rounded-circle"/>
                     </div>
-                    <div className="col-9 align-self-center text-center">
+                    <div className="col-8 align-self-center text-center">
                         {this.props.participant.username}
                     </div>
                 </div>
