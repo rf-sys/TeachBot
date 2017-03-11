@@ -1,6 +1,7 @@
 class User < ApplicationRecord
   extend FriendlyId
   friendly_id :username, use: :slugged
+  searchkick batch_size: 5
   rolify
   require 'validators/EmailValidator'
   require 'sendgrid-ruby'
@@ -119,6 +120,12 @@ class User < ApplicationRecord
 
   def attach_notification(notification)
     notifications << notification
+  end
+
+  def search_data
+    {
+        username: username
+    }
   end
 
   class << self

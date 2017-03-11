@@ -1,18 +1,10 @@
 Rails.application.routes.draw do
-  get 'subscriptions/create'
-
-  get 'subscriptions/destroy'
-
   require 'constraints/admin_constraint'
   require 'sidekiq/web'
 
+  root 'main#index'
+
   post 'user_token' => 'user_token#create'
-
-  get 'courses/index'
-
-  get 'cources/index'
-
-  get 'lessons/index'
 
   get 'bot/help'
 
@@ -26,10 +18,7 @@ Rails.application.routes.draw do
 
   delete 'logout' => 'sessions#destroy'
 
-
   get 'bot', to: 'api#bot'
-
-  root 'main#index'
 
   # resources
 
@@ -95,6 +84,8 @@ Rails.application.routes.draw do
       put 'mark_all_as_read'
     end
   end
+
+  resources :search, only: [:index]
 
   namespace :auth do
     get 'facebook', action: 'facebook'

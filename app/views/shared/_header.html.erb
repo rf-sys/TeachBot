@@ -30,7 +30,7 @@
   </div>
 <% end %>
 
-<nav class="navbar navbar-toggleable-md navbar-inverse bg-primary navbar-custom-styles">
+<nav class="navbar navbar-toggleable-lg navbar-inverse bg-primary navbar-custom-styles">
 
   <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
           data-target="#navbarResponsive" aria-controls="navbarTogglerDemo02" aria-expanded="false"
@@ -40,7 +40,7 @@
 
   <%= link_to 'TeachBot', root_path, class: 'navbar-brand brand-blink', style: 'width: 8ch' %>
   <div class="collapse navbar-collapse" id="navbarResponsive">
-    <ul class="navbar-nav mr-auto mt-2 mt-md-0">
+    <ul class="navbar-nav mr-auto">
       <li class="nav-item active">
         <a class="nav-link" href="<%= root_path %>">
           <i class="fa fa-home" aria-hidden="true"></i> Home
@@ -57,7 +57,12 @@
         </a>
       </li>
     </ul>
-    <ul class="nav navbar-nav float-lg-right">
+
+    <div class="col-lg mr-auto" id="global_search_panel">
+      <%= react_component('GlobalSearch') %>
+    </div>
+
+    <ul class="nav navbar-nav float-xl-right">
 
       <% if current_user %>
 
@@ -112,14 +117,14 @@
 </nav>
 
 <% if flash[:super_info_notice] %>
-  <%= react_component('SuperResponseBlock', {message: flash[:super_info_notice], type: 'alert-info'}) %>
+  <%= react_component('SuperResponseBlock', { message: flash[:super_info_notice], type: 'alert-info' }) %>
 <% end %>
 
 <% if flash[:super_danger_notice] %>
-  <%= react_component('SuperResponseBlock', {message: flash[:super_danger_notice], type: 'alert-danger'}) %>
+  <%= react_component('SuperResponseBlock', { message: flash[:super_danger_notice], type: 'alert-danger' }) %>
 <% end %>
 
 <% if flash[:super_success_notice] %>
-  <%= react_component('SuperResponseBlock', {message: flash[:super_success_notice], type: 'alert-success'}) %>
+  <%= react_component('SuperResponseBlock', { message: flash[:super_success_notice], type: 'alert-success' }) %>
 <% end %>
 

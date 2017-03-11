@@ -121,5 +121,9 @@ gem 'activerecord-import', '~> 0.17.1'
 gem 'fastimage'
 
 gem 'aws-sdk', '~> 2'
+
+# connect rails and ElasticSearch
+gem 'searchkick'
+
 # specify active ruby version
 ruby '2.3.3'

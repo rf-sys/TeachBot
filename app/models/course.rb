@@ -1,6 +1,7 @@
 class Course < ApplicationRecord
   extend FriendlyId
   friendly_id :title, use: :slugged
+  searchkick batch_size: 5
 
   belongs_to :author, class_name: 'User', touch: true
 
@@ -38,6 +39,17 @@ class Course < ApplicationRecord
   after_save :clean_old_slug_cache
 
   after_commit :clean_recent_courses_cache
+
+  def search_data
+    {
+        title: title,
+        description: description
+    }
+  end
+
+  def should_index?
+    public? && published? # only public and published records
+  end
 
   private
 

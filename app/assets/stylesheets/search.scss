@@ -1,0 +1,30 @@
+#global_search_panel {
+  .input_wrapper {
+    width: 100%;
+    position: relative;
+  }
+
+  .search_result_panel_wrapper {
+    position: absolute;
+    background: white;
+    width: 100%;
+    margin-top: 5px;
+    z-index: 100;
+    box-shadow: 0 0 10px;
+  }
+
+  .input {
+    width: 100%;
+  }
+
+  .status_icon {
+    position: absolute;
+    right: 5px;
+    top: 7px;
+    font-size: 8px;
+  }
+
+  .round-0 {
+    border-radius: 0 !important;
+  }
+}
