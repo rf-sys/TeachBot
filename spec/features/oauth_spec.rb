@@ -8,7 +8,6 @@ describe 'OAuth process', :type => :feature do
       click_link 'Login with Facebook'
       expect(page).to have_content user[:info][:name]
       expect(page).to have_content "You have been logged in as: #{user[:info][:name]}"
-      expect(page).to have_content 'Logout'
     end
 
     it 'can handle invalid request' do
@@ -26,7 +25,6 @@ describe 'OAuth process', :type => :feature do
       click_link 'Login with GitHub'
       expect(page).to have_content user[:info][:name]
       expect(page).to have_content "You have been logged in as: #{user[:info][:name]}"
-      expect(page).to have_content 'Logout'
     end
 
     it 'can handle invalid request' do

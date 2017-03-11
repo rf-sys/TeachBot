@@ -2,7 +2,7 @@ class SearchController < ApplicationController
   before_action :set_request_format
 
   def index
-    result = Searchkick.search params[:text], index_name: [Course, Lesson, User]
+    result = Searchkick.search params[:text] || '', index_name: [Course, Lesson, User]
 
     @courses = result.reject { |item| item.class.name != 'Course' }
 

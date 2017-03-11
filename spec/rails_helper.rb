@@ -46,6 +46,22 @@ RSpec.configure do |config|
       MSG
     end
     DatabaseCleaner.clean_with(:truncation)
+
+    # reindex models
+    Course.reindex
+
+    Lesson.reindex
+
+    User.reindex
+
+    # and disable callbacks
+    Searchkick.disable_callbacks
+  end
+
+  config.around(:each, search: true) do |example|
+    Searchkick.enable_callbacks
+    example.run
+    Searchkick.disable_callbacks
   end
 
   config.before(:each) do
