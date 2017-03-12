@@ -8,12 +8,10 @@ class GlobalSearch extends React.Component {
     }
 
     componentDidMount() {
-        $(document).click((event) => {
-            if(!$(event.target).closest('#global_search_result_panel').length) {
-                if($('#global_search_result_panel').is(":visible")) {
-                    this.setState({data: {}, emptyResponse: false});
-                }
-            }
+        $(document)
+            .unbind('global_search_result_panel:hide')
+            .bind('global_search_result_panel:hide', () => {
+            this.setState({data: {}, emptyResponse: false});
         });
     }
 
