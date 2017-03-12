@@ -30,7 +30,7 @@ class Course < ApplicationRecord
     select(:title, :description, :poster, :updated_at)
   end
 
-  validates :title, presence: true, length: {minimum: 6, maximum: 30}
+  validates :title, presence: true, length: {minimum: 6, maximum: 50}
   validates :description, presence: true, length: {minimum: 6, maximum: 255}
   validates :public, inclusion: {in: [true, false]}
 
