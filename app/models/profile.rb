@@ -3,12 +3,12 @@ class Profile < ApplicationRecord
 
   validates :website, format: {
       with: /\Ahttps?:\/\/[^\n]+\z/i
-  }, allow_blank: true
+  }, allow_blank: true, length: { maximum: 75 }
 
-  validates :facebook, length: {maximum: 40}
-  validates :twitter, length: {maximum: 40}
-  validates :about, length: {maximum: 500}
-  validates :location, length: {maximum: 100}
+  validates :facebook, length: { maximum: 40 }
+  validates :twitter, length: { maximum: 40 }
+  validates :about, length: { maximum: 500 }
+  validates :location, length: { maximum: 100 }
 
 =begin
   validates :facebook, format: {

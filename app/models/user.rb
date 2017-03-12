@@ -52,8 +52,8 @@ class User < ApplicationRecord
   accepts_nested_attributes_for :profile, reject_if: :all_blank
 
   validates :username, :email, presence: true, uniqueness: true
-  validates :username, length: {maximum: 50}
-  validates :email, email: true, length: {maximum: 255}
+  validates :username, length: {maximum: 30}
+  validates :email, email: true, length: {maximum: 100}
   validates :password, length: (6..32), confirmation: true, if: :setting_password?
 
   before_save :downcase_email
