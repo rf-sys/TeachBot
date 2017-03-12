@@ -12,9 +12,9 @@ class Lesson < ApplicationRecord
     includes(:course).where(courses: { public: true, published: true })
   end
 
-  validates :title, presence: true, length: {maximum: 50}
-  validates :description, presence: true, length: {maximum: 255} # temporarily
-  validates :content, presence: true, length: {maximum: 5000}
+  validates :title, presence: true, length: { maximum: 50 }
+  validates :description, presence: true, length: { maximum: 500 }
+  validates :content, presence: true, length: { maximum: 5000 }
 
   def search_data
     {

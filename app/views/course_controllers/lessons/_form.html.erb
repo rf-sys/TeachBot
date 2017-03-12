@@ -2,12 +2,13 @@
 <%= form_for [@course, @lesson], remote: true do |f| %>
   <div class="container-fluid">
     <div class="form-group">
-      <%= f.text_field :title, class: 'form-control', placeholder: 'Title of the lesson...', required: 'true' %>
+      <%= f.text_field :title, class: 'form-control', placeholder: 'Title of the lesson...', required: 'true',
+                       maxlength: 50 %>
     </div>
 
     <div class="form-group">
       <%= f.text_area :description, class: 'form-control', placeholder: 'Short description of the lesson...',
-                      required: 'true' %>
+                      required: 'true', maxlength: 500 %>
     </div>
 
     <hr>
