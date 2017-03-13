@@ -54,8 +54,7 @@ class ApplicationController < ActionController::Base
 
   def require_teacher
     return if current_user.has_role? :teacher
-    flash[:danger_notice] = 'You are not a teacher'
-    redirect_to root_path
+    fail_response(['You are not a teacher'], 403)
   end
 
   # mime based error response

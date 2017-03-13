@@ -7,7 +7,7 @@ class CoursesController < ApplicationController
   before_action :require_user, except: [:index, :show]
   before_action :require_teacher, except: [:index, :show]
   before_action :set_course, except: [:index, :new, :create]
-  before_action :require_owner, except: [:index, :show, :new, :create]
+  before_action :require_course_owner, except: [:index, :show, :new, :create]
   before_action :prepare_params, only: [:index]
 
   def index
@@ -48,11 +48,12 @@ class CoursesController < ApplicationController
     end
   end
 
-  def edit; end
+  def edit;
+  end
 
   def update
     if @course.update(course_params)
-      redirect_to @course
+      redirect_to @course, status: :ok
     else
       fail_response(@course.errors.full_messages, 422)
     end
@@ -61,7 +62,7 @@ class CoursesController < ApplicationController
   def destroy
     @course.destroy
     flash[:success_notice] = 'Course has been deleted'
-    redirect_to courses_path
+    redirect_to courses_path, status: :ok
   end
 
   # update poster of the course
@@ -95,15 +96,15 @@ class CoursesController < ApplicationController
     params.require(:course).permit(:title, :description, :public, :theme)
   end
 
-  def require_owner
-    return if it_is_current_user(@course.author)
-    fail_response(['Access denied'], 403)
-  end
-
   def prepare_params
     request.params[:find_by] = 'title' unless params[:find_by].present?
     request.params[:order] = 'title' unless params[:order].present?
     request.params[:order_type] = 'asc' unless params[:order_type].present?
     params[:per] = 6 if params[:per].to_i < 1
+  end
+
+  def require_course_owner
+    return if it_is_current_user(@course.author)
+    fail_response(['Access denied'], 403)
   end
 end

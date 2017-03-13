@@ -4,15 +4,117 @@ RSpec.describe CoursesController, :type => :controller do
   include ActiveJob::TestHelper
   before :each do
     @course = create(:course)
-    @redis = Redis.new
-    @redis.flushall
   end
+
   describe 'GET #show' do
+    # access_to_course? helper already prevents all possible unexpected access to course
     it 'add views' do
       expect {
         get :show, params: { id: @course.friendly_id }
         expect(response).to have_http_status(:success)
       }.to change(ActiveJob::Base.queue_adapter.enqueued_jobs, :size).by(1)
+    end
+  end
+
+  describe 'PUT #update'  do
+    it 'denies access for guests' do
+      put :update, params: {id: @course.friendly_id}
+      expect(response).to have_http_status(302)
+    end
+
+    it 'denies access for no teacher' do
+      foreign_user = create(:second_user)
+
+      auth_as(foreign_user)
+
+      put :update, params: {id: @course.friendly_id}
+      expect(response).to have_http_status(302)
+
+      set_json_request
+
+      put :update, params: {id: @course.friendly_id}
+      expect(response.body).to match(/You are not a teacher/)
+      expect(response).to have_http_status(403)
+    end
+
+    it 'denies access for no owner' do
+      foreign_user = create(:second_user)
+      foreign_user.add_role(:teacher)
+
+      auth_as(foreign_user)
+
+      put :update, params: {id: @course.friendly_id}
+      expect(response).to have_http_status(302)
+
+      set_json_request
+
+      put :update, params: {id: @course.friendly_id}
+      expect(response.body).to match(/Access denied/)
+      expect(response).to have_http_status(403)
+    end
+
+    it 'accepts access for teacher and owner' do
+      auth_as(@course.author) # it calls 'teacher' factory in the factories
+
+      course_title = @course.title
+      expect(@course.title).to eq(course_title)
+
+      new_title = 'UPDATED title'
+      put :update, params: {id: @course.friendly_id, course: {title: new_title}}
+      expect(response).to have_http_status(200)
+      expect(response.body).to match(/redirected/)
+
+      @course.reload
+      expect(@course.title).to eq(new_title)
+    end
+  end
+
+  describe 'DELETE #destroy' do
+    it 'denies access for guests' do
+      delete :destroy, params: {id: @course.friendly_id}
+      expect(response).to have_http_status(302)
+    end
+
+    it 'denies access for no teacher' do
+      foreign_user = create(:second_user)
+
+      auth_as(foreign_user)
+
+      delete :destroy, params: {id: @course.friendly_id}
+      expect(response).to have_http_status(302)
+
+      set_json_request
+
+      delete :destroy, params: {id: @course.friendly_id}
+      expect(response.body).to match(/You are not a teacher/)
+      expect(response).to have_http_status(403)
+    end
+
+    it 'denies access for no owner' do
+      foreign_user = create(:second_user)
+      foreign_user.add_role(:teacher)
+
+      auth_as(foreign_user)
+
+      delete :destroy, params: {id: @course.friendly_id}
+      expect(response).to have_http_status(302)
+
+      set_json_request
+
+      delete :destroy, params: {id: @course.friendly_id}
+      expect(response.body).to match(/Access denied/)
+      expect(response).to have_http_status(403)
+    end
+
+    it 'accepts access for teacher and owner' do
+      auth_as(@course.author) # it calls 'teacher' factory in the factories
+      expect(Course.exists?(@course.id)).to eq(true)
+
+      delete :destroy, params: {id: @course.friendly_id}
+      expect(response).to have_http_status(200)
+      expect(response.body).to match(/redirected/)
+
+      expect(Course.exists?(@course.id)).to eq(false)
     end
   end
 
