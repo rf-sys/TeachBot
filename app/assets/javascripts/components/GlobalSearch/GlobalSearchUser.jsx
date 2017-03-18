@@ -11,7 +11,7 @@ class GlobalSearchUser extends React.Component {
     render() {
         let user = this.props.user;
         return (
-            <a href={`/users/${user.slug}`}
+            <a href={`/users/${user.slug}`} name={`gs_user_${user.slug}_link`}
                className="round-0 list-group-item list-group-item-action flex-column align-items-start">
                 <div className="row align-items-center">
                     <div className="col-md-2">

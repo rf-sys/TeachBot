@@ -64,8 +64,9 @@ class GlobalSearch extends React.Component {
         return (
             <div className="input_wrapper">
                 <input type="search" className="form-control input"
-                       placeholder="Find in courses and lessons..."
-                       onChange={this.triggerChangeInput}/>
+                       placeholder="Search by courses, lessons, users"
+                       onChange={this.triggerChangeInput} id="global_search_input"
+                       name="global_search_input" />
                 <GlobalSearchLoadingIcon loading={this.state.loading}/>
                 <GlobalSearchResults data={this.state.data} text={this.state.text}
                                      atLeastOnePresent={this.atLeastOnePresent()}

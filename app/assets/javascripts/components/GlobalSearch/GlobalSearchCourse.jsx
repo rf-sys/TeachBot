@@ -19,7 +19,7 @@ class GlobalSearchCourse extends React.Component {
     render() {
         let course = this.props.course;
         return (
-            <a href={`/courses/${course.slug}`}
+            <a href={`/courses/${course.slug}`} name={`gs_course_${course.slug}_link`}
                className="round-0 list-group-item list-group-item-action flex-column align-items-start">
                 <div className="row align-items-center">
                     {this.renderPoster()}

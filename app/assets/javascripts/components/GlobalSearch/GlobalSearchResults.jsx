@@ -22,7 +22,7 @@ class GlobalSearchResults extends React.Component {
         return (
             <div className="card">
                 <div className="card-block text-center">
-                    Not results&nbsp;
+                    No results&nbsp;
                     <i className="fa fa-eye-slash" aria-hidden="true"/>
                 </div>
             </div>

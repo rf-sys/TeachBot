@@ -9,7 +9,12 @@ class GlobalSearchLesson extends React.Component {
 
     courseReference() {
         let course = this.props.lesson.course;
-        return <a href={`/courses/${course.slug}`}>{course.title}</a>
+        let lesson = this.props.lesson;
+        return (
+            <a href={`/courses/${course.slug}/lessons/${lesson.slug}`} name={`gs_lesson_${lesson.slug}_link`}>
+                {course.title}
+            </a>
+        )
     }
 
     redirectToLesson() {
@@ -21,7 +26,7 @@ class GlobalSearchLesson extends React.Component {
         let lesson = this.props.lesson;
         return (
             <div onClick={this.redirectToLesson} style={{cursor: 'pointer'}}
-               className="list-group-item list-group-item-action flex-column align-items-start round-0">
+                 className="list-group-item list-group-item-action flex-column align-items-start round-0">
                 <div className="d-flex w-100 justify-content-between">
                     <h5 className="mb-1">{lesson.title}</h5>
                     <small>{moment(lesson.updated_at).format('LLL')}</small>
