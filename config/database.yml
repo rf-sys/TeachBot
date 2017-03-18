@@ -3,9 +3,9 @@ default: &default
   encoding: unicode
   pool: 5
   timeout: 5000
-  host: localhost
-  username: admin
-  password: passw
+  host: db
+  username: <%= ENV['POSTGRES_USER'] %>
+  password: <%= ENV['POSTGRES_PASSWORD'] %>
 
 development:
   <<: *default

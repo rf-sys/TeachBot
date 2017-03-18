@@ -10,7 +10,7 @@
 Role.create([{ name: 'user' }, { name: 'teacher' }, { name: 'admin' }])
 
 # create default admin user
-user = User.create(username: 'admin', email: 'admin@mail.ru', password: ENV['ADMIN_ACCOUNT_PASSWORD'], activated: true)
+user = User.create(username: 'administrator', email: 'admin@mail.ru', password: ENV['ADMIN_ACCOUNT_PASSWORD'], activated: true)
 
 # add roles to admin user
 user.add_role(:teacher)
