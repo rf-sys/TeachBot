@@ -1,0 +1,43 @@
+version: '2'
+services:
+  elasticsearch:
+    image: elasticsearch
+    env_file: .env.sample
+
+  db:
+    image: postgres
+    env_file: .env.sample
+
+  redis:
+    image: redis
+    command: redis-server
+    env_file: .env.sample
+    ports:
+      - '6379:6379'
+
+  web:
+    build: .
+#   command: bundle exec rails s -p 3000 -b '0.0.0.0'
+    env_file: .env.sample
+    volumes:
+      - .:/myapp
+    ports:
+      - "3000:3000"
+    links:
+      - db
+      - redis
+    depends_on:
+      - db
+      - redis
+      - sidekiq
+      - elasticsearch
+
+  sidekiq:
+    build: .
+    volumes:
+      - .:/myapp
+    env_file: .env.sample
+    links:
+      - db
+      - redis
+    command: bundle exec sidekiq -C config/sidekiq.yml

@@ -126,4 +126,4 @@ gem 'aws-sdk', '~> 2'
 gem 'searchkick'
 
 # specify active ruby version
-ruby '2.3.3'
+# ruby '2.3.3'
