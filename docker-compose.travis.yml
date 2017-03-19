@@ -26,6 +26,8 @@ services:
     links:
       - db
       - redis
+      - sidekiq
+      - elasticsearch
     depends_on:
       - db
       - redis
