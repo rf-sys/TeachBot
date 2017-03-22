@@ -9,7 +9,7 @@ class ChatsController < ApplicationController
   def index
     respond_to do |format|
       format.any(:js, :json) do
-        @chats = current_user.chats.distinct
+        @chats = current_user.chats.where(public_chat: false).distinct
       end
       format.html {}
     end
