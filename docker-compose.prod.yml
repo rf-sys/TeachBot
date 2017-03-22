@@ -1,0 +1,43 @@
+# docker-compose file for production environment
+version: '2'
+
+services:
+  elasticsearch:
+    image: elasticsearch
+    env_file: .env.prod.sample
+
+  db:
+    image: postgres
+    env_file: .env.prod.sample
+
+  redis:
+    image: redis
+    command: redis-server
+    env_file: .env.prod.sample
+    ports:
+      - '6379:6379'
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    environment:
+      RAILS_ENV: production
+    env_file: .env.prod.sample
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+      - redis
+      - sidekiq
+      - elasticsearch
+
+  sidekiq:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    env_file: .env.prod.sample
+    depends_on:
+      - db
+      - redis
+    command: bundle exec sidekiq -C config/sidekiq.yml -e production

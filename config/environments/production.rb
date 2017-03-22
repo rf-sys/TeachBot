@@ -23,7 +23,7 @@ Rails.application.configure do
   # config.assets.css_compressor = :sass
 
   # Do not fallback to assets pipeline if a precompiled asset is missed.
-  config.assets.compile = false
+  config.assets.compile = true # set true if deploy on digitalocean
 
   # `config.assets.precompile` and `config.assets.version` have moved to config/initializers/assets.rb
 
@@ -36,8 +36,8 @@ Rails.application.configure do
 
   # Mount Action Cable outside main process or domain
   # config.action_cable.mount_path = nil
-  config.action_cable.url = 'https://teachbot.herokuapp.com/cable'
-  config.action_cable.allowed_request_origins = [ 'https://teachbot.herokuapp.com' ]
+  config.action_cable.url = 'http://localhost:3000/cable'
+  config.action_cable.allowed_request_origins = [ 'http://localhost:3000/' ]
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   # config.force_ssl = true
@@ -81,20 +81,34 @@ Rails.application.configure do
     config.logger = ActiveSupport::TaggedLogging.new(logger)
   end
 
-  config.development_host = "https://teachbot.herokuapp.com/"
+  config.development_host = 'http://localhost:3000/'
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
-  config.action_mailer.default_url_options = { host: 'teachbot.herokuapp.com' }
+  config.action_mailer.default_url_options = { host: 'http://localhost:3000/' }
 
   config.action_mailer.delivery_method = :smtp
+
+=begin SendGrid (I'm using it with Heroku)
   config.action_mailer.smtp_settings = {
       :user_name => ENV['SENDGRID_USERNAME'],
       :password => ENV['SENDGRID_PASSWORD'],
       :domain => 'teachbot.herokuapp.com',
       :address => 'smtp.sendgrid.net',
       :port => 587,
+      :authentication => :plain,
+      :enable_starttls_auto => true
+  }
+=end
+
+  # simple gmail smtp email.
+  # Not recommended in production because of reliable of passing through by mail providers.
+  config.action_mailer.smtp_settings = {
+      :address => 'smtp.gmail.com',
+      :port => 587,
+      :user_name => ENV['GMAIL_SMTP_USER'],
+      :password => ENV['GMAIL_SMTP_PASSWORD'],
       :authentication => :plain,
       :enable_starttls_auto => true
   }

@@ -1,33 +1,28 @@
+# docker-compose file for travis-ci checks
 version: '2'
 services:
   elasticsearch:
     image: elasticsearch
-    env_file: .env.sample
+    env_file: .env.dev.sample
 
   db:
     image: postgres
-    env_file: .env.sample
+    env_file: .env.dev.sample
 
   redis:
     image: redis
     command: redis-server
-    env_file: .env.sample
+    env_file: .env.dev.sample
     ports:
       - '6379:6379'
 
   web:
     build: .
-    command: bundle exec rails s -p 3000 -b '0.0.0.0'
-    env_file: .env.sample
+    env_file: .env.dev.sample
     volumes:
       - .:/myapp
     ports:
       - "3000:3000"
-    links:
-      - db
-      - redis
-      - sidekiq
-      - elasticsearch
     depends_on:
       - db
       - redis
@@ -38,8 +33,8 @@ services:
     build: .
     volumes:
       - .:/myapp
-    env_file: .env.sample
-    links:
+    env_file: .env.dev.sample
+    depends_on:
       - db
       - redis
     command: bundle exec sidekiq -C config/sidekiq.yml

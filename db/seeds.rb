@@ -18,3 +18,8 @@ user.add_role(:admin)
 
 # create public chat
 Chat.create(initiator: user, recipient: user, public_chat: true)
+
+# create indexes (elasticsearch)
+User.reindex
+Lesson.reindex
+Course.reindex

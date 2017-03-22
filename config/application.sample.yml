@@ -1,0 +1,31 @@
+# Add configuration values (ENV) here, as shown below.
+# Used by "figaro" gem
+# work in development environment
+test:
+  AWS_ACCESS_KEY_ID: key
+  AWS_SECRET_ACCESS_KEY: key
+  S3_BUCKET: bucket
+
+development:
+  RECAPTCHA_PUBLIC_KEY: key
+  RECAPTCHA_PRIVATE_KEY: key
+  SENDGRID_API_KEY: key
+  SENDGRID_USERNAME: username (heroku service)
+  SENDGRID_PASSWORD: password (heroku service)
+  GOOGLE_API_KEY: key
+  FACEBOOK_APP_ID: key
+  FACEBOOK_APP_SECRET: key
+  GITHUB_APP_ID: id
+  GITHUB_APP_SECRET: key
+  ADMIN_ACCOUNT_PASSWORD: password
+  S3_BUCKET: bucket
+
+  AWS_ACCESS_KEY_ID: key
+  AWS_SECRET_ACCESS_KEY: key
+
+# env-s here don't work in production mode.
+# Can be specified in the .env file and used by docker. (I prefer this option if I want to deploy on Digitalocean)
+# Can be specified in the settings if we use Heroku as host.
+production:
+  GMAIL_SMTP_USER: gmail_example@gmail.com
+  GMAIL_SMTP_PASSWORD: gmail_passwrod

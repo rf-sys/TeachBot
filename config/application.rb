@@ -10,11 +10,10 @@ module Firstapp
   class Application < Rails::Application
 
     config.autoload_paths << "#{Rails.root}/lib"
+    config.eager_load_paths <<  "#{Rails.root}/lib" # it uses instead of autoload_paths in production
     config.cache_store = :file_store, "#{Rails.root}/tmp/cache/file_store"
     config.react.addons = true
     config.active_job.queue_adapter = :sidekiq
-
-    # 371444199855931
 
     config.api_keys = {
         :google_api_key => 'AIzaSyAl3hIWaCvf2w4jFNa5lyRcfHggb7dcFvQ'

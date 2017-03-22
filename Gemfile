@@ -38,15 +38,17 @@ group :development, :test do
   gem 'rails-controller-testing'
  # gem 'capybara-webkit'
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
-  gem 'byebug', platform: :mri
+ # gem 'byebug', platform: :mri
   gem 'meta_request'
   gem 'factory_girl_rails', '~> 4.0'
   gem 'database_cleaner'
   gem 'rack_session_access'
   gem 'poltergeist'
   gem 'phantomjs', :require => 'phantomjs/poltergeist'
-
   gem 'rubocop', require: false
+
+  gem 'ruby-debug-ide'
+  gem 'debase'
 end
 
 group :development do

@@ -14,6 +14,9 @@ RUN bundle install
 
 COPY . .
 
+# add assets precompile for production build
+RUN rake assets:precompile
+
 EXPOSE 3000
 
 CMD rm -rf tmp/pids/server.pid \

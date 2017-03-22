@@ -1,1 +1,1 @@
-//= require components
+//= require_tree ./components

@@ -3,20 +3,18 @@ default: &default
   encoding: unicode
   pool: 5
   timeout: 5000
-  host: db
+  host: <%= ENV.fetch("DB_HOST") { "db" } %>
   username: <%= ENV['POSTGRES_USER'] %>
   password: <%= ENV['POSTGRES_PASSWORD'] %>
 
 development:
   <<: *default
-  database: teachbot
+  database: teachbot_development
 
 test:
   <<: *default
   database: teachbot_test
 
 production:
-  host: ec2-54-246-82-77.eu-west-1.compute.amazonaws.com
-  database: <%= ENV['PROD_DATABASE'] %>
-  username: <%= ENV['PROD_DB_USERNAME'] %>
-  password: <%= ENV['PROD_DB_PASSWORD'] %>
+  <<: *default
+  database: <%= ENV['POSTGRES_DB'] %>
