@@ -23,6 +23,9 @@ development:
   AWS_ACCESS_KEY_ID: key
   AWS_SECRET_ACCESS_KEY: key
 
+  MAILTRAP_USERNAME: username
+  MAILTRAP_PASSWORD: password
+
 # env-s here don't work in production mode.
 # Can be specified in the .env file and used by docker. (I prefer this option if I want to deploy on Digitalocean)
 # Can be specified in the settings if we use Heroku as host.
