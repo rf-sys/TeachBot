@@ -53,7 +53,7 @@ class CoursesController < ApplicationController
 
   def update
     if @course.update(course_params)
-      redirect_to @course, status: :ok
+      redirect_to @course
     else
       fail_response(@course.errors.full_messages, 422)
     end
@@ -62,7 +62,7 @@ class CoursesController < ApplicationController
   def destroy
     @course.destroy
     flash[:success_notice] = 'Course has been deleted'
-    redirect_to courses_path, status: :ok
+    redirect_to courses_path
   end
 
   # update poster of the course

@@ -61,9 +61,7 @@ RSpec.describe CoursesController, :type => :controller do
 
       new_title = 'UPDATED title'
       put :update, params: {id: @course.friendly_id, course: {title: new_title}}
-      expect(response).to have_http_status(200)
-      expect(response.body).to match(/redirected/)
-
+      expect(response).to have_http_status(302)
       @course.reload
       expect(@course.title).to eq(new_title)
     end
@@ -111,9 +109,7 @@ RSpec.describe CoursesController, :type => :controller do
       expect(Course.exists?(@course.id)).to eq(true)
 
       delete :destroy, params: {id: @course.friendly_id}
-      expect(response).to have_http_status(200)
-      expect(response.body).to match(/redirected/)
-
+      expect(response).to have_http_status(302)
       expect(Course.exists?(@course.id)).to eq(false)
     end
   end
