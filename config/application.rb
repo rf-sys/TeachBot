@@ -9,14 +9,14 @@ Bundler.require(*Rails.groups)
 module Firstapp
   class Application < Rails::Application
 
-    config.autoload_paths << "#{Rails.root}/lib"
-    config.eager_load_paths <<  "#{Rails.root}/lib" # it uses instead of autoload_paths in production
-    config.cache_store = :file_store, "#{Rails.root}/tmp/cache/file_store"
+    config.autoload_paths << Rails.root.join('lib')
+    config.eager_load_paths << Rails.root.join('lib') # it uses instead of autoload_paths in production
+    config.cache_store = :file_store, Rails.root.join('tmp', 'cache', 'file_store')
     config.react.addons = true
     config.active_job.queue_adapter = :sidekiq
 
     config.api_keys = {
-        :google_api_key => 'AIzaSyAl3hIWaCvf2w4jFNa5lyRcfHggb7dcFvQ'
+      google_api_key: 'AIzaSyAl3hIWaCvf2w4jFNa5lyRcfHggb7dcFvQ'
     }
 
     config.action_view.sanitized_allowed_tags = %w(b p i strong u s h1 h2 img a div hr code ul ol li blockquote)

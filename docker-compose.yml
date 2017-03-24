@@ -3,24 +3,27 @@ version: '2'
 services:
   elasticsearch:
     image: elasticsearch
-    env_file: .env
+    env_file: .env.development
+    environment:
+    # it helps us run elasticsearch on systems with no significant resources
+      ES_JAVA_OPTS: -Xms1g -Xmx1g # by default - 10g
 
   db:
     image: postgres
-    env_file: .env
+    env_file: .env.development
 
   redis:
     image: redis
     command: redis-server
-    env_file: .env
+    env_file: .env.development
     ports:
       - '6379:6379'
 
   web:
     build: .
-    env_file: .env
+    env_file: .env.development
     volumes:
-      - .:/myapp
+      - .:/usr/src/app
     ports:
       - "3000:3000"
     depends_on:
@@ -32,8 +35,8 @@ services:
   sidekiq:
     build: .
     volumes:
-      - .:/myapp
-    env_file: .env
+      - .:/usr/src/app
+    env_file: .env.development
     depends_on:
       - db
       - redis

@@ -46,3 +46,6 @@ bower.json
 cache
 /config/application.yml
 /node_modules
+/.env.development
+/.env.production
+/.env.test

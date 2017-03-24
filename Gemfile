@@ -72,7 +72,7 @@ gem 'react-rails'
 gem 'sprockets-es6'
 
 # ENV support
-gem 'figaro'
+gem 'dotenv-rails', groups: [:development, :test]
 
 gem 'bootstrap', '~> 4.0.0.alpha6'
 
