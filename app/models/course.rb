@@ -36,9 +36,9 @@ class Course < ApplicationRecord
 
   validates :theme, format: {with: /\A#.{6}\z/, message: 'color is invalid'}, allow_blank: true
 
-  after_save :clean_old_slug_cache
+  after_save :clean_old_slug_cache, :clean_recent_courses_cache
 
-  after_commit :clean_recent_courses_cache
+  before_destroy :clean_recent_courses_cache
 
   def search_data
     {
