@@ -36,8 +36,8 @@ Rails.application.configure do
 
   # Mount Action Cable outside main process or domain
   # config.action_cable.mount_path = nil
-  config.action_cable.url = 'http://localhost:3000/cable'
-  config.action_cable.allowed_request_origins = [ 'http://localhost:3000/' ]
+  config.action_cable.url = "#{ENV['APP_HOST']}/cable"
+  config.action_cable.allowed_request_origins = [ENV['APP_HOST']]
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   # config.force_ssl = true
@@ -47,7 +47,7 @@ Rails.application.configure do
   config.log_level = :debug
 
   # Prepend all log lines with the following tags.
-  config.log_tags = [ :request_id ]
+  config.log_tags = [:request_id]
 
   # Use a different cache store in production.
   # config.cache_store = :mem_cache_store
@@ -81,29 +81,30 @@ Rails.application.configure do
     config.logger = ActiveSupport::TaggedLogging.new(logger)
   end
 
-  config.development_host = 'http://localhost:3000/'
+  config.development_host = ENV['APP_HOST']
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
-  config.action_mailer.default_url_options = { host: 'http://localhost:3000/' }
+  config.action_mailer.default_url_options = { host: ENV['APP_HOST'] }
 
   config.action_mailer.delivery_method = :smtp
 
-=begin SendGrid (I'm using it with Heroku)
+# SendGrid (I'm using it with Heroku)
   config.action_mailer.smtp_settings = {
       :user_name => ENV['SENDGRID_USERNAME'],
       :password => ENV['SENDGRID_PASSWORD'],
-      :domain => 'teachbot.herokuapp.com',
+      :domain => ENV['APP_HOST'],
       :address => 'smtp.sendgrid.net',
       :port => 587,
       :authentication => :plain,
       :enable_starttls_auto => true
   }
-=end
+
 
   # simple gmail smtp email.
   # Not recommended in production because of reliable of passing through by mail providers.
+=begin
   config.action_mailer.smtp_settings = {
     address: 'smtp.gmail.com',
     port: 587,
@@ -112,4 +113,5 @@ Rails.application.configure do
     authentication: :plain,
     enable_starttls_auto: true
   }
+=end
 end

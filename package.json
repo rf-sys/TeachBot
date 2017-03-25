@@ -1,0 +1,8 @@
+{
+  "name": "teachbot",
+  "dependencies": {},
+  "license": "MIT",
+  "engines": {
+    "node": ">= 0.10"
+  }
+}
