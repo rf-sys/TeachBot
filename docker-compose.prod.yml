@@ -1,6 +1,5 @@
 # docker-compose file for production environment
 version: '2'
-
 services:
   elasticsearch:
     image: elasticsearch
@@ -8,10 +7,15 @@ services:
     environment:
     # it helps us run elasticsearch on systems with no significant resources
       ES_JAVA_OPTS: -Xms1g -Xmx1g # by default - 10g
+    ports:
+      - "9200:9200"
+      - "9300:9300"
 
   db:
     image: postgres
     env_file: .env.production.sample
+    ports:
+      - "5432:5432"
 
   redis:
     image: redis

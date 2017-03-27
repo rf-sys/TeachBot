@@ -7,10 +7,15 @@ services:
     environment:
     # it helps us run elasticsearch on systems with no significant resources
       ES_JAVA_OPTS: -Xms1g -Xmx1g # by default - 10g
+    ports:
+      - "9200:9200"
+      - "9300:9300"
 
   db:
     image: postgres
     env_file: .env.development
+    ports:
+      - "5432:5432"
 
   redis:
     image: redis
