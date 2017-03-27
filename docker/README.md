@@ -32,7 +32,7 @@ to create db, fill up and add indexes to elasticsearch service
 
 4. Run `docker-compose -f docker-compose.prod.yml build` to build images
 
-5. If you have done "build" first time, you need to run `docker-compose -f docker-compose.prod.yml run web sh bin/docker-start.sh`
+5. If you have done "build" first time, you need to run `docker-compose -f docker-compose.prod.yml run web sh docker/init_app.sh`
 to create db, fill up and add indexes to elasticsearch service
 
 6. Run `docker-compose -f docker-compose.prod.yml up` to start your app
@@ -62,7 +62,7 @@ You can change or remove (to use default value) this env variable in config
 
 7. Run `docker-compose -f docker-compose.prod.yml build` to build images
 
-5. If you have done "build" first time, you need to run `docker-compose -f docker-compose.prod.yml run web sh bin/docker-start.sh`
+5. If you have done "build" first time, you need to run `docker-compose -f docker-compose.prod.yml run web sh docker/init_app.sh`
 to create db, fill up and add indexes to elasticsearch service
 
 8. Run `docker-compose -f docker-compose.prod.yml up` to start your app

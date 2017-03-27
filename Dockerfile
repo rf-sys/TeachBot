@@ -10,6 +10,9 @@ RUN bundle install
 
 COPY . .
 
+#install phantomjs (otherwise docker container don't see and install it after each command)
+RUN sh docker/install_phantomjs.sh
+
 EXPOSE 3000
 
 CMD rm -rf tmp/pids/server.pid \
