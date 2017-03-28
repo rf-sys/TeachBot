@@ -3,7 +3,7 @@ version: '2'
 services:
   elasticsearch:
     image: elasticsearch
-    env_file: .env.production.sample
+    env_file: .env.production
     environment:
     # it helps us run elasticsearch on systems with no significant resources
       ES_JAVA_OPTS: -Xms1g -Xmx1g # by default - 10g
@@ -13,14 +13,14 @@ services:
 
   db:
     image: postgres
-    env_file: .env.production.sample
+    env_file: .env.production
     ports:
       - "5432:5432"
 
   redis:
     image: redis
     command: redis-server
-    env_file: .env.production.sample
+    env_file: .env.production
     ports:
       - '6379:6379'
 
@@ -30,7 +30,7 @@ services:
       dockerfile: Dockerfile.prod
     environment:
       RAILS_ENV: production
-    env_file: .env.production.sample
+    env_file: .env.production
     ports:
       - "3000:3000"
     depends_on:
@@ -43,7 +43,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.prod
-    env_file: .env.production.sample
+    env_file: .env.production
     depends_on:
       - db
       - redis

@@ -18,5 +18,5 @@ before_script:
   - docker-compose -f docker-compose.travis.yml build
 
 script:
-  - docker-compose -f docker-compose.travis.yml run web rails db:create
+  - docker-compose -f docker-compose.travis.yml run web sh docker/init_app.sh
   - docker-compose -f docker-compose.travis.yml run -e S3_BUCKET=$S3_BUCKET -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY web rake spec

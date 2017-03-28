@@ -3,9 +3,9 @@
 Be sure you have "Docker" and "docker-compose" installed
 
 ### Development:
-1. Clone "dev" repository:
+1. Clone repository:
 
-`git clone -b dev https://github.com/Okalia/TeachBot.git`
+`git clone https://github.com/Okalia/TeachBot.git`
 
 2. Rename `.env.development.sample` into `.env.development`
 
@@ -13,7 +13,7 @@ Be sure you have "Docker" and "docker-compose" installed
 
 4. Run `docker-compose build` to build images
 
-5. If you have done "build" first time, you need to run `docker-compose run web sh bin/docker-start.sh`
+5. If you have done "build" first time, you need to run `docker-compose run web sh docker/init_app.sh`
 to create db, fill up and add indexes to elasticsearch service
 
 6. Run `docker-compose up` to start your app
@@ -22,9 +22,9 @@ to create db, fill up and add indexes to elasticsearch service
 
 ### Production:
 
-1. Clone "dev" repository:
+1. Clone repository:
 
-`git clone -b dev https://github.com/Okalia/TeachBot.git`
+`git clone https://github.com/Okalia/TeachBot.git`
 
 2. Rename `.env.production.sample` into `.env.production`
 
@@ -41,9 +41,9 @@ to create db, fill up and add indexes to elasticsearch service
 
 ### Deploy on Digitalocean
 
-1. Clone "dev" repository:
+1. Clone repository:
 
-`git clone -b dev https://github.com/Okalia/TeachBot.git`
+`git clone https://github.com/Okalia/TeachBot.git`
 
 2. Rename `.env.production.sample` into `.env.production`
 
