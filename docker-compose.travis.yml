@@ -14,8 +14,6 @@ services:
   db:
     image: postgres
     env_file: .env.development.sample
-    ports:
-      - "5432:5432"
 
   redis:
     image: redis
