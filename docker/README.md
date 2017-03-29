@@ -65,3 +65,15 @@ to create db, fill up and add indexes to elasticsearch service
 9. Visit `http://your_machine_ip:3000` to check if application works
 
 (to get `your_machine_ip` you can copy IPv4 of your droplet on Digitalocen or type `docker-machine ip teachbot`)
+
+#### Troubleshoots
+
+##### Byebug and Docker interaction 
+If you are using **byebug** gem in development, you need start 'web' service separately from others
+in debug mode. Example solution:
+
+1. in the first console: `docker-compose up redis db elasticsearch sidekiq` - start all services, except "web"
+
+2. in the second console: `docker-compose run --service-ports web` - start "web" in debug mode to be able interact with byebug
+
+[Solution source](http://stackoverflow.com/questions/31669226/rails-byebug-did-not-stop-application)
