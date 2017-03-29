@@ -77,3 +77,36 @@ in debug mode. Example solution:
 2. in the second console: `docker-compose run --service-ports web` - start "web" in debug mode to be able interact with byebug
 
 [Solution source](http://stackoverflow.com/questions/31669226/rails-byebug-did-not-stop-application)
+
+##### RubyMine and Docker
+
+RubyMine still a problem when we want to use IDE run/debug/rspec... configurations with docker-compose. 
+But we found a hack you can use to use your containers and IDE's abilities at the same time:
+
+1. If you services run locally (on your machine in containers - by default), then services, that are in the containers must be called from 0.0.0.0:port to access to them from IDE:
+
+change your .env.development and .env.test to:
+
+`ELASTICSEARCH_URL=http://0.0.0.0:9200`
+
+`REDIS_URL=redis://0.0.0.0:6379/0`
+
+`DB_HOST=0.0.0.0`
+
+2. Start your containers, expect web:
+
+`docker-compose up redis db elasticsearch`
+
+3. Start Sidekiq in the console in app folder:
+
+`bundle exec sidekiq -C config/sidekiq.yml`
+
+(Sidekiq won't work in container as we changed out env's ip to 0.0.0.0 and hence it won't be able to call db and redis)
+
+3. Now, you are able to interact with your services and
+to use IDE Run/Debug configurations (as run app/tests...) while all necessary services are working
+separately
+
+As you can notice, we don't use "web" and "sidekiq" containers. Instead we merely interact with app 
+and call other containers from outside through 0.0.0.0. 
+
