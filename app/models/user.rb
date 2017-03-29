@@ -38,12 +38,12 @@ class User < ApplicationRecord
   has_and_belongs_to_many :unread_messages, join_table: 'unread_messages_users', class_name: 'Message'
 
   scope :select_profile_attr, -> { select(:id, :username, :email, :avatar, :updated_at) }
-  scope :find_with_profile, -> (id) { includes(:profile).find(id) }
-  scope :course_subscribers, -> (course) do
-    includes(:subscriptions).where(subscriptions: {subscribeable_type: 'Course', subscribeable_id: course.id})
+  scope :find_with_profile, ->(id) { includes(:profile).find(id) }
+  scope :course_subscribers, ->(course) do
+    includes(:subscriptions).where(subscriptions: { subscribeable_type: 'Course', subscribeable_id: course.id })
   end
 
-  scope :where_username_like, -> (username) do
+  scope :where_username_like, ->(username) do
     where('username LIKE ?', "%#{username}%").limit(10)
   end
 
@@ -52,8 +52,8 @@ class User < ApplicationRecord
   accepts_nested_attributes_for :profile, reject_if: :all_blank
 
   validates :username, :email, presence: true, uniqueness: true
-  validates :username, length: {maximum: 30}
-  validates :email, email: true, length: {maximum: 100}
+  validates :username, length: { maximum: 30 }
+  validates :email, email: true, length: { maximum: 100 }
   validates :password, length: (6..32), confirmation: true, if: :setting_password?
 
   before_save :downcase_email
@@ -69,46 +69,45 @@ class User < ApplicationRecord
   after_save :clean_user_courses_cache
 
   def assign_default_role
-    self.add_role(:user) if self.roles.blank?
+    add_role(:user) if roles.blank?
   end
 
   # delete avatar before delete user
   def delete_avatar
-    if File.file?(Rails.root.join('public', 'assets/images/avatars', "#{self.id}.jpg"))
-      FileUtils.rm(Rails.root.join('public', 'assets/images/avatars', "#{self.id}.jpg"))
-    end
+    avatar = $bucket.object("uploads/avatars/#{id}.jpg")
+    avatar.delete if avatar.exists?
   end
 
   def delete_unread_messages
-    self.unread_messages.destroy_all
+    unread_messages.destroy_all
   end
 
   # generate and store token to the database
   def remember
     self.remember_token = User.new_token # message new string which is like a token
-    update_attribute(:remember_digest, User.digest(remember_token)) # save a hash of the token above in the DB
+    update_attributes(remember_digest: User.digest(remember_token)) # save a hash of the token above in the DB
   end
 
   # Returns true if the given token matches the digest.
   def authenticated?(attribute, token)
-    digest = self.send("#{attribute}_digest")
+    digest = send("#{attribute}_digest")
     return false if digest.nil?
     BCrypt::Password.new(digest).is_password?(token)
   end
 
   # Forgets a user.
   def forget
-    update_attribute(:remember_digest, nil)
+    update_attributes(remember_digest: nil)
   end
 
   # Activates an account.
   def activate
-    update_columns(activated: true, activated_at: Time.zone.now)
+    update_attributes(activated: true, activated_at: Time.zone.now)
   end
 
   # Sends activation email.
   def send_activation_email
-    UserMailer.account_activation(self, self.activation_token).deliver_later
+    UserMailer.account_activation(self, activation_token).deliver_later
   end
 
   # Regenerate activation token and digest and send email
@@ -124,7 +123,7 @@ class User < ApplicationRecord
 
   def search_data
     {
-        username: username
+      username: username
     }
   end
 
@@ -159,7 +158,7 @@ class User < ApplicationRecord
   end
 
   def generate_profile
-    self.create_profile
+    create_profile
   end
 
   def clean_user_courses_cache
@@ -169,9 +168,7 @@ class User < ApplicationRecord
   # touch all chats, user belongs to
   def touch_chats
     # "unless" need to prevent queries if code is wrapped by 'ActiveRecord::Base.no_touching' around
-    unless self.no_touching?
-      chats.each(&:touch)
-    end
+    chats.each(&:touch) unless no_touching?
   end
 
   class << self
@@ -185,7 +182,5 @@ class User < ApplicationRecord
     def new_token
       SecureRandom.urlsafe_base64
     end
-
   end
-
 end
