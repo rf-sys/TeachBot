@@ -4,7 +4,7 @@ describe 'Chats', :type => :feature, js: true do
   before :each do
     @initiator = create(:user)
     @recipient = create(:second_user)
-    page.set_rack_session(:user_id => @initiator.id)
+    auth_for_capybara(page, @initiator.id)
   end
 
   it 'creates chat' do
