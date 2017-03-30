@@ -7,8 +7,13 @@
     <p class="card-text">
       <small class="text-muted">Last updated: <%= course.updated_at.strftime('%e %b %Y %H:%M:%S%p') %></small>
     </p>
+    <p class="card-text">
+      <small class="text-muted">Views: <%= course.views %></small>
+    </p>
   </div>
   <div class="card-footer text-muted">
-    <%= link_to 'Visit', course_path(course), class: 'btn btn-primary' %>
+    <%= link_to course_path(course), class: 'btn btn-primary' do %>
+      Visit&nbsp;<i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
+  <% end %>
   </div>
 </div>

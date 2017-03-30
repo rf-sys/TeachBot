@@ -34,7 +34,7 @@ class QueryMaster
 
   # get specific field to search if present
   def find_by
-   @params['find_by'] if @params.keys.include?('find_by')
+    @params['find_by'] if @params.keys.include?('find_by')
   end
 
   # change order field if present?

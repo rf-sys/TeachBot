@@ -8,8 +8,9 @@
 <div class="container-fluid" style="margin-top: 15px">
   <div class="row">
     <div class="col-md">
-      <%= render partial: 'course_body' %>
+        <%= render partial: 'course_body' %>
     </div>
+
 
     <% if it_is_current_user(@course.author) %>
       <div class="col-sm-12 col-md-3">
@@ -28,7 +29,7 @@
             <%= render 'edit_poster_modal' %>
 
             <%= link_to course_path(@course), method: :delete,
-                        data: { confirm: 'Are you sure that you want to delete this course?'},
+                        data: { confirm: 'Are you sure that you want to delete this course?' },
                         class: 'list-group-item list-group-item-action' do %>
               <i class="fa fa-trash" aria-hidden="true"></i>&ensp;Delete course
             <% end %>

@@ -13,9 +13,8 @@ class CoursesController < ApplicationController
   def index
     page = params[:page] || 1
     per = params[:per] || 6
-    master = QueryMaster.new(Course)
 
-    @courses = master.query(request).public_and_published.paginate(page, per)
+    @courses = Course.public_and_published.order(views: :desc).paginate(page, per)
 
     respond_to do |format|
       format.json { render json: @courses }
@@ -28,8 +27,6 @@ class CoursesController < ApplicationController
     unless access_to_course?(@course, current_user)
       return fail_response(['You dont have access to browse this course'], 403)
     end
-
-    @views = $redis_connection.get("courses/#{@course.id}/visitors") || 0
 
     AddNewCourseViewerJob.perform_later(request.remote_ip, @course.id)
   end
@@ -48,8 +45,7 @@ class CoursesController < ApplicationController
     end
   end
 
-  def edit;
-  end
+  def edit; end
 
   def update
     if @course.update(course_params)

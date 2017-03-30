@@ -1,3 +1,4 @@
+# methods, that helps to work with Course model
 module CoursesHelper
   # @param [Course] course
   def access_to_course?(course, auth_user = nil)
@@ -19,9 +20,25 @@ module CoursesHelper
 
     false
   end
+
   private
 
   def course_participant?(auth_user)
     @course.participants.include?(auth_user)
+  end
+
+  def visited_recently?(ip, course_id)
+    recent_visit = $redis_connection.get("#{ip}/courses/#{course_id}/visited")
+
+    return true if recent_visit.present?
+
+    mark_recent_visit(ip, course_id)
+    false
+  end
+
+  def mark_recent_visit(ip, course_id)
+    $redis_connection.set("#{ip}/courses/#{course_id}/visited",
+                          Time.now.to_i, ex: 24.hours)
+    true
   end
 end

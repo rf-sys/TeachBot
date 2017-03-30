@@ -4,16 +4,18 @@
   <meta name="lesson_id" content="<%= @lesson.id %>">
 <% end %>
 
+
 <%= render partial: 'nav', locals: { lesson: @lesson, course: @course } %>
 
 <div class="container-fluid">
-  <h1><%= @lesson.title %></h1>
-  <p class="lead">
-    <%= @lesson.description %>
-  </p>
-  <hr>
-  <%= sanitize @lesson.content %>
-
+  <% cache @lesson do %>
+    <h1><%= @lesson.title %></h1>
+    <p class="lead">
+      <%= @lesson.description %>
+    </p>
+    <hr>
+    <%= sanitize @lesson.content %>
+  <% end %>
   <hr>
   <h2 class="text-center">Comments</h2>
   <div id="disqus_thread" style="margin-top: 15px"></div>

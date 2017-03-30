@@ -12,6 +12,7 @@ class SearchController < ApplicationController
   end
 
   private
+
   def set_request_format
     request.format = :json
   end
