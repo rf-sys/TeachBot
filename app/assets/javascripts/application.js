@@ -22,6 +22,7 @@
 //= require wysihtml
 //= require autosize
 //= require cropperjs
+//= require selectize
 //= require coffee/global
 //= require components
 //= require_tree .

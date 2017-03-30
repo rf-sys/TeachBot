@@ -81,6 +81,7 @@ source 'https://rails-assets.org' do
   gem 'rails-assets-wysihtml'
   gem 'rails-assets-autosize'
   gem 'rails-assets-cropperjs'
+  gem 'rails-assets-selectize'
 end
 
 # font-awesome
