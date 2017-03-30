@@ -16,7 +16,7 @@
   <div class="form-group">
     <div class="form-check">
       <label class="form-check-label">
-        <%= f.check_box :public, {class: 'form-check-input'} %>
+        <%= f.check_box :public, { class: 'form-check-input' } %>
         Public course
       </label>
     </div>
@@ -33,8 +33,14 @@
       Theme of your course defines color decor of your course
     </small>
   </div>
+
+  <div class="form-group">
+    <%= f.label :tags %>
+    <%= f.text_field :tags, maxlength: 75 %>
+    <small>Associate your course with keywords</small>
+  </div>
   <%= f.submit class: 'btn btn-outline-primary pull-xs-right',
                id: 'create_user_btn',
-               data: {disable_with: 'Loading...'}
+               data: { disable_with: 'Loading...' }
   %>
 <% end %>

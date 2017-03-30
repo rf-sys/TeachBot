@@ -53,6 +53,20 @@
           <b><%= @course.views %></b>
         </td>
       </tr>
+
+      <% if @course.tags.present? %>
+        <tr>
+          <th>Tags</th>
+          <td>
+            <h5>
+              <% @course.tags.split(',')[0..6].each do |tag| %>
+                <span class="badge background_coloured_element"><%= tag %></span>
+              <% end %>
+            </h5>
+          </td>
+        </tr>
+      <% end %>
+
       <tr>
         <%= render 'subscribers' %>
       </tr>

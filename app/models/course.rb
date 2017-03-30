@@ -30,11 +30,11 @@ class Course < ApplicationRecord
     select(:title, :description, :poster, :updated_at)
   end
 
-  validates :title, presence: true, length: {minimum: 6, maximum: 50}
-  validates :description, presence: true, length: {minimum: 6, maximum: 255}
-  validates :public, inclusion: {in: [true, false]}
-
-  validates :theme, format: {with: /\A#.{6}\z/, message: 'color is invalid'}, allow_blank: true
+  validates :title, presence: true, length: { minimum: 6, maximum: 50 }
+  validates :description, presence: true, length: { minimum: 6, maximum: 255 }
+  validates :public, inclusion: { in: [true, false] }
+  validates :theme, format: { with: /\A#.{6}\z/, message: 'color is invalid' }, allow_blank: true
+  validates :tags, length: { maximum: 75 }, allow_blank: true
 
   after_save :clean_old_slug_cache, :clean_recent_courses_cache
 

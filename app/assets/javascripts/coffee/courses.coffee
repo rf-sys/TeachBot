@@ -8,6 +8,16 @@ $ ->
     $("#courses_index_subscriptions").on 'ajax:success', (event, response, status) ->
       $("#courses_index_subscriptions").html(response)
 
+    $('#course_tags').selectize
+      delimiter: ','
+      persist: false,
+      maxItems: 7,
+      create: (input) ->
+        {
+          value: input
+          text: input
+        }
+
   $(this).whenExist "#course_theme_color", ->
     color = $('#course_theme_color').attr 'content'
     $('.background_coloured_element').attr 'style', "background-color: #{color} !important"
