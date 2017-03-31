@@ -43,7 +43,8 @@ class Course < ApplicationRecord
   def search_data
     {
         title: title,
-        description: description
+        description: description,
+        tags: tags
     }
   end
 

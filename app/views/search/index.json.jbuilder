@@ -1,6 +1,6 @@
 json.courses do
   json.array! @courses do |course|
-    json.extract! course, :id, :title, :description, :updated_at, :slug, :poster
+    json.extract! course, :id, :title, :description, :updated_at, :slug, :poster, :tags
   end
 end
 
