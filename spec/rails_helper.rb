@@ -10,6 +10,10 @@ require 'helpers'
 
 # set test env variables
 Dotenv.overload('.env.test')
+
+# create tmp dir if no presented
+tmp_dir = Rails.root.join('spec', 'tmp')
+FileUtils.mkdir_p tmp_dir unless File.directory?(tmp_dir)
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
 # run as spec files by default. This means that files in spec/support that end
@@ -88,6 +92,7 @@ RSpec.configure do |config|
   config.append_after(:each) do
     DatabaseCleaner.clean
     $bucket.clear!
+    FileUtils.rm_rf(Rails.root.join('spec/tmp/.'), secure: true)
   end
 
   # The different available types are documented in the features, such as in

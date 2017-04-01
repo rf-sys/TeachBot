@@ -76,4 +76,17 @@ describe 'database namespace rake task' do
       expect(lesson.slug).to eq(slug)
     end
   end
+
+  describe 'fill_up_users_with_data' do
+    let :run_rake_task do
+      Rake::Task['database:fill_up_users_with_data'].reenable
+      Rake.application.invoke_task 'database:fill_up_users_with_data'
+    end
+
+    it 'should create n users' do
+      assert_equal(User.count, 0)
+      run_rake_task
+      assert_equal(User.count, 100)
+    end
+  end
 end

@@ -4,7 +4,7 @@ class PublicChatControllers::MessagesController < ApplicationController
 
   def index
     page = params[:page]
-    @messages = Message.for_public_chat(@public_chat).paginate(page, 5)
+    @messages = Message.for_chat(@public_chat).public_format.paginate(page, 5)
   end
 
   def create

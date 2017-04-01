@@ -6,7 +6,7 @@ RSpec.describe SubscriptionMailer, type: :mailer do
     @lesson = create(:lesson)
   end
 
-  let(:mail) { SubscriptionMailer.new_lesson_email(@lesson.course, @lesson, @lesson.course.author) }
+  let(:mail) { SubscriptionMailer.new_lesson_email(@lesson.course.id, @lesson.id, @lesson.course.author.id) }
 
   it 'has valid content' do
     expect(mail.subject).to eq('New lesson has been created!')

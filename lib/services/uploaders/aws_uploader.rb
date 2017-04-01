@@ -9,7 +9,7 @@ class AwsUploader < BaseUploader
   end
 
   def store
-    $bucket.object(file_url).upload_file(file_path, {acl: 'public-read'})
+    $bucket.object(file_url).upload_file(file_path, acl: 'public-read')
   rescue => error
     @error = error
     false

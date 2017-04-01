@@ -62,29 +62,58 @@ RSpec.describe UsersController, type: :controller do
   end
 
   describe 'PUT/PATCH #update' do
+    before(:each) do
+      @user = create(:user)
+    end
     it 'updates user' do
-      user = create(:user)
-      auth_as(user)
+      auth_as(@user)
       patch :update, params: {
-        id:   user.friendly_id,
+        id:   @user.friendly_id,
         user: {
           username:           'updated_username',
-          email:              user.email,
           profile_attributes: {
-            website:  '',
-            facebook: '',
-            twitter:  '',
-            about:    'Test user about',
-            location: '',
-            id:       user.id
+            about: 'Test user about',
+            id:    @user.id
           }
         }
       }
-      user.reload
+      @user.reload
 
       expect(response).to have_http_status(302)
-      expect(user.username).to eq('updated_username')
-      expect(user.profile.about).to eq('Test user about')
+      expect(@user.username).to eq('updated_username')
+      expect(@user.profile.about).to eq('Test user about')
+    end
+
+    it 'returns error if invalid credentials' do
+      auth_as(@user)
+      patch :update, params: {
+        id:   @user.friendly_id,
+        user: {
+          username: ''
+        }
+      }
+      expect(response).to have_http_status(422)
+    end
+
+    it 'updates avatar' do
+      auth_as(@user)
+      avatar = fixture_file_upload(Rails.root.join('spec', 'fixtures', 'files', 'valid_avatar.jpg'),
+                                   'image/png')
+
+      default_avatar = @user.avatar
+
+      patch :update, params: {
+        id:   @user.friendly_id,
+        user: {
+          username: 'updated_username',
+          avatar:   avatar
+        }
+      }
+
+      @user.reload
+      expect(response).to have_http_status(302)
+      expect(@user.avatar).not_to eq default_avatar
+      expect(@user.avatar).to match(/teachbot-test.s3/)
     end
   end
 

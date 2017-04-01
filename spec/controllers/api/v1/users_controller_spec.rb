@@ -24,9 +24,25 @@ RSpec.describe Api::V1::UsersController, type: :controller do
       post :find_by_username, params: { username: user.username }
       expect(response).to have_http_status(200)
     end
+
+    it 'throws "Unauthorized" error if invalid jwt token' do
+      user = create(:user)
+      token = JsonWebToken.encode(payload(user))
+
+      request.headers['Authorization'] = "Bearer #{token}invalid"
+
+      post :find_by_username, params: { username: user.username }
+      expect(response).to have_http_status(401)
+
+      request.headers['Authorization'] = 'Bearer ivalid'
+
+      post :find_by_username, params: { username: user.username }
+      expect(response).to have_http_status(401)
+    end
   end
 
   private
+
   def payload(user)
     {
         iss: Rails.application.config.development_host,

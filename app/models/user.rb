@@ -38,13 +38,15 @@ class User < ApplicationRecord
   has_and_belongs_to_many :unread_messages, join_table: 'unread_messages_users', class_name: 'Message'
 
   scope :select_profile_attr, -> { select(:id, :username, :email, :avatar, :updated_at) }
-  scope :find_with_profile, ->(id) { includes(:profile).find(id) }
-  scope :course_subscribers, ->(course) do
-    includes(:subscriptions).where(subscriptions: { subscribeable_type: 'Course', subscribeable_id: course.id })
-  end
 
   scope :where_username_like, ->(username) do
     where('username LIKE ?', "%#{username}%").limit(10)
+  end
+
+  scope :find_with_profile, ->(id) { includes(:profile).find(id) }
+
+  scope :course_subscribers, ->(course) do
+    includes(:subscriptions).where(subscriptions: { subscribeable_type: 'Course', subscribeable_id: course.id })
   end
 
   scope :public_fields, -> { select(:id, :username, :avatar) }
@@ -107,7 +109,7 @@ class User < ApplicationRecord
 
   # Sends activation email.
   def send_activation_email
-    UserMailer.account_activation(self, activation_token).deliver_later
+    UserMailer.account_activation(id, activation_token).deliver_later
   end
 
   # Regenerate activation token and digest and send email

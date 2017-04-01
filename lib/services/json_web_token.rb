@@ -6,7 +6,7 @@ class JsonWebToken
   end
 
   def self.decode(token)
-    decoded_token = JWT.decode token, SECRET_KEY, true, {:algorithm => 'HS256'}
+    decoded_token = JWT.decode token, SECRET_KEY, true, algorithm: 'HS256'
     decoded_token.first
   rescue
     nil

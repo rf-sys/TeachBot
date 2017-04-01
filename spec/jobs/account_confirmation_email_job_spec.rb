@@ -21,7 +21,7 @@ RSpec.describe UserMailer, type: :job do
     expect(email.deliver_later.queue_name).to eq('mailers')
   end
 
-  it 'sends valid data' do
+  it 'uses valid data' do
     assert_equal [@user.email], email.to
     assert_equal 'Account activation', email.subject
     assert_match(/Hi #{@user.username}/, email.html_part.body.to_s)

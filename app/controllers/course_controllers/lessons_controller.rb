@@ -4,7 +4,7 @@ module CourseControllers
     include CoursesHelper
     before_action :require_user, except: [:show]
     before_action :set_course
-    before_action :require_author, except: [:show]
+    before_action :require_course_author, except: [:show]
     before_action :set_lesson, only: [:edit, :update, :destroy]
 
     def show
@@ -26,7 +26,7 @@ module CourseControllers
     def create
       lesson = @course.lessons.new(lesson_params)
       if lesson.save
-        NewLessonNotificationJob.perform_later(@course, lesson)
+        NewLessonNotificationJob.perform_later(@course.id, lesson.id)
         redirect_to course_lesson_path(@course, lesson)
       else
         error_message(lesson.errors.full_messages, 422)
@@ -68,7 +68,7 @@ module CourseControllers
       end
     end
 
-    def require_author
+    def require_course_author
       return if owner? @course
       fail_response([no_author_message], 403)
     end

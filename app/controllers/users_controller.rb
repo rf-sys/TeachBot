@@ -32,13 +32,10 @@ class UsersController < ApplicationController
   end
 
   def destroy
-    if current_user.destroy
-      session[:user_id] = nil
-      flash[:success_notice] = 'User has been deleted.'
-      redirect_to '/'
-    else
-      fail_response([current_user.errors.full_messages], 422)
-    end
+    current_user.destroy
+    session[:user_id] = nil
+    flash[:success_notice] = 'User has been deleted.'
+    redirect_to '/'
   end
 
   private

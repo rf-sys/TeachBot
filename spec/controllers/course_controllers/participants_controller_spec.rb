@@ -5,6 +5,19 @@ RSpec.describe CourseControllers::ParticipantsController, type: :controller do
     @course = create(:course)
     @target_user = create(:second_user)
   end
+
+  describe 'GET #index' do
+    it 'returns array of chat participants' do
+      @course.participants << @target_user
+      get :index, params: { course_id: @course.id }
+      expected = {
+          participants: @course.participants.select(:id, :username, :avatar, :slug)
+      }.to_json
+      expect(response).to have_http_status(:success)
+      expect(response.body).to eq expected
+    end
+  end
+
   describe 'POST #create' do
     it 'denies access for guests' do
       post :create, params: { course_id: @course.id, id: @target_user.id }

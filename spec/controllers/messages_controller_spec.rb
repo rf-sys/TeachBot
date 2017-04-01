@@ -89,17 +89,39 @@ RSpec.describe MessagesController, type: :controller do
       auth_as(user)
 
       user.unread_messages << [message]
-      expect(user.unread_messages.count).to eq (1)
+      expect(user.unread_messages.count).to eq 1
       unread_messages_request(1)
 
       user.unread_messages << [message]
-      expect(user.unread_messages.count).to eq (2)
+      expect(user.unread_messages.count).to eq 2
       unread_messages_request(2)
     end
 
     it 'denies access for guests' do
       post :unread_messages_count
       expect(response.status).to eq(302)
+    end
+  end
+
+  describe 'POST #mark_as_read' do
+    it 'marks message as read' do
+      chat = create(:chat)
+      user = chat.initiator
+      auth_as(user)
+      message = create(:message, chat: chat)
+      assert_equal user.unread_messages.include?(message), false
+      user.unread_messages << message
+      assert_equal user.unread_messages.include?(message), true
+
+      post :mark_as_read, params: { id: message.id }
+
+      expect(response).to have_http_status(:success)
+      assert_equal user.unread_messages.include?(message), false
+    end
+
+    it 'denies access for no auth user' do
+      post :mark_as_read, params: { id: 123 }
+      expect(response).to have_http_status(302)
     end
   end
 
@@ -152,6 +174,27 @@ RSpec.describe MessagesController, type: :controller do
 
       expect(response.status).to eq(200)
 
+    end
+  end
+
+  describe 'POST #unread_messages' do
+    it 'displays unread messages' do
+      chat = create(:chat)
+      user = chat.initiator
+      auth_as(user)
+
+      unread_message = create(:message, chat: chat)
+      create(:message, chat: chat)
+
+      user.unread_messages << unread_message
+
+      set_json_request
+      post :unread_messages, params: { chat_id: chat.id }
+
+      expect(response).to have_http_status(:success)
+
+      expect(chat.messages.count).to eq 2
+      expect(user.unread_messages.count).to eq 1
     end
   end
 

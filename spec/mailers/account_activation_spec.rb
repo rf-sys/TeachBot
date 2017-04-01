@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe UserMailer, :type => :mailer do
+RSpec.describe UserMailer, type: :mailer do
   include ActiveJob::TestHelper
   before :each do
     @user = create(:user)
@@ -18,6 +18,16 @@ RSpec.describe UserMailer, :type => :mailer do
       expect(mail.body.encoded).to match('https')
     end
 
-  end
+    it 'sends activation email to the user' do
+      expect do
+        @user.send_activation_email
+      end.to change(ActiveJob::Base.queue_adapter.enqueued_jobs, :size).by(1)
+    end
 
+    it 'sends activation email to the user again' do
+      expect do
+        @user.resend_activation_email
+      end.to change(ActiveJob::Base.queue_adapter.enqueued_jobs, :size).by(1)
+    end
+  end
 end

@@ -1,9 +1,9 @@
 class UserMailer < ApplicationMailer
 
-  def account_activation(user, token)
-    @user = user
-    @activation_token = token
-    mail to: user.email, subject: 'Account activation'
+  def account_activation(user_id, token)
+    @user ||= User.find_by(id: user_id)
+    @activation_token ||= token
+    mail to: @user.email, subject: 'Account activation'
   end
 
   def password_reset

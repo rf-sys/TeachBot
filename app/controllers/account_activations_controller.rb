@@ -1,6 +1,7 @@
 # handle account activation requests
 class AccountActivationsController < ApplicationController
   before_action :check_interval_presence, only: [:create]
+  before_action :require_guest, only: [:new]
 
   def edit
     user = User.find_by(email: params[:email])
@@ -20,9 +21,7 @@ class AccountActivationsController < ApplicationController
   # Create activation code
   def create
     @user = User.find_by(email: params[:user][:email])
-    return error_message(['Email not found'], 404) unless @user
-    return error_message([already_confirmed], 422) if @user.activated?
-    @user.resend_activation_email
+    @user.resend_activation_email if @user
     send_activation_email_interval
   end
 
@@ -38,10 +37,6 @@ class AccountActivationsController < ApplicationController
 
   def activation_interval_error
     error_message(['You can send another email once in 15 minutes'], 403)
-  end
-
-  def already_confirmed
-    'Email has already been confirmed'
   end
 
   def interval_exists?

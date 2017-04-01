@@ -17,7 +17,7 @@ class BaseUploader
   # @return [String]
   def extension
     # by default return extension of the uploaded file
-    FastImage(@file).type.to_s
+    FastImage.type(@file).to_s
   end
 
   # how we store our file
@@ -65,7 +65,7 @@ class BaseUploader
     accepted_formats = available_formats
 
     unless accepted_formats.include? extension
-      raise 'File has no valid type (image required)'
+      raise 'File has no valid type'
     end
   end
 

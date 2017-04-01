@@ -17,18 +17,13 @@ class Course < ApplicationRecord
   # get users through polymorphic relationship
   has_many :subscribers, through: :subscriptions, source: :user, dependent: :destroy
 
-
   has_many :lessons, dependent: :destroy
 
-  scope :public_and_published, -> do
+  scope :public_and_published, lambda {
     where(public: true, published: true)
-  end
+  }
 
-  scope :courses_with_paginate, -> (page = 1) { page(page).per(2) }
-
-  scope :public_params, -> do
-    select(:title, :description, :poster, :updated_at)
-  end
+  scope :courses_with_paginate, ->(page = 1) { page(page).per(2) }
 
   validates :title, presence: true, length: { minimum: 6, maximum: 50 }
   validates :description, presence: true, length: { minimum: 6, maximum: 255 }
@@ -38,18 +33,24 @@ class Course < ApplicationRecord
 
   after_save :clean_old_slug_cache, :clean_recent_courses_cache
 
-  before_destroy :clean_recent_courses_cache
+  before_destroy :clean_recent_courses_cache, :delete_poster
 
   def search_data
     {
-        title: title,
-        description: description,
-        tags: tags
+      title:       title,
+      description: description,
+      tags:        tags
     }
   end
 
   def should_index?
     public? && published? # only public and published records
+  end
+
+  # delete avatar before delete user
+  def delete_poster
+    poster = $bucket.object("uploads/courses_posters/#{id}.jpg")
+    poster.delete if poster.exists?
   end
 
   private

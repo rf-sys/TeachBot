@@ -1,7 +1,13 @@
 class NewLessonNotificationJob < ApplicationJob
   queue_as :default
 
-  def perform(course, lesson)
+  def perform(course_id, lesson_id)
+    course ||= Course.find_by(id: course_id)
+    lesson ||= Lesson.find_by(id: lesson_id)
+
+    return unless course.present?
+    return unless lesson.present?
+
     @subscribers = User.course_subscribers(course)
     notifications = create_notifications(@subscribers, course, lesson)
     deliver_notifications(notifications)
@@ -33,13 +39,13 @@ class NewLessonNotificationJob < ApplicationJob
 
   def deliver_notifications(notifications)
     notifications.each do |notification|
-      NotificationJob.perform_later(notification.user, notification)
+      NotificationJob.perform_later(notification.user.id, notification.id)
     end
   end
 
   def deliver_emails(subscribers, course, lesson)
     subscribers.each do |user|
-      SubscriptionMailer.new_lesson_email(course, lesson, user).deliver_later
+      SubscriptionMailer.new_lesson_email(course.id, lesson.id, user.id).deliver_later
     end
   end
 end

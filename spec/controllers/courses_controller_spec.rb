@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe CoursesController, :type => :controller do
+RSpec.describe CoursesController, type: :controller do
   include ActiveJob::TestHelper
   before :each do
     @course = create(:course)

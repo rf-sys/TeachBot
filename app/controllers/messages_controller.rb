@@ -16,27 +16,23 @@ class MessagesController < ApplicationController
     create_message.create
   end
 
+  # POST - mark message as red for auth user
+  # @return [JSON]
   def mark_as_read
     message = fetch_cache(Message, params[:id])
+    return fail_response(['Message not found'], 404) unless message
     chat_id = message.chat_id
-    message_id = message.id
-    if current_user.unread_messages.delete(message)
-      UnreadMessagesChannel.remove_message(current_user, chat_id, message_id)
-      render json: { status: 'done' }, status: 200
-    else
-      render json: 'Something went wrong', status: 422
-    end
+    current_user.unread_messages.delete(message)
+    UnreadMessagesChannel.remove_message(current_user, chat_id, message.id)
+    render json: { status: 'done' }, status: 200
   end
 
   # POST - mark all unread messages as read for current_user
   # @return [Object]
   def mark_all_as_read
     messages = current_user.unread_messages.where(chat_id: params[:chat_id])
-    if current_user.unread_messages.delete(messages)
-      render json: { status: 'done' }, status: 200
-    else
-      render json: 'Something went wrong', status: 422
-    end
+    current_user.unread_messages.delete(messages)
+    render json: { status: 'done' }, status: 200
   end
 
   # POST - return all user's unread messages

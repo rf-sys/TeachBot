@@ -4,7 +4,8 @@ class AddNewCourseViewerJob < ApplicationJob
   # @param [String] ip
   # @param [Integer] course_id
   def perform(ip, course_id)
-    course = Course.find(course_id)
+    course ||= Course.find_by(id: course_id)
+
     return unless course.present?
 
     redis = Redis.new
