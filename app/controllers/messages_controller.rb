@@ -63,7 +63,7 @@ class MessagesController < ApplicationController
   # @param [Message] message
   def send_message(chat, message)
     ChatChannel.send_message(chat.id, message)
-    broadcast_new_unread_message(chat.users, current_user)
+    broadcast_new_unread_message(chat.members, current_user)
   end
 
   private

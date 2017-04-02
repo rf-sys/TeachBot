@@ -10,6 +10,6 @@ json.chat do
     end
     json.read read?(@message, current_user)
   end
-  json.users @chat.users, :id, :username, :avatar
+  json.users @chat.members, :id, :username, :avatar
 end
 json.type :new_chat

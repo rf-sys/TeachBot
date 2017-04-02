@@ -4,7 +4,7 @@ module ChatsHelper
   # @param [User] user
   # @return boolean
   def user_related_to_chat(chat, user)
-    chat.users.include?(user)
+    chat.members.include?(user)
   end
 
   def user_is_initiator(user, chat)

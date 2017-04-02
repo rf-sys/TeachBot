@@ -17,7 +17,7 @@ class ChatsController < ApplicationController
 
   # DELETE - leave from chat
   def leave
-    @chat.users.delete(current_user)
+    @chat.members.delete(current_user)
     render json: { status: 'done' }, status: :ok
     ChatChannel.send_notification_to_chat(@chat.id, user_left_the_chat_msg)
   end
@@ -59,7 +59,7 @@ class ChatsController < ApplicationController
   private
 
   def delete_if_no_participants
-    @chat.destroy if @chat.users.count <= 1
+    @chat.destroy if @chat.members.count <= 1
   end
 
   def set_chat

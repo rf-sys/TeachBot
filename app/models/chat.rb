@@ -1,5 +1,6 @@
 class Chat < ApplicationRecord
-  has_and_belongs_to_many :users
+  has_many :memberships, dependent: :destroy
+  has_many :members, through: :memberships, source: 'user'
   has_many :messages, dependent: :destroy
 
   belongs_to :initiator, foreign_key: 'initiator_id', class_name: 'User'
@@ -9,7 +10,7 @@ class Chat < ApplicationRecord
     where(
       '(initiator_id = ? AND recipient_id = ?) OR (initiator_id = ? AND recipient_id = ?)',
       user_1, user_2, user_2, user_1
-    ).where(public_chat: false).joins(:users).group('chats.id').having('count(users.id) = 2')
+    ).where(public_chat: false).joins(:members).group('chats.id').having('count(users.id) = 2')
   }
 
   scope :with_users_and_messages, -> { includes(:users, messages: [:user]).distinct }
@@ -17,16 +18,16 @@ class Chat < ApplicationRecord
   after_create :add_participants
 
   def add_participants
-    users << [initiator, recipient]
+    members << [initiator, recipient]
   end
 
   def add_participant(user)
-    users << user
+    members << user
     touch
   end
 
   def kick_participant(user)
-    users.delete(user)
+    members.delete(user)
     touch
   end
 

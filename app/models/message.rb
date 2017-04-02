@@ -28,6 +28,6 @@ class Message < ApplicationRecord
   # @param [Chat] chat
   def save_with_unread_users(chat)
     chat.messages << self
-    unread_users << [chat.users]
+    unread_users << [chat.members]
   end
 end

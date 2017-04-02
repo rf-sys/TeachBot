@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170330175148) do
+ActiveRecord::Schema.define(version: 20170402112330) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -31,13 +31,6 @@ ActiveRecord::Schema.define(version: 20170330175148) do
     t.integer  "initiator_id"
     t.integer  "recipient_id"
     t.boolean  "public_chat",  default: false
-  end
-
-  create_table "chats_users", id: false, force: :cascade do |t|
-    t.integer "chat_id"
-    t.integer "user_id"
-    t.index ["chat_id"], name: "index_chats_users_on_chat_id", using: :btree
-    t.index ["user_id"], name: "index_chats_users_on_user_id", using: :btree
   end
 
   create_table "courses", force: :cascade do |t|
@@ -80,6 +73,15 @@ ActiveRecord::Schema.define(version: 20170330175148) do
     t.text     "content"
     t.index ["course_id"], name: "index_lessons_on_course_id", using: :btree
     t.index ["slug"], name: "index_lessons_on_slug", unique: true, using: :btree
+  end
+
+  create_table "memberships", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "chat_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["chat_id"], name: "index_memberships_on_chat_id", using: :btree
+    t.index ["user_id"], name: "index_memberships_on_user_id", using: :btree
   end
 
   create_table "messages", force: :cascade do |t|
@@ -175,6 +177,8 @@ ActiveRecord::Schema.define(version: 20170330175148) do
   end
 
   add_foreign_key "accesses", "users"
+  add_foreign_key "memberships", "chats"
+  add_foreign_key "memberships", "users"
   add_foreign_key "messages", "chats"
   add_foreign_key "messages", "users"
   add_foreign_key "notifications", "users"

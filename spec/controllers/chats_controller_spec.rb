@@ -42,18 +42,18 @@ RSpec.describe ChatsController, type: :controller do
   describe 'DELETE #leave' do
     it 'removes participant from the chat' do
       chat = create(:chat)
-      chat.users << create(:third_user)
+      chat.members << create(:third_user)
 
-      assert_equal(chat.users.count, 3)
+      assert_equal(chat.members.count, 3)
       auth_as(chat.recipient)
       delete :leave, params: { id: chat.id }
       expect(response).to have_http_status(:success)
-      expect(chat.users.count).to eq 2
+      expect(chat.members.count).to eq 2
     end
 
     it 'removes chat if only one participant left' do
       chat = create(:chat)
-      assert_equal(chat.users.count, 2)
+      assert_equal(chat.members.count, 2)
       auth_as(chat.recipient)
 
       delete :leave, params: { id: chat.id }

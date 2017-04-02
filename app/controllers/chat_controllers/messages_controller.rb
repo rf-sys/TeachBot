@@ -16,9 +16,9 @@ class ChatControllers::MessagesController < ApplicationController
     message = current_user.messages.new_message(message_params, chat: @chat)
 
     if message.save
-      ActiveRecord::Base.no_touching { message.unread_users << [@chat.users] }
+      ActiveRecord::Base.no_touching { message.unread_users << [@chat.members] }
       ChatChannel.send_message(@chat.id, message)
-      broadcast_new_unread_message(@chat.users, current_user)
+      broadcast_new_unread_message(@chat.members, current_user)
     else
       error_message(message.errors.full_messages, 422)
     end
