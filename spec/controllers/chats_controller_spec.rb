@@ -1,6 +1,35 @@
 require 'rails_helper'
 
 RSpec.describe ChatsController, type: :controller do
+  describe 'GET #index' do
+    render_views
+
+    before(:each) do
+      @chat = create(:chat)
+    end
+
+    it 'renders chats' do
+      auth_as(@chat.recipient)
+      get :index
+      expect(response).to have_http_status(:success)
+
+      set_json_request
+
+      get :index
+      expect(response).to have_http_status(:success)
+    end
+
+    it 'denies access for guests' do
+      get :index
+      expect(response).to have_http_status(302)
+
+      set_json_request
+
+      get :index
+      expect(response).to have_http_status(403)
+    end
+  end
+
   describe 'POST #add_participant' do
     it 'adds new participant' do
       chat = create(:chat)

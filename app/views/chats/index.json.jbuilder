@@ -1,7 +1,7 @@
 json.array! @chats do |chat|
   json.cache!("users/#{current_user.cache_key}/conversations/#{chat.cache_key}") do
     json.extract! chat, :id, :initiator_id
-    json.users chat.users.uniq, :id, :username, :avatar, :slug
+    json.users chat.members.uniq, :id, :username, :avatar, :slug
 
     if (last_msg = chat.messages.order(created_at: :asc).last)
       json.last_message do
