@@ -12,7 +12,7 @@
     </div>
 
 
-    <% if it_is_current_user(@course.author) %>
+    <% if current_user?(@course.author) %>
       <div class="col-sm-12 col-md-3">
         <div class="list-group">
           <% unless @course.public %>

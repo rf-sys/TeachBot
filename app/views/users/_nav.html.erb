@@ -8,7 +8,7 @@
     <div class="dropdown-menu">
 
 
-      <% if it_is_current_user @user %>
+      <% if current_user? @user %>
         <%= link_to user_courses_path(@user), class: 'dropdown-item' do %>
           <i class="fa fa-book" aria-hidden="true"></i>	&ensp;My courses
         <% end %>
@@ -22,7 +22,7 @@
       <% end %>
     </div>
   </li>
-  <% if it_is_current_user @user %>
+  <% if current_user? @user %>
     <li class="nav-item">
       <%= link_to 'Subscriptions', user_subscriptions_path(@user),
                   class: 'nav-link ' + (controller_name == 'subscriptions' ? 'active' : '') %>

@@ -2,7 +2,7 @@ module CourseControllers
   # 123
   class LessonsController < ApplicationController
     include CoursesHelper
-    before_action :require_user, except: [:show]
+    before_action :authenticate_user!, except: [:show]
     before_action :set_course
     before_action :require_course_author, except: [:show]
     before_action :set_lesson, only: [:edit, :update, :destroy]

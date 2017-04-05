@@ -1,6 +1,6 @@
 # handle user's posts
 class PostsController < ApplicationController
-  before_action :require_user
+  before_action :authenticate_user!
 
   def create
     post = current_user.posts.build(post_params)

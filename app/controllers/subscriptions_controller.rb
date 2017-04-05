@@ -1,6 +1,6 @@
 # Handle courses' subscribe/unsubscribe button
 class SubscriptionsController < ApplicationController
-  before_action :require_user, :set_course
+  before_action :authenticate_user!, :set_course
 
   def create
     if course_in_subscriptions?(@course)

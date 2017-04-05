@@ -5,6 +5,12 @@ module SessionsHelper
     flash[:info_notice] = 'You have been logged in as: ' + user.username
   end
 
+  def log_in_and_redirect_with_back(user)
+    log_in user
+    redirect_to session.delete(:prev_url) || root_url
+  end
+
+
   # Remembers a user in a persistent session and save remember_token in DB
   def remember(user)
     user.remember # message token and save its hash in the DB
@@ -14,9 +20,9 @@ module SessionsHelper
 
   # destroy session and clear current_user
   def log_out
-      forget(@current_user)
-      session.delete(:user_id)
-      @current_user = nil
+    forget(@current_user)
+    session.delete(:user_id)
+    @current_user = nil
   end
 
   # Forgets a persistent session.

@@ -18,8 +18,7 @@ class AuthController < ApplicationController
   # common callback for all provided oauth services
   def auth_callback
     user = User.find_or_create_from_auth_hash(auth_hash)
-    log_in(user)
-    redirect_to root_path
+    log_in_and_redirect_with_back(user)
   rescue StandardError => e
     flash[:danger_notice] = e.message
     redirect_to root_url

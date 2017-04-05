@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   include SessionsHelper
   include CustomHelper::Cache
-  helper_method :current_user, :it_is_current_user
+  helper_method :current_user, :current_user?
 
   after_action :check_live_id
 
@@ -22,13 +22,14 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def require_user
+  def authenticate_user!
     return if current_user.present?
     respond_to do |format|
       format.any(:js, :json) { need_login_error_message }
       format.html do
+        session[:prev_url] = request.fullpath
         flash[:danger_notice] = 'You need login to go there'
-        redirect_to root_url
+        redirect_to login_url
       end
     end
   end
@@ -44,7 +45,7 @@ class ApplicationController < ActionController::Base
     fail_response(['Access denied'], 403)
   end
 
-  def it_is_current_user(user)
+  def current_user?(user)
     current_user.try(:id) == user.id
   end
 

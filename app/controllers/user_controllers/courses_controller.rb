@@ -1,5 +1,5 @@
 class UserControllers::CoursesController < ApplicationController
-  before_action :require_user, only: [:destroy]
+  before_action :authenticate_user!, only: [:destroy]
 
   def index
     @user = fetch_cache(User, params[:user_id]) { User.friendly.find(params[:user_id]) }

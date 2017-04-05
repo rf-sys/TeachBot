@@ -81,7 +81,7 @@
   <%= render partial: 'lesson', collection: @course.lessons %>
 </div>
 
-<% if it_is_current_user(@course.author) %>
+<% if current_user?(@course.author) %>
   <div class="box-shadow-block">
     <h2 style="text-align: center; padding: 10px">
       <%= link_to 'Create a new lesson', new_course_lesson_path(@course), class: 'text_coloured_element' %>

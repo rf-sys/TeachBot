@@ -2,7 +2,7 @@
 # (like add participant or leave from the chat)
 class ChatsController < ApplicationController
   include ChatsHelper, UsersHelper
-  before_action :require_user
+  before_action :authenticate_user!
   before_action :set_chat, only: [:leave, :add_participant, :kick_participant]
   after_action :delete_if_no_participants, only: [:leave]
 

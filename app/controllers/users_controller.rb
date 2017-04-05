@@ -3,7 +3,7 @@ class UsersController < ApplicationController
   include Services::UseCases::User::UpdateUserService
   include UsersHelper
   before_action :require_guest, only: [:new, :create]
-  before_action :require_user, :profile_owner, only: [:edit, :update, :destroy]
+  before_action :authenticate_user!, :profile_owner, only: [:edit, :update, :destroy]
   before_action :set_user, except: [:new, :create]
 
   def show; end

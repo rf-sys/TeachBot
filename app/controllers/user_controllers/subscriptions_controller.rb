@@ -1,6 +1,6 @@
 class UserControllers::SubscriptionsController < ApplicationController
   # get user's subscriptions, divided by pagination
-  before_action :require_user, only: [:destroy]
+  before_action :authenticate_user!, only: [:destroy]
   before_action :set_user
 
   def index
@@ -19,7 +19,7 @@ class UserControllers::SubscriptionsController < ApplicationController
 
   # pass course id =)
   def destroy
-    return error_message(['Access denied'], 403) unless it_is_current_user(@user)
+    return error_message(['Access denied'], 403) unless current_user?(@user)
 
     course = fetch_cache(Course, params[:id])
     @user.subscriptions_to_courses.destroy(course)

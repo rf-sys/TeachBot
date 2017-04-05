@@ -1,6 +1,6 @@
 # handle logic of the messages of the users' chats
 class MessagesController < ApplicationController
-  before_action :require_user
+  before_action :authenticate_user!
   include MessagesHelper
   include Services::UseCases::Message::CreateMessageService
 

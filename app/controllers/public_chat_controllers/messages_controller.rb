@@ -1,6 +1,6 @@
 class PublicChatControllers::MessagesController < ApplicationController
   before_action :set_public_chat
-  before_action :require_user, only: [:create]
+  before_action :authenticate_user!, only: [:create]
 
   def index
     page = params[:page]

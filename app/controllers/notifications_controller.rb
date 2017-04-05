@@ -1,7 +1,7 @@
 # represents notifications module at the header
 class NotificationsController < ApplicationController
   include NotificationsHelper
-  before_action :require_user
+  before_action :authenticate_user!
   before_action :related_to_current_user, only: [:destroy]
 
   # return user's notifications

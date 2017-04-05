@@ -4,7 +4,7 @@ class CoursesController < ApplicationController
   include CoursesHelper
   require_dependency 'services/query_master.rb'
 
-  before_action :require_user, except: [:index, :show]
+  before_action :authenticate_user!, except: [:index, :show]
   before_action :require_teacher, except: [:index, :show]
   before_action :set_course, except: [:index, :new, :create]
   before_action :require_course_owner, except: [:index, :show, :new, :create]
@@ -100,7 +100,7 @@ class CoursesController < ApplicationController
   end
 
   def require_course_owner
-    return if it_is_current_user(@course.author)
+    return if current_user?(@course.author)
     fail_response(['Access denied'], 403)
   end
 end

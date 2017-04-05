@@ -1,7 +1,7 @@
 class ChatControllers::MessagesController < ApplicationController
   include MessagesHelper, ChatsHelper
 
-  before_action :require_user
+  before_action :authenticate_user!
   before_action :set_chat
   before_action :check_relation_to_chat
 

@@ -13,7 +13,7 @@
 
 
 
-    <% if it_is_current_user(@course.author) %>
+    <% if current_user?(@course.author) %>
       <%= link_to edit_course_lesson_path(@course, lesson), class: 'btn btn-outline-warning' do %>
         Edit <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
       <% end %>

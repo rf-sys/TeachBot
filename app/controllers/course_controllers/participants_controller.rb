@@ -1,5 +1,5 @@
 class CourseControllers::ParticipantsController < ApplicationController
-  before_action :require_user, except: [:index]
+  before_action :authenticate_user!, except: [:index]
   before_action :set_course
   before_action :set_user, :require_owner, except: [:index]
 
