@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe 'Chats', :type => :feature, js: true do
+describe 'Chats', type: :feature, js: true do
   before :each do
     @initiator = create(:user)
     @recipient = create(:second_user)

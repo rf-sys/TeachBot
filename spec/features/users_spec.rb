@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe 'the signin process', :type => :feature, js: true do
+describe 'the signin process', type: :feature, js: true do
   describe 'user profile' do
     before(:each) do
       @user = create(:user)

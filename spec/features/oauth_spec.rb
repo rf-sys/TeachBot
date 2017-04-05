@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe 'OAuth process', :type => :feature do
+describe 'OAuth process', type: :feature do
   describe 'Facebook login', js: true do
     it 'can log in user with facebook account' do
       user = omniauth_facebook_mock_user

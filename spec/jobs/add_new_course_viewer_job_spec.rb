@@ -4,9 +4,12 @@ RSpec.describe AddNewCourseViewerJob, type: :job do
   include ActiveJob::TestHelper
   before :each do
     @course = create(:course)
+    redis = Redis.new
+    redis.del("users/0.0.0.0/courses/#{@course.id}/visited_at")
   end
 
-  subject(:job) { described_class.perform_later('127.0.0.1', @course.id) }
+  subject(:job) { described_class.perform_later('0.0.0.0', @course.id) }
+  subject(:job_now) { described_class.perform_now('0.0.0.0', @course.id) }
 
   it 'queues the job' do
     jobs = ActiveJob::Base.queue_adapter.enqueued_jobs
@@ -18,10 +21,16 @@ RSpec.describe AddNewCourseViewerJob, type: :job do
   end
 
   it 'has appropriate arguments' do
-    expect { job }.to have_enqueued_job.with('127.0.0.1', @course.id)
+    expect { job }.to have_enqueued_job.with('0.0.0.0', @course.id)
   end
 
   it 'has appropriate queue name' do
     expect { job }.to have_enqueued_job.on_queue('default')
+  end
+
+  it 'add views when executed' do
+    assert @course.views, 0
+    job_now
+    assert @course.views, 1
   end
 end

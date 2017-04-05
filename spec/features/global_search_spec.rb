@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe 'global search', :type => :feature, js: true do
+describe 'global search', type: :feature, js: true do
   it 'shows panel after load page' do
     visit root_path
 
