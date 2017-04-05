@@ -6,7 +6,7 @@ module Throttle
       class << self
 
         def run(controller, key, options = {})
-          self.before(controller, key, options)
+          before(controller, key, options)
         end
 
         def check_redis_connection
@@ -16,10 +16,6 @@ module Throttle
             return false
           end
           true
-        end
-
-        def check_test_env
-          Rails.env == 'test'
         end
 
         def send_denied_response(controller, message)
@@ -36,8 +32,6 @@ module Throttle
       @interval = 2.send(@format) # seconds
 
       def self.before(controller, key, options = {})
-        return true if check_test_env
-
         @key = key
 
         config(options)
@@ -47,12 +41,12 @@ module Throttle
         end
 
         remote_ip = controller.request.remote_ip
+
         if too_many_attempts?(remote_ip)
-          mark_ip(remote_ip)
           send_denied_response(controller, "Too many attempts. Try in #{output_time}")
-        else
-          mark_ip(remote_ip)
         end
+
+        mark_ip(remote_ip)
       end
 
       # return: bool
@@ -88,7 +82,6 @@ module Throttle
       @max_attempts = 5
 
       def self.before(controller, key, options = {})
-        return true if check_test_env
 
         @key = key
 
@@ -113,7 +106,7 @@ module Throttle
           $redis_connection.set("throttle[#{@key}][#{remote_ip}]", 0, ex: @interval.minutes)
         end
 
-        return $redis_connection.get("throttle[#{@key}][#{remote_ip}]").to_i >= @max_attempts
+        $redis_connection.get("throttle[#{@key}][#{remote_ip}]").to_i >= @max_attempts
       end
 
       # message a new cache with updated values
@@ -126,7 +119,7 @@ module Throttle
 
       def self.config(options)
         options.each do |key, val|
-          self.instance_variable_set("@#{key}".to_sym, val)
+          instance_variable_set("@#{key}".to_sym, val)
         end
       end
 

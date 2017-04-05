@@ -75,7 +75,8 @@ RSpec.describe AccountActivationsController, type: :controller do
 
   describe 'POST #create' do
     before(:each) do
-      $redis_connection.del("throttle[activation_email][#{request.remote_ip}]")
+      redis = Redis.new
+      redis.del("throttle[send_account_activation_email_interval][#{request.remote_ip}]")
       @user = create(:user)
       set_js_request
     end
@@ -86,7 +87,7 @@ RSpec.describe AccountActivationsController, type: :controller do
 
       post :create, params: { user: { email: @user.email } }
       expect(response).to have_http_status(403)
-      expect(response.body).to match(/You can send another email/)
+      expect(response.body).to match(/Too many attempts/)
     end
 
     it 'sends email if user not found' do
