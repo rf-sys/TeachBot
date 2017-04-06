@@ -19,6 +19,9 @@ class Course < ApplicationRecord
 
   has_many :lessons, dependent: :destroy
 
+  has_many :tags, as: :taggable, dependent: :destroy
+  accepts_nested_attributes_for :tags
+
   scope :public_and_published, lambda {
     where(public: true, published: true)
   }
@@ -51,6 +54,11 @@ class Course < ApplicationRecord
   def delete_poster
     poster = $bucket.object("uploads/courses_posters/#{id}.jpg")
     poster.delete if poster.exists?
+  end
+
+
+  def build_tags_if_any(tags_collection)
+    tags.clear.build(tags_collection)
   end
 
   private

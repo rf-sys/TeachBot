@@ -2,11 +2,11 @@ require 'rails_helper'
 
 RSpec.describe CoursesController, type: :controller do
   include ActiveJob::TestHelper
-  before :each do
-    @course = create(:course)
-  end
 
   describe 'GET #show' do
+    before :each do
+      @course = create(:course)
+    end
     # access_to_course? helper already prevents all possible unexpected access to course
     it 'add views' do
       expect {
@@ -16,7 +16,93 @@ RSpec.describe CoursesController, type: :controller do
     end
   end
 
-  describe 'PUT #update'  do
+  describe 'POST #create' do
+    before :each do
+      @user = create(:teacher)
+      @course_params = {
+          title: 'testCourseTitle',
+          description: 'testCourseDescription',
+          public: true
+      }
+    end
+
+    it 'denies access for no guests' do
+      post :create, params: {
+          course: @course_params
+      }
+
+
+      expect(response).to have_http_status(302)
+      expect(Course.count).to be 0
+    end
+
+    it 'denies access for no teacher' do
+      auth_as(create(:second_user))
+
+      post :create, params: {
+          course: @course_params
+      }
+
+      expect(response).to have_http_status(302)
+      expect(Course.count).to be 0
+    end
+
+    it 'creates the course' do
+      auth_as(@user)
+
+      post :create, params: {
+          course: @course_params
+      }
+
+      expect(response).to have_http_status(302)
+      expect(Course.count).to be 1
+    end
+
+    it 'creates tags' do
+      auth_as(@user)
+
+      set_json_request
+
+      tags_param = 'test1,test2'
+      tags = { tags: tags_param }
+
+      @course_params.merge! tags
+
+      post :create, params: {
+          course: @course_params
+      }
+
+      expect(response).to have_http_status(302)
+
+      course = Course.first
+      expect(course.tags.size).to eq 2
+
+      assert (course.tags.pluck(:name) - tags_param.split(',')).empty?
+    end
+
+    it 'returns error if fail validation' do
+      auth_as(@user)
+
+      set_json_request
+
+      tags_param = SecureRandom.base58(21)
+      tags = { tags: tags_param }
+
+      @course_params.merge! tags
+
+      post :create, params: {
+          course: @course_params
+      }
+
+      expect(response).to have_http_status(422)
+      expect(response.body).to match(/Tags name is too long/)
+    end
+  end
+
+  describe 'PUT #update' do
+    before :each do
+      @course = create(:course)
+    end
     it 'denies access for guests' do
       put :update, params: {id: @course.friendly_id}
       expect(response).to have_http_status(302)
@@ -65,9 +151,53 @@ RSpec.describe CoursesController, type: :controller do
       @course.reload
       expect(@course.title).to eq(new_title)
     end
+
+    it 'creates tags' do
+      auth_as(@course.author)
+      assert_equal @course.tags.size, 0
+
+      set_json_request
+
+      tags = 'test1,test2'
+
+      put :update, params: {
+          id: @course.friendly_id,
+          course: {
+              tags: tags
+          }
+      }
+
+      expect(response).to have_http_status(302)
+      @course.reload
+      expect(@course.tags.size).to eq 2
+
+      assert (@course.tags.pluck(:name) - tags.split(',')).empty?
+    end
+
+    it 'returns error if fail validation' do
+      auth_as(@course.author)
+      assert_equal @course.tags.size, 0
+
+      set_json_request
+
+      tags = SecureRandom.base58(21)
+
+      put :update, params: {
+          id: @course.friendly_id,
+          course: {
+              tags: tags
+          }
+      }
+
+      expect(response).to have_http_status(422)
+      expect(response.body).to match(/Tags name is too long/)
+    end
   end
 
   describe 'DELETE #destroy' do
+    before :each do
+      @course = create(:course)
+    end
     it 'denies access for guests' do
       delete :destroy, params: {id: @course.friendly_id}
       expect(response).to have_http_status(302)
@@ -115,6 +245,9 @@ RSpec.describe CoursesController, type: :controller do
   end
 
   describe 'PATCH #update_poster' do
+    before :each do
+      @course = create(:course)
+    end
     it 'do redirect if guest' do
       patch :update_poster, params: { id: @course.id }
       expect(response.status).to eq(302)

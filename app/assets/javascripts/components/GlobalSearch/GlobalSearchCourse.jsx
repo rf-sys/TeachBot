@@ -1,7 +1,6 @@
 class GlobalSearchCourse extends React.Component {
     constructor(props) {
         super(props);
-        this.tags = _.split(props.course.tags, ',', 7);
     }
 
 
@@ -31,8 +30,12 @@ class GlobalSearchCourse extends React.Component {
                         <small>{moment(course.updated_at).format('LLL')}</small>
                         <p className="mb-1">{course.description}</p>
                         <p classID="mb-1">
-                            {this.tags.map((tag, index) => {
-                                return <span className="badge badge-primary course_tag" key={index}>{tag}</span>;
+                            {this.props.course.tags.map((tag, index) => {
+                                return (
+                                    <span className="badge badge-primary course_tag" key={index}>
+                                        {tag.name}
+                                    </span>
+                                );
                             })}
                         </p>
                     </div>

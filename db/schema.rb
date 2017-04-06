@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170402112330) do
+ActiveRecord::Schema.define(version: 20170406111807) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -46,7 +46,6 @@ ActiveRecord::Schema.define(version: 20170402112330) do
     t.string   "slug"
     t.integer  "subscriptions_count", default: 0
     t.integer  "views",               default: 0
-    t.string   "tags"
     t.index ["author_id"], name: "index_courses_on_author_id", using: :btree
     t.index ["slug"], name: "index_courses_on_slug", unique: true, using: :btree
   end
@@ -144,6 +143,15 @@ ActiveRecord::Schema.define(version: 20170402112330) do
     t.datetime "updated_at",         null: false
     t.index ["subscribeable_type", "subscribeable_id"], name: "index_subscriptions_on_subscribeable_type_and_subscribeable_id", using: :btree
     t.index ["user_id"], name: "index_subscriptions_on_user_id", using: :btree
+  end
+
+  create_table "tags", force: :cascade do |t|
+    t.string   "name"
+    t.string   "taggable_type"
+    t.integer  "taggable_id"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.index ["taggable_type", "taggable_id"], name: "index_tags_on_taggable_type_and_taggable_id", using: :btree
   end
 
   create_table "unread_messages_users", id: false, force: :cascade do |t|

@@ -1,4 +1,7 @@
 FactoryGirl.define do
+  factory :tag do
+    name "MyString"
+  end
   factory :subscription do
     user nil
     subscribeable ""

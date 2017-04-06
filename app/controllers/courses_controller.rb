@@ -2,13 +2,11 @@
 class CoursesController < ApplicationController
   include Services::UseCases::Course::UpdatePosterService
   include CoursesHelper
-  require_dependency 'services/query_master.rb'
 
   before_action :authenticate_user!, except: [:index, :show]
   before_action :require_teacher, except: [:index, :show]
   before_action :set_course, except: [:index, :new, :create]
   before_action :require_course_owner, except: [:index, :show, :new, :create]
-  before_action :prepare_params, only: [:index]
 
   def index
     page = params[:page] || 1
@@ -37,6 +35,7 @@ class CoursesController < ApplicationController
 
   def create
     course = current_user.courses.new(course_params)
+    course.tags.clear.build(course_tags(params))
     if course.save
       flash[:super_success_notice] = 'Course has been created successfully'
       redirect_to course
@@ -48,6 +47,7 @@ class CoursesController < ApplicationController
   def edit; end
 
   def update
+    @course.tags.clear.build(course_tags(params))
     if @course.update(course_params)
       redirect_to @course
     else
@@ -89,14 +89,7 @@ class CoursesController < ApplicationController
   end
 
   def course_params
-    params.require(:course).permit(:title, :description, :public, :theme, :tags)
-  end
-
-  def prepare_params
-    request.params[:find_by] = 'title' unless params[:find_by].present?
-    request.params[:order] = 'title' unless params[:order].present?
-    request.params[:order_type] = 'asc' unless params[:order_type].present?
-    params[:per] = 6 if params[:per].to_i < 1
+    params.require(:course).permit(:title, :description, :public, :theme)
   end
 
   def require_course_owner

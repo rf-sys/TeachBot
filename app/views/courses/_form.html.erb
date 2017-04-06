@@ -36,7 +36,7 @@
 
   <div class="form-group">
     <%= f.label :tags %>
-    <%= f.text_field :tags, maxlength: 75 %>
+    <%= f.text_field :tags, value: f.object.tags.pluck(:name).join(','), maxlength: 75 %>
     <small>Associate your course with keywords</small>
   </div>
   <%= f.submit class: 'btn btn-outline-primary pull-xs-right',
