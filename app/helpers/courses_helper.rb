@@ -23,9 +23,9 @@ module CoursesHelper
 
   # prepare course tags param to be saved as association
   def course_tags(params)
-    return [] unless params.fetch(:course, {}).fetch(:tags, false).present?
+    return [] unless params.fetch(:course, {}).fetch(:tags_list, false).present?
 
-    tags_param = params[:course][:tags].split(',')
+    tags_param = params[:course][:tags_list].split(',')
 
     tags_param.map! { |tag| { name: tag } }
   end

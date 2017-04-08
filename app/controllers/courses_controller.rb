@@ -35,8 +35,7 @@ class CoursesController < ApplicationController
 
   def create
     course = current_user.courses.new(course_params)
-    course.tags.clear.build(course_tags(params))
-    if course.save
+    if course.save_with_tags(course_params, course_tags(params))
       flash[:super_success_notice] = 'Course has been created successfully'
       redirect_to course
     else
@@ -47,8 +46,7 @@ class CoursesController < ApplicationController
   def edit; end
 
   def update
-    @course.tags.clear.build(course_tags(params))
-    if @course.update(course_params)
+    if @course.save_with_tags(course_params, course_tags(params))
       redirect_to @course
     else
       fail_response(@course.errors.full_messages, 422)

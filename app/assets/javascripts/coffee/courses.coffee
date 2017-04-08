@@ -8,10 +8,10 @@ $ ->
     $("#courses_index_subscriptions").on 'ajax:success', (event, response, status) ->
       $("#courses_index_subscriptions").html(response)
 
-    $('#course_tags').selectize
+    $('#course_tags_list').selectize
       delimiter: ','
       persist: false,
-      maxItems: 7,
+      maxItems: 8,
       create: (input) ->
         {
           value: input

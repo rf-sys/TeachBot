@@ -20,6 +20,15 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
+  activerecord:
+    errors:
+      models:
+        course:
+          attributes:
+            tags:
+              invalid: has invalid tag (too long or empty)
+
+
   custom:
     models:
       user:

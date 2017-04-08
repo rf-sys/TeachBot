@@ -20,7 +20,6 @@ class Course < ApplicationRecord
   has_many :lessons, dependent: :destroy
 
   has_many :tags, as: :taggable, dependent: :destroy
-  accepts_nested_attributes_for :tags
 
   scope :public_and_published, lambda {
     where(public: true, published: true)
@@ -40,10 +39,41 @@ class Course < ApplicationRecord
 
   def search_data
     {
-      title:       title,
-      description: description,
-      tags:        tags
+        title: title,
+        description: description,
+        tags: tags
     }
+  end
+
+  # Kind of trick to provide painless work with tags as dynamic association.
+  # Used when we assume to send tags with other attributes.
+  # @param [ActionController::StrongParameters] params
+  # @param [Array] course_tags
+  # @return [boolean]
+  def save_with_tags(params, course_tags = [])
+    # build tags collection
+    tags_list = tags.build(course_tags)
+
+    # validate tags collection and return error if invalid
+    if tags_list.size > 7
+      errors.add(:tags, ': Too many tags')
+      return false
+    end
+
+    # assign other model attributes
+    assign_attributes(params)
+
+    # delete old tags (persisted in the db)
+
+    # return false with errors if no valid?
+    return false unless valid?
+
+    # delete tags only if we update existing record
+    # obvious, new record cannot have tags
+    tags.where.not(id: nil).destroy_all unless new_record?
+
+    # save with skipped unnecessary validation, because we checked it before
+    save(validate: false)
   end
 
   def should_index?
@@ -54,11 +84,6 @@ class Course < ApplicationRecord
   def delete_poster
     poster = $bucket.object("uploads/courses_posters/#{id}.jpg")
     poster.delete if poster.exists?
-  end
-
-
-  def build_tags_if_any(tags_collection)
-    tags.clear.build(tags_collection)
   end
 
   private

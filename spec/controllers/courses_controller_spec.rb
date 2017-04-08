@@ -64,7 +64,7 @@ RSpec.describe CoursesController, type: :controller do
       set_json_request
 
       tags_param = 'test1,test2'
-      tags = { tags: tags_param }
+      tags = { tags_list: tags_param }
 
       @course_params.merge! tags
 
@@ -85,8 +85,9 @@ RSpec.describe CoursesController, type: :controller do
 
       set_json_request
 
-      tags_param = SecureRandom.base58(21)
-      tags = { tags: tags_param }
+      # at the moment, max length - 30 chars
+      tags_param = SecureRandom.base58(31)
+      tags = { tags_list: tags_param }
 
       @course_params.merge! tags
 
@@ -95,7 +96,7 @@ RSpec.describe CoursesController, type: :controller do
       }
 
       expect(response).to have_http_status(422)
-      expect(response.body).to match(/Tags name is too long/)
+      expect(response.body).to match(/Tags has invalid tag/)
     end
   end
 
@@ -163,7 +164,7 @@ RSpec.describe CoursesController, type: :controller do
       put :update, params: {
           id: @course.friendly_id,
           course: {
-              tags: tags
+              tags_list: tags
           }
       }
 
@@ -180,7 +181,30 @@ RSpec.describe CoursesController, type: :controller do
 
       set_json_request
 
-      tags = SecureRandom.base58(21)
+      # at the moment, max length - 30 chars
+      tags = SecureRandom.base58(31)
+
+      put :update, params: {
+          id: @course.friendly_id,
+          course: {
+              tags_list: tags
+          }
+      }
+
+      expect(response).to have_http_status(422)
+      expect(response.body).to match(/Tags has invalid tag/)
+    end
+
+    it 'replaces old tags with new' do
+      auth_as(@course.author)
+      @course.tags << [Tag.new(name: 'oldTag1'), Tag.new(name: 'oldTag2')]
+      
+      @course.reload
+
+      assert_equal @course.tags.size, 2
+      set_json_request
+
+      tags = 'test1,test2'
 
       put :update, params: {
           id: @course.friendly_id,
@@ -188,9 +212,6 @@ RSpec.describe CoursesController, type: :controller do
               tags: tags
           }
       }
-
-      expect(response).to have_http_status(422)
-      expect(response.body).to match(/Tags name is too long/)
     end
   end
 
