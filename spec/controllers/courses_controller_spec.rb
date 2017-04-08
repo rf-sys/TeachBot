@@ -202,6 +202,7 @@ RSpec.describe CoursesController, type: :controller do
       @course.reload
 
       assert_equal @course.tags.size, 2
+
       set_json_request
 
       tags = 'test1,test2'
@@ -209,9 +210,17 @@ RSpec.describe CoursesController, type: :controller do
       put :update, params: {
           id: @course.friendly_id,
           course: {
-              tags: tags
+              tags_list: tags
           }
       }
+
+      expect(response).to have_http_status(302)
+
+      @course.reload
+
+      assert_equal @course.tags.size, 2
+
+      expect((@course.tags.pluck(:name) - tags.split(',')).size).to be 0
     end
   end
 

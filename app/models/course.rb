@@ -63,8 +63,6 @@ class Course < ApplicationRecord
     # assign other model attributes
     assign_attributes(params)
 
-    # delete old tags (persisted in the db)
-
     # return false with errors if no valid?
     return false unless valid?
 
