@@ -11,7 +11,7 @@ $ ->
     $('#course_tags_list').selectize
       delimiter: ','
       persist: false,
-      maxItems: 8,
+      maxItems: 7,
       create: (input) ->
         {
           value: input
