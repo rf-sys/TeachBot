@@ -10,14 +10,16 @@
 <h1 class="display-4 text-center">Recent courses</h1>
 <hr>
 <% if @courses.present? %>
-  <div class="card-deck">
-    <% @courses.each do |course| %>
-      <div class="col-3">
-        <% cache course do %>
-          <%= render partial: 'courses/course', locals: {course: course, last_page: true} %>
-        <% end %>
-      </div>
-    <% end %>
+  <div class="container-fluid">
+    <div class="row">
+      <% @courses.each do |course| %>
+        <div class="col-xl-3 col-lg-6">
+          <% cache course do %>
+            <%= render partial: 'courses/course', locals: { course: course, last_page: true } %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
   </div>
 <% else %>
   <h2 class="text-center">No recent public courses</h2>
