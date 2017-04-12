@@ -36,18 +36,16 @@ module CoursesHelper
     @course.participants.include?(auth_user)
   end
 
-  def visited_recently?(ip, course_id)
-    recent_visit = $redis_connection.get("#{ip}/courses/#{course_id}/visited")
-
-    return true if recent_visit.present?
-
-    mark_recent_visit(ip, course_id)
-    false
-  end
 
   def mark_recent_visit(ip, course_id)
-    $redis_connection.set("#{ip}/courses/#{course_id}/visited",
+    RedisSingleton.instance.set("#{ip}/courses/#{course_id}/visited",
                           Time.now.to_i, ex: 24.hours)
     true
+  end
+
+  def visited_recently?(ip, course)
+    visit = Services::Access::RecentVisit.new(ip, course)
+
+    visit.alive?
   end
 end

@@ -1,0 +1,21 @@
+<section class="jumbotron info-jumbotron">
+  <div class="container">
+    <h1 class="jumbotron-heading">
+      <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+      &nbsp;Recommendations</h1>
+    <p class="lead text-muted">
+      Here presents courses which may interest you.
+    </p>
+  </div>
+</section>
+
+<div class="container">
+  <% if @recommendations.any? %>
+    <%= render @recommendations %>
+  <% else %>
+    <h2>No recommendations</h2>
+    <p class="lead">
+      We cannot provide any recommendations to you at the moment.
+    </p>
+  <% end %>
+</div>

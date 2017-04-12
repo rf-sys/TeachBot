@@ -6,13 +6,14 @@ RSpec.describe CoursesController, type: :controller do
   describe 'GET #show' do
     before :each do
       @course = create(:course)
+      Services::Access::RecentVisit.new(request.remote_ip, @course).clear
     end
     # access_to_course? helper already prevents all possible unexpected access to course
-    it 'add views' do
-      expect {
+    it 'add views and add popular_tags jobs' do
+      expect do
         get :show, params: { id: @course.friendly_id }
         expect(response).to have_http_status(:success)
-      }.to change(ActiveJob::Base.queue_adapter.enqueued_jobs, :size).by(1)
+      end.to change(ActiveJob::Base.queue_adapter.enqueued_jobs, :size).by(2)
     end
   end
 
@@ -20,17 +21,16 @@ RSpec.describe CoursesController, type: :controller do
     before :each do
       @user = create(:teacher)
       @course_params = {
-          title: 'testCourseTitle',
-          description: 'testCourseDescription',
-          public: true
+        title:       'testCourseTitle',
+        description: 'testCourseDescription',
+        public:      true
       }
     end
 
     it 'denies access for no guests' do
       post :create, params: {
-          course: @course_params
+        course: @course_params
       }
-
 
       expect(response).to have_http_status(302)
       expect(Course.count).to be 0
@@ -40,7 +40,7 @@ RSpec.describe CoursesController, type: :controller do
       auth_as(create(:second_user))
 
       post :create, params: {
-          course: @course_params
+        course: @course_params
       }
 
       expect(response).to have_http_status(302)
@@ -51,7 +51,7 @@ RSpec.describe CoursesController, type: :controller do
       auth_as(@user)
 
       post :create, params: {
-          course: @course_params
+        course: @course_params
       }
 
       expect(response).to have_http_status(302)
@@ -69,7 +69,7 @@ RSpec.describe CoursesController, type: :controller do
       @course_params.merge! tags
 
       post :create, params: {
-          course: @course_params
+        course: @course_params
       }
 
       expect(response).to have_http_status(302)
@@ -92,7 +92,7 @@ RSpec.describe CoursesController, type: :controller do
       @course_params.merge! tags
 
       post :create, params: {
-          course: @course_params
+        course: @course_params
       }
 
       expect(response).to have_http_status(422)
@@ -105,7 +105,7 @@ RSpec.describe CoursesController, type: :controller do
       @course = create(:course)
     end
     it 'denies access for guests' do
-      put :update, params: {id: @course.friendly_id}
+      put :update, params: { id: @course.friendly_id }
       expect(response).to have_http_status(302)
     end
 
@@ -114,12 +114,12 @@ RSpec.describe CoursesController, type: :controller do
 
       auth_as(foreign_user)
 
-      put :update, params: {id: @course.friendly_id}
+      put :update, params: { id: @course.friendly_id }
       expect(response).to have_http_status(302)
 
       set_json_request
 
-      put :update, params: {id: @course.friendly_id}
+      put :update, params: { id: @course.friendly_id }
       expect(response.body).to match(/You are not a teacher/)
       expect(response).to have_http_status(403)
     end
@@ -130,12 +130,12 @@ RSpec.describe CoursesController, type: :controller do
 
       auth_as(foreign_user)
 
-      put :update, params: {id: @course.friendly_id}
+      put :update, params: { id: @course.friendly_id }
       expect(response).to have_http_status(302)
 
       set_json_request
 
-      put :update, params: {id: @course.friendly_id}
+      put :update, params: { id: @course.friendly_id }
       expect(response.body).to match(/Access denied/)
       expect(response).to have_http_status(403)
     end
@@ -147,7 +147,7 @@ RSpec.describe CoursesController, type: :controller do
       expect(@course.title).to eq(course_title)
 
       new_title = 'UPDATED title'
-      put :update, params: {id: @course.friendly_id, course: {title: new_title}}
+      put :update, params: { id: @course.friendly_id, course: { title: new_title } }
       expect(response).to have_http_status(302)
       @course.reload
       expect(@course.title).to eq(new_title)
@@ -162,17 +162,17 @@ RSpec.describe CoursesController, type: :controller do
       tags = 'test1,test2'
 
       put :update, params: {
-          id: @course.friendly_id,
-          course: {
-              tags_list: tags
-          }
+        id:     @course.friendly_id,
+        course: {
+          tags_list: tags
+        }
       }
 
       expect(response).to have_http_status(302)
       @course.reload
       expect(@course.tags.size).to eq 2
 
-      assert (@course.tags.pluck(:name) - tags.split(',')).empty?
+      expect((@course.tags.pluck(:name) - tags.split(',')).empty?).to be true
     end
 
     it 'returns error if fail validation' do
@@ -185,10 +185,10 @@ RSpec.describe CoursesController, type: :controller do
       tags = SecureRandom.base58(31)
 
       put :update, params: {
-          id: @course.friendly_id,
-          course: {
-              tags_list: tags
-          }
+        id:     @course.friendly_id,
+        course: {
+          tags_list: tags
+        }
       }
 
       expect(response).to have_http_status(422)
@@ -198,7 +198,7 @@ RSpec.describe CoursesController, type: :controller do
     it 'replaces old tags with new' do
       auth_as(@course.author)
       @course.tags << [Tag.new(name: 'oldTag1'), Tag.new(name: 'oldTag2')]
-      
+
       @course.reload
 
       assert_equal @course.tags.size, 2
@@ -208,10 +208,10 @@ RSpec.describe CoursesController, type: :controller do
       tags = 'test1,test2'
 
       put :update, params: {
-          id: @course.friendly_id,
-          course: {
-              tags_list: tags
-          }
+        id:     @course.friendly_id,
+        course: {
+          tags_list: tags
+        }
       }
 
       expect(response).to have_http_status(302)
@@ -229,7 +229,7 @@ RSpec.describe CoursesController, type: :controller do
       @course = create(:course)
     end
     it 'denies access for guests' do
-      delete :destroy, params: {id: @course.friendly_id}
+      delete :destroy, params: { id: @course.friendly_id }
       expect(response).to have_http_status(302)
     end
 
@@ -238,12 +238,12 @@ RSpec.describe CoursesController, type: :controller do
 
       auth_as(foreign_user)
 
-      delete :destroy, params: {id: @course.friendly_id}
+      delete :destroy, params: { id: @course.friendly_id }
       expect(response).to have_http_status(302)
 
       set_json_request
 
-      delete :destroy, params: {id: @course.friendly_id}
+      delete :destroy, params: { id: @course.friendly_id }
       expect(response.body).to match(/You are not a teacher/)
       expect(response).to have_http_status(403)
     end
@@ -254,12 +254,12 @@ RSpec.describe CoursesController, type: :controller do
 
       auth_as(foreign_user)
 
-      delete :destroy, params: {id: @course.friendly_id}
+      delete :destroy, params: { id: @course.friendly_id }
       expect(response).to have_http_status(302)
 
       set_json_request
 
-      delete :destroy, params: {id: @course.friendly_id}
+      delete :destroy, params: { id: @course.friendly_id }
       expect(response.body).to match(/Access denied/)
       expect(response).to have_http_status(403)
     end
@@ -268,7 +268,7 @@ RSpec.describe CoursesController, type: :controller do
       auth_as(@course.author) # it calls 'teacher' factory in the factories
       expect(Course.exists?(@course.id)).to eq(true)
 
-      delete :destroy, params: {id: @course.friendly_id}
+      delete :destroy, params: { id: @course.friendly_id }
       expect(response).to have_http_status(302)
       expect(Course.exists?(@course.id)).to eq(false)
     end
@@ -344,7 +344,6 @@ RSpec.describe CoursesController, type: :controller do
       patch :update_poster, params: { id: @course.id, course: { poster: file } }
       expect(response.body).to match(/Poster has been created successfully/)
       expect(response.status).to eq(200)
-
     end
   end
 end

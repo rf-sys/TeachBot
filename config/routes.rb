@@ -87,6 +87,8 @@ Rails.application.routes.draw do
 
   resources :search, only: [:index]
 
+  resources :recommendations, only: [:index]
+
   namespace :auth do
     get 'facebook', action: 'facebook'
     get 'facebook/callback', action: 'auth_callback'

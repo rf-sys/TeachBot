@@ -1,0 +1,26 @@
+<div class="card course-card-custom">
+  <div class="card-block">
+    <p class="lead">
+      <i class="fa fa-tags" aria-hidden="true"></i>
+      &nbsp;Popular tags (topics)
+    </p>
+    <table class="table">
+      <thead>
+      <tr>
+        <th>#</th>
+        <th>Tag</th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @popular_tags.each_with_index do |tag, index| %>
+        <tr>
+          <td><%= index + 1 %></td>
+          <td>
+            <span class="badge badge-primary"><%= tag %></span>
+          </td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

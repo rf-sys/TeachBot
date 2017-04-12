@@ -1,0 +1,8 @@
+<div class="card course-card-custom">
+  <div class="card-block">
+    <h5 class="card-title"><%= recommendation.title %></h5>
+    <h6 class="card-subtitle mb-2 text-muted"><%= recommendation.views.to_s + ' views' %></h6>
+
+    <%= link_to 'Visit', course_path(recommendation), class: 'card-link' %>
+  </div>
+</div>

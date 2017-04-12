@@ -8,11 +8,23 @@ class CoursesController < ApplicationController
   before_action :set_course, except: [:index, :new, :create]
   before_action :require_course_owner, except: [:index, :show, :new, :create]
 
+  # show
+  after_action :mark_visit, only: [:show]
+  after_action :add_view, only: [:show]
+  after_action :increase_tags_popularity, only: [:show]
+  after_action :increase_tags_recommendation, only: [:show]
+
+
   def index
     page = params[:page] || 1
     per = params[:per] || 6
 
-    @courses = Course.public_and_published.order(views: :desc).paginate(page, per)
+    @courses = Course.public_and_published.includes(:tags)
+                     .order(views: :desc).paginate(page, per)
+
+    @popular_tags = load_popular_tags
+
+    @recommendations = load_recommendations if current_user.present?
 
     respond_to do |format|
       format.json { render json: @courses }
@@ -23,10 +35,8 @@ class CoursesController < ApplicationController
 
   def show
     unless access_to_course?(@course, current_user)
-      return fail_response(['You dont have access to browse this course'], 403)
+      fail_response(['You dont have access to browse this course'], 403)
     end
-
-    AddNewCourseViewerJob.perform_later(request.remote_ip, @course.id)
   end
 
   def new
@@ -43,7 +53,8 @@ class CoursesController < ApplicationController
     end
   end
 
-  def edit; end
+  def edit;
+  end
 
   def update
     if @course.save_with_tags(course_params, course_tags(params))
@@ -93,5 +104,37 @@ class CoursesController < ApplicationController
   def require_course_owner
     return if current_user?(@course.author)
     fail_response(['Access denied'], 403)
+  end
+
+  def mark_visit
+    visit = Services::Access::RecentVisit.new(request.remote_ip, @course)
+    visit.mark_recent_visit_until(Time.zone.tomorrow)
+  end
+
+  def add_view
+    return if visited_recently?(request.remote_ip, @course)
+    AddNewCourseViewerJob.perform_later(@course.id)
+  end
+
+  def increase_tags_popularity
+    return if visited_recently?(request.remote_ip, @course)
+    IncreaseTagsPopularityJob.perform_later(@course.tags.pluck(:name))
+  end
+
+  def increase_tags_recommendation
+    return unless current_user.present?
+    tags = @course.tags.pluck(:name)
+    IncreaseTagsRecommendationJob.perform_later(tags, current_user.id)
+  end
+
+
+  def load_popular_tags
+    RedisSingleton.instance.zrevrange('popular_tags', 0, 6)
+  end
+
+  def load_recommendations
+    key = RedisGlobals.user_recommendations(current_user.id)
+    courses_ids = RedisSingleton.instance.zrange(key, 0, 6)
+    Course.find(courses_ids).first(3)
   end
 end

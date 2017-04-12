@@ -6,20 +6,20 @@ class PublicChatChannel < ApplicationCable::Channel
   end
 
   def unsubscribed
-    $redis_connection.srem('participants', current_user.to_json)
+    RedisSingleton.instance.srem('participants', current_user.to_json)
     send_members_to_chat
   end
 
   # user has been joined to the chat
   def appear
     current_user.reload
-    $redis_connection.sadd('participants', current_user.to_json)
+    RedisSingleton.instance.sadd('participants', current_user.to_json)
     send_members_to_chat
   end
 
   # user has left the chat
   def leave
-    $redis_connection.srem('participants', current_user.to_json)
+    RedisSingleton.instance.srem('participants', current_user.to_json)
     send_members_to_chat
   end
 
@@ -35,7 +35,7 @@ class PublicChatChannel < ApplicationCable::Channel
 
   # send participants list of the public chat to the client
   def send_members_to_chat
-    members = $redis_connection.smembers('participants')
+    members = RedisSingleton.instance.smembers('participants')
     members.map! { |item| JSON.parse(item) }
 
     ActionCable.server.broadcast PUBLIC_CHAT_CHANNEL, members: members, type: 'members'

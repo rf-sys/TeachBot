@@ -6,21 +6,28 @@
           <li class="list-inline-item">
             <%= link_to user_courses_path(current_user), class: 'text-white' do %>
               <i class="fa fa-book" aria-hidden="true"></i>
-              <span>Courses</span>
+              &nbsp;Courses
             <% end %>
           </li>
 
           <li class="list-inline-item">
             <%= link_to user_subscriptions_path(current_user), class: 'text-white' do %>
-              <i class="fa fa-list-ul" aria-hidden="true"></i>
-              <span>Subscriptions</span>
+              <i class="fa fa-bookmark" aria-hidden="true"></i>
+              &nbsp;Subscriptions
+            <% end %>
+          </li>
+
+          <li class="list-inline-item">
+            <%= link_to recommendations_path, class: 'text-white' do %>
+              <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+              &nbsp;Recommendations
             <% end %>
           </li>
 
           <li class="list-inline-item">
             <%= link_to edit_user_path(current_user), class: 'text-white' do %>
               <i class="fa fa-cog" aria-hidden="true"></i>
-              <span>Settings</span>
+              &nbsp;Settings
             <% end %>
           </li>
 
@@ -53,7 +60,7 @@
       </li>
       <li class="nav-item active">
         <a class="nav-link" href="<%= public_chat_path %>">
-          <i class="fa fa-weixin" aria-hidden="true"></i> Chat
+          <i class="fa fa-commenting" aria-hidden="true"></i> Chat
         </a>
       </li>
     </ul>

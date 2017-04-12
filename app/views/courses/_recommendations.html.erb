@@ -1,0 +1,17 @@
+<div class="card" id="recommendations_block">
+  <div class="card-block">
+    <p class="lead">
+      <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+      &nbsp;Recommendations
+    </p>
+    <%= render partial: 'recommendation', collection: @recommendations, as: :recommendation %>
+    <div class="text-center">
+
+      <%= link_to recommendations_path, class: 'btn btn-outline-primary btn-block' do %>
+        More recommendations&nbsp;<i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i>
+      <% end %>
+
+    </div>
+  </div>
+</div>
+

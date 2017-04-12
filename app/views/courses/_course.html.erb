@@ -4,16 +4,33 @@
   <div class="card-block">
     <h2 class="card-title" style="word-break: break-all"><%= course.title %></h2>
     <p class="card-text" style="word-break: break-all"><%= course.description %></p>
-    <p class="card-text">
-      <small class="text-muted">Last updated: <%= course.updated_at.strftime('%e %b %Y %H:%M:%S%p') %></small>
-    </p>
-    <p class="card-text">
-      <small class="text-muted">Views: <%= course.views %></small>
-    </p>
+
+    <table class="table table-sm">
+      <tr>
+        <th scope="row">Updated</th>
+        <td><%= course.updated_at.strftime('%e %b %Y') %></td>
+      </tr>
+      <tr>
+        <th scope="row">Views</th>
+        <td><%= course.views %></td>
+      </tr>
+      <tr>
+        <th scope="row">Tags</th>
+        <td>
+          <% if course.tags.any? %>
+            <% course.tags.each do |tag| %>
+              <span class="badge badge-primary"><%= tag.name %></span>
+            <% end %>
+          <% else %>
+            not specified
+          <% end %>
+        </td>
+      </tr>
+    </table>
   </div>
   <div class="card-footer text-muted">
     <%= link_to course_path(course), class: 'btn btn-primary' do %>
       Visit&nbsp;<i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
-  <% end %>
+    <% end %>
   </div>
 </div>

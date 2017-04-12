@@ -3,5 +3,11 @@
     <div class="col-lg" id="index_courses">
       <%= render partial: 'courses' %>
     </div>
+    <% if @popular_tags.any? || @recommendations.any? %>
+    <div class="col-lg-3">
+      <%= render partial: 'popular_tags' if @popular_tags.any? %>
+      <%= render partial: 'recommendations' if @recommendations.present? %>
+    </div>
+      <% end %>
   </div>
 </div>

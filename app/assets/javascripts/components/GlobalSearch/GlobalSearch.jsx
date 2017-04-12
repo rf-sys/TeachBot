@@ -60,11 +60,26 @@ class GlobalSearch extends React.Component {
         return (courses.length + lessons.length + users.length) > 0
     }
 
+    searchIcon() {
+        let style = {
+            position: 'absolute',
+            left: '12px',
+            top: '10px',
+            fontSize: '18px'
+        };
+        return <i className="fa fa-search" aria-hidden="true" style={style}/>
+    }
+
     render() {
+        let inputStyle = {
+            paddingLeft: '35px',
+            borderRadius: '15px'
+        };
         return (
             <div className="input_wrapper">
-                <input type="search" className="form-control input"
-                       placeholder="Search by courses, lessons, users"
+                {this.searchIcon()}
+                <input type="search" className="form-control input" style={inputStyle}
+                       placeholder="Search courses, lessons, users, tags"
                        onChange={this.triggerChangeInput} id="global_search_input"
                        name="global_search_input" />
                 <GlobalSearchLoadingIcon loading={this.state.loading}/>

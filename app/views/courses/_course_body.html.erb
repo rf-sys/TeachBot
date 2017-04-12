@@ -59,7 +59,7 @@
           <th>Tags</th>
           <td>
             <h5>
-              <% @course.tags[0..6].each do |tag| %>
+              <% @course.tags.each do |tag| %>
                 <span class="badge background_coloured_element"><%= tag.name %></span>
               <% end %>
             </h5>

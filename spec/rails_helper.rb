@@ -9,7 +9,7 @@ require 'helpers'
 # Add additional requires below this line. Rails is not loaded until this point!
 
 # set test env variables
-Dotenv.overload('.env.test')
+#Dotenv.overload('.env.test')
 
 # create tmp dir if no presented
 tmp_dir = Rails.root.join('spec', 'tmp')
@@ -72,6 +72,7 @@ RSpec.configure do |config|
 
   config.before(:each) do
     DatabaseCleaner.strategy = :transaction
+    clean_redis
   end
 
   config.before(:each, type: :feature) do
@@ -93,6 +94,7 @@ RSpec.configure do |config|
     DatabaseCleaner.clean
     $bucket.clear!
     FileUtils.rm_rf(Rails.root.join('spec/tmp/.'), secure: true)
+    clean_redis
   end
 
   # The different available types are documented in the features, such as in
