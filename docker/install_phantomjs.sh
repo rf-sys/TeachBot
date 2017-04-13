@@ -27,8 +27,15 @@ wget -q https://bitbucket.org/ariya/phantomjs/downloads/$PHANTOM_JS.tar.bz2 -O $
 tar xvjf $PHANTOM_JS.tar.bz2
 
 if [ -d /usr/local/share/$PHANTOM_JS ] ; then
+   echo "delete $PHANTOM_JS"
   rm -rf /usr/local/share/$PHANTOM_JS
 fi
+
+if [ -d /usr/local/share/phantomjs ] ; then
+  echo "delete phantomjs"
+  rm -rf /usr/local/share/phantomjs
+fi
+
 mv -f $PHANTOM_JS /usr/local/share/
 ln -sf /usr/local/share/$PHANTOM_JS/bin/phantomjs /usr/local/share/phantomjs
 ln -sf /usr/local/share/$PHANTOM_JS/bin/phantomjs /usr/local/bin/phantomjs

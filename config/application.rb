@@ -22,6 +22,8 @@ module Firstapp
     config.action_view.sanitized_allowed_tags = %w(b p i strong u s h1 h2 img a div hr code ul ol li blockquote)
     config.action_view.sanitized_allowed_attributes = %w(src href class)
 
+    config.application_version = '1.1'
+
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
