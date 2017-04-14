@@ -105,9 +105,6 @@ gem 'sendgrid-ruby'
 # pagination gem
 gem 'kaminari'
 
-# roles access support
-gem 'rolify'
-
 # animate.css support
 gem 'animate_css_on_rails'
 

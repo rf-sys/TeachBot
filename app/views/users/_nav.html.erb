@@ -12,7 +12,7 @@
         <%= link_to user_courses_path(@user), class: 'dropdown-item' do %>
           <i class="fa fa-book" aria-hidden="true"></i>	&ensp;My courses
         <% end %>
-        <% if @user.has_role?(:teacher) %>
+        <% if @user.role?(:teacher) %>
           <%= link_to new_course_path, class: 'dropdown-item' do %>
             <i class="fa fa-file-o" aria-hidden="true"></i>	&ensp;Create course
           <% end %>

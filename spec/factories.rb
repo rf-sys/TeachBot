@@ -35,7 +35,7 @@ FactoryGirl.define do
     activated true
     activation_token User.new_token
     factory :teacher do
-      after(:create) {|user| user.add_role(:teacher)}
+      after(:create) { |user| user.add_role(:teacher) }
     end
   end
 

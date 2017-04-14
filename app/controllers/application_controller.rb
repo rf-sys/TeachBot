@@ -54,7 +54,7 @@ class ApplicationController < ActionController::Base
   end
 
   def require_teacher
-    return if current_user.has_role? :teacher
+    return if current_user.role? :teacher
     fail_response(['You are not a teacher'], 403)
   end
 

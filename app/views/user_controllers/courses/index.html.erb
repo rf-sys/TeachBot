@@ -11,7 +11,7 @@
           <%= react_component('UserCourses', {
               user: @user.id,
               current_user: current_user.try(:id),
-              is_teacher: current_user ? current_user.has_role?(:teacher) : nil
+              is_teacher: current_user ? current_user.role?(:teacher) : nil
           }) %>
         </div>
       </div>

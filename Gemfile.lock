@@ -271,7 +271,6 @@ GEM
     recaptcha (4.1.0)
       json
     redis (3.3.3)
-    rolify (5.1.0)
     rspec-core (3.5.4)
       rspec-support (~> 3.5.0)
     rspec-expectations (3.5.0)
@@ -412,7 +411,6 @@ DEPENDENCIES
   react-rails
   recaptcha
   redis (~> 3.0)
-  rolify
   rspec-rails (~> 3.5)
   rubocop
   sass-rails (~> 5.0)

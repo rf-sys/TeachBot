@@ -2,7 +2,6 @@ class User < ApplicationRecord
   extend FriendlyId
   friendly_id :username, use: :slugged
   searchkick batch_size: 5
-  rolify
   require 'validators/EmailValidator'
   require 'sendgrid-ruby'
   include SendGrid
@@ -10,6 +9,8 @@ class User < ApplicationRecord
   # to get 'authenticate method' and 'password='.
   # 'password=' generates password_digest
   include ActiveModel::SecurePassword::InstanceMethodsOnActivation
+
+  include Roles
 
   has_one :profile, dependent: :destroy, inverse_of: :user
   has_many :lessons
@@ -66,15 +67,11 @@ class User < ApplicationRecord
 
   before_destroy :delete_avatar, :delete_unread_messages
 
-  after_create :generate_profile, :assign_default_role
+  after_create :generate_profile
 
   after_update :touch_chats
 
   after_save :clean_user_courses_cache
-
-  def assign_default_role
-    add_role(:user) if roles.blank?
-  end
 
   # delete avatar before delete user
   def delete_avatar
