@@ -13,6 +13,18 @@
   color: white;
 }
 
+.vk-btn {
+  @extend .btn;
+  border-color: #6287AE;
+  color: #6287AE;
+}
+
+.vk-btn:hover {
+  border-color: #6287AE;
+  background-color: #6287AE;
+  color: white;
+}
+
 .gh-btn {
   @extend .btn;
   border-color: #444444;

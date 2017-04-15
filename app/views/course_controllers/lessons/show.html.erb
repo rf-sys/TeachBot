@@ -1,7 +1,27 @@
 <%= content_for :head do %>
   <meta id="course_theme_color" content="<%= @course.theme %>">
-  <meta name="lesson_url" content="<%= course_lesson_url(@course, @lesson) %>">
+
   <meta name="lesson_id" content="<%= @lesson.id %>">
+  <meta name="lesson_url" content="<%= course_lesson_url(@course, @lesson) %>">
+  <meta name="lesson_title" content="<%= @lesson.title %>">
+  <meta name="lesson_description" content="<%= @lesson.description %>">
+
+  <meta property="og:url" content="<%= course_lesson_url(@course, @lesson) %>"/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:title" content="TeachBot"/>
+  <meta property="og:description" content="<%= @lesson.description %>"/>
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@teachbot" />
+  <meta name="twitter:title" content="<%= @lesson.title %>" />
+  <meta name="twitter:description" content="<%= @lesson.description %>" />
+
+
+  <% if @course.poster.present? %>
+    <meta name="lesson_poster" content="<%= @course.poster %>"/>
+    <meta property="og:image" content="<%= @course.poster %>"/>
+    <meta name="twitter:image" content="<%= @course.poster %>" />
+  <% end %>
 <% end %>
 
 
@@ -17,6 +37,7 @@
     <%= sanitize @lesson.content %>
   <% end %>
   <hr>
+  <%= react_component('ShareLessonButtons') %>
   <h2 class="text-center">Comments</h2>
   <div id="disqus_thread" style="margin-top: 15px"></div>
 </div>
