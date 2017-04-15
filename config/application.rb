@@ -6,7 +6,7 @@ require 'recaptcha/rails'
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
-module Firstapp
+module Teachbot
   class Application < Rails::Application
 
     config.autoload_paths << Rails.root.join('lib')
