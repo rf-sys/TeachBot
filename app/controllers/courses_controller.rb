@@ -135,6 +135,6 @@ class CoursesController < ApplicationController
   def load_recommendations
     key = RedisGlobals.user_recommendations(current_user.id)
     courses_ids = RedisSingleton.instance.zrange(key, 0, 6)
-    Course.find(courses_ids).first(3)
+    Course.where(id: courses_ids).first(3)
   end
 end
