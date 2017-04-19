@@ -6,7 +6,7 @@ class GenerateRecommendedCoursesJob < ApplicationJob
 
     return unless user.present?
 
-    redis = Redis.new
+    redis = RedisSingleton.instance
     popular_tags_key = RedisGlobals.user_popular_tags(user.id)
     user_recommendations_key = RedisGlobals.user_recommendations(user.id)
 

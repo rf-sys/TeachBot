@@ -10,7 +10,7 @@ class IncreaseTagsRecommendationJob < ApplicationJob
 
     tags_names.uniq!
 
-    redis = Redis.new
+    redis = RedisSingleton.instance
 
     key ||= RedisGlobals.user_popular_tags(user_id)
 

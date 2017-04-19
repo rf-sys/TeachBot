@@ -6,7 +6,7 @@ class IncreaseTagsPopularityJob < ApplicationJob
 
     tags_names.uniq!
 
-    redis = Redis.new
+    redis = RedisSingleton.instance
     key = RedisGlobals.popular_tags
 
     tags_names.each do |tag|
