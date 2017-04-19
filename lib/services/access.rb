@@ -5,7 +5,7 @@ module Services
       def initialize(ip, entity)
         @ip = ip
         @entity = entity
-        @redis = Redis.new
+        @redis = RedisSingleton.instance
       end
 
       def alive?
