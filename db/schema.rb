@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170413181049) do
+ActiveRecord::Schema.define(version: 20170424152908) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -23,6 +23,15 @@ ActiveRecord::Schema.define(version: 20170413181049) do
     t.datetime "updated_at",      null: false
     t.index ["accessable_type", "accessable_id"], name: "index_accesses_on_accessable_type_and_accessable_id", using: :btree
     t.index ["user_id"], name: "index_accesses_on_user_id", using: :btree
+  end
+
+  create_table "attachments", force: :cascade do |t|
+    t.string   "attachable_type"
+    t.integer  "attachable_id"
+    t.text     "template"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+    t.index ["attachable_type", "attachable_id"], name: "index_attachments_on_attachable_type_and_attachable_id", using: :btree
   end
 
   create_table "chats", force: :cascade do |t|
@@ -107,7 +116,6 @@ ActiveRecord::Schema.define(version: 20170413181049) do
 
   create_table "posts", force: :cascade do |t|
     t.integer  "user_id"
-    t.string   "title"
     t.string   "text"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

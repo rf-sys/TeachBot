@@ -1,10 +1,19 @@
 FactoryGirl.define do
-  factory :tag do
-    name "MyString"
+  factory :attachment do
+    association :attachable, factory: :post
+    template 'Text attachment template'
+    trait :valid_attachment do
+      to_create { |instance| instance.save(validate: false) }
+    end
   end
+
+  factory :tag do
+    name 'Test tag'
+  end
+
   factory :subscription do
     user nil
-    subscribeable ""
+    subscribeable nil
   end
 
   factory :notification do
@@ -79,7 +88,10 @@ FactoryGirl.define do
 
   factory :post do
     user
-    title 'testPost'
     text 'testText'
+
+    factory :post_with_attachment do
+      after(:create) { |post| create(:attachment, attachable: post) }
+    end
   end
 end

@@ -1,0 +1,48 @@
+<div data-attachment-id="<%= id %>">
+  <% if preview %>
+    <div class="row">
+      <div class="col-md-11 text-left">
+        <span class="text-muted">Link</span>
+      </div>
+      <div class="col-md-1 text-right">
+        <button type="button" class="close" data-name="deleteLinkButton">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
+  <% end %>
+  <div class="card">
+    <% if image.present? %>
+
+      <%== !preview ? open_a_tag(url) : '' %>
+
+      <img class="card-img-top" src="<%= image %>" alt="Not found" data-name="linkImage">
+
+      <%== !preview ? close_a_tag : '' %>
+
+      <% if preview %>
+        <button type="button" class="close attachment_link_image_close_button"
+                data-name="deleteLinkImageButton">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      <% end %>
+
+    <% end %>
+    <div class="card-block">
+
+      <%== !preview ? open_a_tag(url) : '' %>
+
+      <h4 class="card-title attachment_link_title" data-placeholder="Enter text ..."
+          data-name="linkTitle"
+          <%= preview ? ' contenteditable=true'.html_safe : '' %>>
+        <%= title %>
+      </h4>
+
+      <%== !preview ? close_a_tag : '' %>
+
+      <a href="<%= url %>" class="attachment_a_tag">
+        <h6 class="card-subtitle mb-2 text-muted"><%= url %></h6>
+      </a>
+    </div>
+  </div>
+</div>

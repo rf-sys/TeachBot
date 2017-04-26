@@ -1,10 +1,12 @@
 require 'rails_helper'
 
 RSpec.describe UserControllers::PostsController, type: :controller do
-
   describe 'GET #index' do
+    render_views
+
     before :each do
       @post = create(:post)
+      set_json_request
       get :index, params: {user_id: @post.user.id}
     end
 
@@ -13,7 +15,7 @@ RSpec.describe UserControllers::PostsController, type: :controller do
     end
 
     it 'returns collection of the posts' do
-      expect(response.body).to match(@post.title)
+      expect(response.body).to match(@post.text)
     end
   end
 

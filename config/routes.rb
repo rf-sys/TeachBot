@@ -20,6 +20,8 @@ Rails.application.routes.draw do
 
   get 'bot', to: 'api#bot'
 
+  post 'attachment', to: 'attachments#attachment'
+
   # resources
 
   resources :account_activations, except: [:destroy, :show, :update]
@@ -52,7 +54,11 @@ Rails.application.routes.draw do
 
   resources :account_activations, only: [:edit]
 
-  resources :posts, only: [:create, :destroy]
+  resources :posts, only: [:create, :destroy] do
+    collection do
+      post 'attachment'
+    end
+  end
 
   resources :messages, only: [:create] do
     member do
