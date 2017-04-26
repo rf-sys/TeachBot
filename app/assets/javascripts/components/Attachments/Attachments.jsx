@@ -130,7 +130,6 @@ class Attachments extends React.Component {
         let url = this.getUrlFromText();
 
         if (url && !this.existingUrlInAttachments(url) && !this.loadedOnce(url)) {
-            this.addUrlToLoadedOnce(url);
             this.loadAttachment(url);
         }
 
@@ -210,6 +209,7 @@ class Attachments extends React.Component {
     loadAttachment(url) {
         this.setState({loading: true});
         let ajax = $.post('/attachment', {url: url});
+
         ajax.done((attachment) => {
             if (!_.isEmpty(attachment)) {
                 this.setAttachment(attachment.data);
@@ -218,7 +218,10 @@ class Attachments extends React.Component {
             }
         });
 
-        ajax.always(() => this.setState({loading: false}));
+        ajax.always(() => {
+            this.setState({loading: false});
+            this.addUrlToLoadedOnce(url);
+        });
     }
 
     /**
