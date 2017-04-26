@@ -51,7 +51,6 @@ RSpec.describe CoursesController, type: :controller do
       auth_as(@user)
 
       user = create(:teacher, username: 'harahaiha', email: 'god@mail.ru')
-      puts user.roles.to_json
 
       post :create, params: {
         course: @course_params
