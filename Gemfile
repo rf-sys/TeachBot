@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.0.0', '>= 5.0.0.1'
+gem 'rails', '~> 5.1.0'
 # Use sqlite3 as the database for Active Record
 # gem 'sqlite3'
 gem 'pg'
@@ -39,7 +39,6 @@ group :development, :test do
  # gem 'capybara-webkit'
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platform: :mri
-  gem 'meta_request'
   gem 'factory_girl_rails', '~> 4.0'
   gem 'database_cleaner'
   gem 'rack_session_access'
@@ -58,7 +57,6 @@ group :development do
 end
 
 group :test do
-  gem 'codecov', require: false
   # add test coverage support
   gem 'simplecov', require: false
 
@@ -132,4 +130,4 @@ gem 'aws-sdk', '~> 2'
 gem 'searchkick'
 
 # specify active ruby version
-ruby '2.3.3'
+ruby '2.4.1'
