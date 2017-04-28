@@ -93,6 +93,8 @@ class Course < ApplicationRecord
   end
 
   def clean_old_slug_cache
-    Rails.cache.delete("course/#{slug_was}/info")
+    return unless saved_change_to_attribute?('slug')
+
+    Rails.cache.delete("course/#{saved_change_to_attribute('slug')[0]}/info")
   end
 end

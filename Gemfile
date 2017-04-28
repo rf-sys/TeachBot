@@ -33,24 +33,23 @@ gem 'sidekiq'
 # gem 'capistrano-rails', group: :development
 
 group :development, :test do
-  gem 'rspec-rails', '~> 3.5'
   gem 'capybara'
   gem 'rails-controller-testing'
- # gem 'capybara-webkit'
+  gem 'rspec-rails', '~> 3.5'
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platform: :mri
-  gem 'factory_girl_rails', '~> 4.0'
   gem 'database_cleaner'
-  gem 'rack_session_access'
+  gem 'factory_girl_rails', '~> 4.0'
+  gem 'phantomjs', require: 'phantomjs/poltergeist'
   gem 'poltergeist'
-  gem 'phantomjs', :require => 'phantomjs/poltergeist'
+  gem 'rack_session_access'
   gem 'rubocop', require: false
 end
 
 group :development do
   # Access an IRB console on exception pages or by using <%= console %> anywhere in the code.
-  gem 'web-console'
   gem 'listen', '~> 3.0.5'
+  gem 'web-console'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
@@ -63,7 +62,7 @@ group :test do
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 
 # custom gems
 
@@ -74,18 +73,18 @@ gem 'react-rails'
 gem 'sprockets-es6'
 
 # ENV support
-gem 'dotenv-rails', groups: [:development, :test]
+gem 'dotenv-rails', groups: %i[development test]
 
 gem 'bootstrap', '~> 4.0.0.alpha6'
 
 source 'https://rails-assets.org' do
   # tether need for bootstrap
-  gem 'rails-assets-tether', '>= 1.1.0'
-  gem 'rails-assets-moment'
-  gem 'rails-assets-lodash'
-  gem 'rails-assets-wysihtml'
   gem 'rails-assets-autosize'
   gem 'rails-assets-cropperjs'
+  gem 'rails-assets-lodash'
+  gem 'rails-assets-moment'
+  gem 'rails-assets-tether', '>= 1.1.0'
+  gem 'rails-assets-wysihtml'
 end
 
 # font-awesome

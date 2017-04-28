@@ -258,7 +258,7 @@ GEM
       execjs
       railties (>= 3.2)
       tilt
-    recaptcha (4.1.0)
+    recaptcha (4.2.0)
       json
     redis (3.3.3)
     rspec-core (3.5.4)
