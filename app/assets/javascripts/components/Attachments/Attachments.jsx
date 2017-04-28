@@ -19,7 +19,7 @@ class Attachments extends React.Component {
     }
 
     componentDidMount() {
-        $(document).on('attachments:clearAll', () => {
+        $(document).unbind('attachments:clearAll').on('attachments:clearAll', () => {
             return this.clearAll();
         });
     }
