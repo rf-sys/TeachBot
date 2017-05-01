@@ -49,3 +49,5 @@ cache
 /.env.development
 /.env.production
 /.env.test
+/public/packs
+/node_modules

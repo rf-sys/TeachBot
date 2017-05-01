@@ -1,18 +1,18 @@
 require 'rails_helper'
 
-describe 'the signin process', type: :feature do
+describe 'the signin process', type: :feature, js: true do
   before :each do
     @user = create(:user)
   end
 
-  it 'denies access if I am auth', js: true do
+  it 'denies access if I am auth' do
     auth_for_capybara(page, @user.id)
     visit login_path
     expect(page).to have_content 'Access denied for authorized user'
   end
 
 
-  it 'signs me in as valid user', js: true do
+  it 'signs me in as valid user' do
     visit login_path
     sleep(1)
     within('#login_form') do
@@ -24,9 +24,9 @@ describe 'the signin process', type: :feature do
   end
 
 
-  it 'signs me in as valid user', js: true do
+  it 'signs me in as valid user' do
     visit login_path
-    sleep(1)
+    sleep(2)
     within('#login_form') do
       fill_in 'session_email', with: 'testuser@gmail.com'
       fill_in 'session_password', with: 'password'
@@ -35,7 +35,7 @@ describe 'the signin process', type: :feature do
     expect(page).to have_content 'You have been logged in as: ' + @user.username
   end
 
-  it 'i cannot signs with invalid data', js: true do
+  it 'i cannot signs with invalid data' do
     visit login_path
     sleep(1)
     within('#login_form') do

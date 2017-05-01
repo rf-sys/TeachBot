@@ -62,6 +62,9 @@ RSpec.configure do |config|
 
     # and disable callbacks
     Searchkick.disable_callbacks
+
+    # complie out packs before tests
+    system 'bin/webpack'
   end
 
   config.around(:each, search: true) do |example|

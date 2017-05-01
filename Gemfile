@@ -44,6 +44,7 @@ group :development, :test do
   gem 'poltergeist'
   gem 'rack_session_access'
   gem 'rubocop', require: false
+  gem 'selenium-webdriver'
 end
 
 group :development do
@@ -127,6 +128,8 @@ gem 'aws-sdk', '~> 2'
 
 # connect rails and ElasticSearch
 gem 'searchkick'
+
+gem 'webpacker'
 
 # specify active ruby version
 ruby '2.4.1'

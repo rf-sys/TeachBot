@@ -32,7 +32,7 @@ module Throttle
       @interval = 2.send(@format) # seconds
 
       def self.before(controller, key, options = {})
-        @key = key
+        @key = Rails.env == 'test' ? key + '_test' : key
 
         config(options)
 
@@ -83,7 +83,7 @@ module Throttle
 
       def self.before(controller, key, options = {})
 
-        @key = key
+        @key = Rails.env == 'test' ? key + '_test' : key
 
         config(options)
 

@@ -1,5 +1,5 @@
 <% if @courses.present? %>
-  <div id="courses_card_columns" class="card-columns load-fade">
+  <div id="courses_card_columns" class="card-columns">
     <%= render partial: 'course', collection: @courses, cached: true %>
   </div>
 <% else %>

@@ -5,15 +5,14 @@
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="turbolinks-cache-control" content="no-preview">
+  <!--<meta name="turbolinks-cache-control" content="no-preview">-->
   <%= csrf_meta_tags %>
   <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
-
   <link rel="alternate" type="application/rss+xml" title="Codingfish RSS Feed" href="<%= rss_index_path %>">
 
   <%= yield :head %>
-
+  <%= javascript_pack_tag 'application' %>
 </head>
 
 <body id="body_<%= controller_name %>_<%= action_name %>">
@@ -21,7 +20,7 @@
 <%= render 'shared/header' %>
 
 <%= render 'shared/notices' %>
-<div class="load-fade">
+<div>
 <%= yield %>
 </div>
 <%= render 'shared/footer', cached: true %>
