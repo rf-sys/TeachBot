@@ -3,6 +3,7 @@ class UserPostsForm extends React.Component {
         super(props);
 
         this.state = {text: '', attachments: [], attachment: '', status_text: '', status: '', loading: false};
+        this.editor = null;
 
         this.setAttachments = this.setAttachments.bind(this);
         this.setAttachment = this.setAttachment.bind(this);
@@ -14,15 +15,10 @@ class UserPostsForm extends React.Component {
     componentDidMount() {
         const post_editor = new wysihtml5.Editor('post_editor');
 
-        let post_editor_elem = $(post_editor.editableElement);
+        this.editor = $(post_editor.editableElement);
 
-        post_editor_elem.keyup(() => {
-            this.setState({text: post_editor_elem.html()});
-        });
-
-        $(document).on('attachments:clearAll', () => {
-            post_editor_elem.text('');
-            this.setState({text: ''});
+        this.editor.keyup(() => {
+            this.setState({text: this.editor.html()});
         });
     }
 
@@ -48,6 +44,7 @@ class UserPostsForm extends React.Component {
 
         ajax.done((post) => {
             this.resetStatusAlert();
+            this.resetForm();
             $(document).trigger('attachments:clearAll');
             this.props.addPost(post);
         });
@@ -62,6 +59,13 @@ class UserPostsForm extends React.Component {
 
     resetStatusAlert() {
         this.setState({status_text: ''});
+    }
+
+    resetForm() {
+        this.editor.text('');
+        this.setState({text: ''});
+        this.setAttachment('');
+        this.setAttachments([]);
     }
 
     render() {
