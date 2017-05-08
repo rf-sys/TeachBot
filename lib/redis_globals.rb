@@ -20,6 +20,20 @@ class RedisGlobals
       normalize_key('popular_tags')
     end
 
+    # contains request interval presence for specific action and request ip
+    def throttle_request_interval(action, request_ip)
+      normalize_key("throttle/request_interval[#{action}]/#{request_ip}")
+    end
+
+    # contains request interval presence for specific action and request ip
+    def throttle_request_locker(action, request_ip)
+      normalize_key("throttle/request_locker[#{action}]/#{request_ip}")
+    end
+
+    def throttle_request_locker_attempts(action, request_ip)
+      normalize_key("throttle/request_locker_attempts[#{action}]/#{request_ip}")
+    end
+
     def test_env_suffix
       '_test'
     end

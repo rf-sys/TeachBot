@@ -25,7 +25,9 @@ services:
       - '6379:6379'
 
   web:
-    build: .
+    build:
+      context: .
+      dockerfile: docker/web/Dockerfile
     env_file: .env.development
     volumes:
       - .:/usr/src/app
@@ -36,13 +38,26 @@ services:
       - redis
       - sidekiq
       - elasticsearch
+      - webpacker
+    stdin_open: true
+    tty: true
 
   sidekiq:
-    build: .
+    build:
+      context: .
+      dockerfile: docker/sidekiq/Dockerfile
     volumes:
       - .:/usr/src/app
     env_file: .env.development
     depends_on:
       - db
       - redis
-    command: bundle exec sidekiq -C config/sidekiq.yml
+
+  webpacker:
+    build:
+      context: .
+      dockerfile: docker/webpacker/Dockerfile
+    volumes:
+      - .:/usr/src/app
+    ports:
+      - "8080:8080"

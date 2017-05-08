@@ -13,4 +13,15 @@ module CustomHelper
       end
     end
   end
+
+  module Redis
+    def check_redis_connection
+      begin
+        RedisSingleton.instance.ping
+      rescue Redis::CannotConnectError
+        return false
+      end
+      true
+    end
+  end
 end

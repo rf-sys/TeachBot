@@ -63,8 +63,8 @@ RSpec.configure do |config|
     # and disable callbacks
     Searchkick.disable_callbacks
 
-    # complie out packs before tests
     system 'bin/webpack'
+    Webpacker::Manifest.load
   end
 
   config.around(:each, search: true) do |example|
@@ -75,7 +75,6 @@ RSpec.configure do |config|
 
   config.before(:each) do
     DatabaseCleaner.strategy = :transaction
-    clean_redis
   end
 
   config.before(:each, type: :feature) do
@@ -90,6 +89,7 @@ RSpec.configure do |config|
   end
 
   config.before(:each) do
+    clean_redis
     DatabaseCleaner.start
   end
 

@@ -29,11 +29,13 @@ class SessionsController < ApplicationController
 
   def set_user
     @user = User.find_by(email: params[:session][:email].downcase, uid: nil)
-    error_message([user_not_found], 404) unless @user.present?
+    error_message([user_not_found], 404) if @user.blank?
   end
 
   def session_locker
-    Throttle::Interval::SessionLocker.run(self, 'login_interval', interval: 1)
+    Services::Throttle::RequestLocker.new(self, time: 1 * 60, attempts: 5)
+  rescue StandardError => e
+    fail_response([e.message + ' Try in 1 minute'], 403)
   end
 
   def user_not_found

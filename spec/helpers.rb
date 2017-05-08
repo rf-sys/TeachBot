@@ -52,7 +52,7 @@ def omniauth_github_mock_user
 end
 
 def clean_redis
-  redis = Redis.new
+  redis = RedisSingleton.instance
   keys = redis.keys('*' + RedisGlobals.test_env_suffix)
   redis.del(keys) if keys.any?
 end

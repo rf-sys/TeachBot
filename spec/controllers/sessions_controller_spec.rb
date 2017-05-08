@@ -10,10 +10,10 @@ RSpec.describe SessionsController, type: :controller do
     it 'returns success if correct data' do
       user = create(:user)
       post :create, params: {
-          session: {
-              email: user.email,
-              password: 'password'
-          }
+        session: {
+          email:    user.email,
+          password: 'password'
+        }
       }
       expect(response).to have_http_status(302) # indicate redirect status code
     end
@@ -21,10 +21,10 @@ RSpec.describe SessionsController, type: :controller do
     it 'returns error if user not found' do
       create(:user)
       post :create, params: {
-          session: {
-              email: 'invalid@example.com',
-              password: 'invalid'
-          }
+        session: {
+          email:    'invalid@example.com',
+          password: 'invalid'
+        }
       }
       expect(response).to have_http_status(404)
     end
@@ -33,10 +33,10 @@ RSpec.describe SessionsController, type: :controller do
       user = create(:user, activated: false)
 
       post :create, params: {
-          session: {
-              email: user.email,
-              password: 'password'
-          }
+        session: {
+          email:    user.email,
+          password: 'password'
+        }
       }
       expect(response).to have_http_status(404) # indicate redirect status code
       expect(response.body).to match(/Account not activated/)
@@ -45,10 +45,10 @@ RSpec.describe SessionsController, type: :controller do
     it 'returns error if params has no valid password' do
       user = create(:user)
       post :create, params: {
-          session: {
-              email: user.email,
-              password: 'invalid'
-          }
+        session: {
+          email:    user.email,
+          password: 'invalid'
+        }
       }
 
       expect(response).to have_http_status(404) # indicate redirect status code
@@ -57,15 +57,18 @@ RSpec.describe SessionsController, type: :controller do
 
     it 'denies access if too many attempts' do
       user = create(:user)
-      6.times do
+      set_json_request
+
+      7.times do
         post :create, params: {
-            session: {
-                email: user.email,
-                password: 'invalid'
-            }
+          session: {
+            email:    user.email,
+            password: 'invalid'
+          }
         }
       end
-      expect(response).to have_http_status(403) # indicate redirect status code
+
+      expect(response).to have_http_status(403)
       expect(response.body).to match(/Too many attempts/)
     end
   end

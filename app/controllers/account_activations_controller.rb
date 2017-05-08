@@ -22,12 +22,14 @@ class AccountActivationsController < ApplicationController
   def create
     @user = User.find_by(email: params[:user][:email])
     @user.resend_activation_email if @user
+    render json: {}
   end
 
   private
 
   def check_interval_presence
-    Throttle::Interval::RequestInterval.run(self, 'send_account_activation_email_interval',
-                                            format: :minutes, time: 15, interval: 15)
+    Services::Throttle::RequestInterval.new(self, time: 15)
+  rescue StandardError => e
+    fail_response([e.message + ' Try in 15 seconds'], 403)
   end
 end

@@ -75,14 +75,14 @@ describe 'global search', type: :feature, js: true do
 
   it "shows 'Not found' result" do
     visit root_path
+
     find('#navbar_toggler').click
 
     element = find('input#header_search_input')
-
     # to exec 'typing by user' event (necessary for React listeners)
     element.send_keys('random string')
 
-    sleep(3)
+    sleep(5)
 
     expect(page).to have_content('Not found', count: 3)
   end

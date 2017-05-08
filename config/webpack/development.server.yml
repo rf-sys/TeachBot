@@ -2,15 +2,16 @@
 
 default: &default
   enabled: true
-  host: localhost
-  port: 8080
+  host: 0.0.0.0
+  port: 3000
 
 development:
   <<: *default
 
 test:
   <<: *default
-  enabled: true
+  enabled: false
+  host: web
 
 production:
   <<: *default

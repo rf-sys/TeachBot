@@ -2,12 +2,12 @@
   <div class="row justify-content-center" style="margin-top: 15px;">
     <h1>Send activation email</h1>
   </div>
-  <div class="row justify-content-center load-fade">
+  <div class="row justify-content-center">
     <div class="col-md-6 align-self-center">
 
       <%= react_component('ResponseMessagesBlock') %>
 
-      <%= form_tag(account_activations_path, remote: true) do %>
+      <%= form_with(url: account_activations_path, remote: true, id: 'account_activation_email_form') do %>
 
         <div class="form-group">
           <%= label(:user, :email) %>

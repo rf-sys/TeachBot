@@ -1,4 +1,4 @@
-# docker-compose file for travis-ci checks
+# docker-compose file for development environment
 version: '2'
 services:
   elasticsearch:
@@ -23,7 +23,9 @@ services:
       - '6379:6379'
 
   web:
-    build: .
+    build:
+      context: .
+      dockerfile: docker/web/Dockerfile
     env_file: .env.development.sample
     volumes:
       - .:/usr/src/app
@@ -34,13 +36,24 @@ services:
       - redis
       - sidekiq
       - elasticsearch
+      - webpacker
 
   sidekiq:
-    build: .
+    build:
+      context: .
+      dockerfile: docker/sidekiq/Dockerfile
     volumes:
       - .:/usr/src/app
     env_file: .env.development.sample
     depends_on:
       - db
       - redis
-    command: bundle exec sidekiq -C config/sidekiq.yml
+
+  webpacker:
+    build:
+      context: .
+      dockerfile: docker/webpacker/Dockerfile
+    volumes:
+      - .:/usr/src/app
+    ports:
+      - "8080:8080"
