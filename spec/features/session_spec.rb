@@ -14,7 +14,7 @@ describe 'the signin process', type: :feature, js: true do
 
   it 'signs me in as valid user' do
     visit login_path
-    sleep(1)
+    sleep(2)
     within('#login_form') do
       fill_in 'session_email', with: 'testuser@gmail.com'
       fill_in 'session_password', with: 'password'
@@ -37,7 +37,7 @@ describe 'the signin process', type: :feature, js: true do
 
   it 'i cannot signs with invalid data' do
     visit login_path
-    sleep(1)
+    sleep(2)
     within('#login_form') do
       fill_in 'session_email', with: 'INVALIDEMAIL@example.com'
       fill_in 'session_password', with: 'password'
