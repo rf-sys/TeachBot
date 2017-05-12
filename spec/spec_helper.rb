@@ -9,23 +9,11 @@ require 'rack_session_access/capybara'
 require 'capybara/poltergeist'
 
 
-=begin
 Capybara.register_driver :selenium do |app|
   Capybara::Selenium::Driver.new(app, browser: :chrome).tap do |driver|
     driver.browser.manage.window.size = Selenium::WebDriver::Dimension.new(1920, 1080)
   end
 end
-
-Capybara.javascript_driver = :selenium
-=end
-
-
-=begin
-Capybara.register_driver :poltergeist do |app|
-  Capybara::Poltergeist::Driver.new(app, timeout: 4.minutes, phantomjs: Phantomjs.path)
-end
-Capybara.javascript_driver = :poltergeist
-=end
 
 Capybara.register_driver :poltergeist do |app|
   Capybara::Poltergeist::Driver.new(app, timeout: 4.minutes, phantomjs: Phantomjs.path)

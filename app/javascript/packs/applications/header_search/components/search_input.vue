@@ -1,10 +1,9 @@
 <template>
     <div class="search_field_wrapper">
-        <i class="fa fa-search search_icon" aria-hidden="true"></i>
-        <input type="search" class="form-control input"
+        <!--<i class="fa fa-search search_icon" aria-hidden="true" id="header_search_app_search_loop"></i>-->
+        <input type="search" class="form-control input" id="header_search_app_search_input"
                v-bind:value="value" v-on:input="updateText($event.target.value)"
-               placeholder="Search courses, lessons, users, tags"
-               name="global_search_input"/>
+               placeholder="Search courses, lessons, users, tags"/>
         <i class="fa fa-spinner fa-pulse fa-3x fa-fw loading_icon" v-if="loading"></i>
     </div>
 </template>
@@ -29,7 +28,7 @@
 
     .input {
         width: 100%;
-        padding-left: 35px;
+      /*  padding-left: 35px; */
     }
 
     .search_icon {

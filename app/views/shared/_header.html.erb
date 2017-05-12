@@ -65,15 +65,7 @@
       </li>
     </ul>
 
-    <div class="col-lg mr-auto" id="header_search_panel_app">
-      <div class="search_field_wrapper">
-        <i class="fa fa-search search_icon" aria-hidden="true"></i>
-        <input type="search" class="form-control input" ref="click_outside_el" id="header_search_input"
-               v-model="text" placeholder="Search courses, lessons, users, tags"/>
-        <i class="fa fa-spinner fa-pulse fa-3x fa-fw loading_icon" v-if="loading"></i>
-      </div>
-      <search-results v-bind:data="data"></search-results>
-    </div>
+    <div class="nav-item" id="header_search_app"></div>
 
     <ul class="nav navbar-nav float-xl-right">
 
@@ -102,7 +94,7 @@
           </a>
         </li>
 
-        <%= react_component('Notifications', {}, tag: 'li', class: 'nav-item hidden-md-down') %>
+        <div id="notifications_app"></div>
 
         <li class="nav-item">
           <a class="nav-link" href="<%= logout_path %>" data-method="delete">

@@ -1,5 +1,8 @@
 // phantomjs promise polyfill (to prevent promise error)
-import es6_promise from 'es6-promise';
-es6_promise.polyfill();
+import {polyfill} from 'es6-promise';
+
+polyfill();
+
 // global packs
-require('./header_search/main.js');
+require('./applications/header_search');
+require('./applications/notifications');

@@ -24,9 +24,9 @@ class NewLessonNotificationJob < ApplicationJob
   end
 
   def generate_notification(user, course, lesson)
-   notification = notification_template(course, lesson)
-   notification.user = user
-   notification
+    notification = notification_template(course, lesson)
+    notification.user = user
+    notification
   end
 
   def notification_template(course, lesson)

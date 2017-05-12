@@ -84,10 +84,10 @@ Rails.application.routes.draw do
     resources :messages, only: [:index, :create], controller: 'public_chat_controllers/messages'
   end
 
-  resources :notifications, only: [:index, :destroy] do
+  resources :notifications, only: %i[index destroy] do
     collection do
       post 'count'
-      put 'mark_all_as_read'
+      put 'mark_as_read'
     end
   end
 

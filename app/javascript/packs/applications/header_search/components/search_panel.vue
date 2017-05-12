@@ -1,39 +1,40 @@
 <template>
-    <div class="col-lg mr-auto">
-        <div>
+    <div class="col-lg mr-auto" id="header_search_app_search_panel" v-click-outside="clickOutside">
+        <div class="search_field_wrapper">
             <search-input v-model="text" v-bind:loading="loading"></search-input>
-            <search-results v-bind:data="data"></search-results>
+            <search-results v-bind:data="data" v-bind:loaded_once="loaded_once"></search-results>
         </div>
     </div>
 </template>
 
 <script>
     import _ from 'lodash'
-    import * as api from './../api'
 
-    import clickOutside from '../../helpers/click_outside'
+    import {find} from './../api'
 
     import SearchInput from './search_input.vue'
     import SearchResults from './search_results.vue'
+    import ClickOutside from './../../../misc/directives/click_outside'
 
     export default {
         components: {SearchInput, SearchResults},
-        mixins: [clickOutside],
+        directives: {ClickOutside},
         data() {
             return {
                 text: "",
                 data: {},
                 loading: false,
+                loaded_once: false
             }
         },
 
         watch: {
             text(newValue) {
-                if (newValue) {
-                    this.loading = true;
+                if (newValue)
                     return this.search();
-                } else {
+                else {
                     this.data = {};
+                    this.loaded_once = false;
                 }
             }
         },
@@ -41,18 +42,21 @@
         methods: {
             search: _.debounce(
                 function () {
-                    api.find(this.text).then(({data}) => {
+                    this.loading = true;
+                    find(this.text).then(({data}) => {
                         this.data = data;
+                        this.loaded_once = true;
                         this.loading = false;
                     }).catch(() => {
+                        this.loaded_once = true;
                         this.loading = false;
                     });
                 }, 500
             ),
 
             clickOutside() {
-                console.log('clickOutside');
-                this.data = [];
+                this.loaded_once = false;
+                this.data = {};
             }
         },
     }
