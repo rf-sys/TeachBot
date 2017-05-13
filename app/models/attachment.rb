@@ -1,7 +1,7 @@
 class Attachment < ApplicationRecord
   self.inheritance_column = :attachment_type
 
-  belongs_to :attachable, polymorphic: true
+  belongs_to :attachable, polymorphic: true, optional: true
 
   attr_accessor :title, :type, :url, :image
 

@@ -23,7 +23,7 @@ module CoursesHelper
 
   # prepare course tags param to be saved as association
   def course_tags(params)
-    return [] unless params.fetch(:course, {}).fetch(:tags_list, false).present?
+    return [] if params.fetch(:course, {}).fetch(:tags_list, false).blank?
 
     tags_param = params[:course][:tags_list].split(',')
 

@@ -108,7 +108,7 @@ RSpec.describe MessagesController, type: :controller do
       chat = create(:chat)
       user = chat.initiator
       auth_as(user)
-      message = create(:message, chat: chat)
+      message = create(:message, chat: chat, user: user)
       assert_equal user.unread_messages.include?(message), false
       user.unread_messages << message
       assert_equal user.unread_messages.include?(message), true
@@ -183,8 +183,8 @@ RSpec.describe MessagesController, type: :controller do
       user = chat.initiator
       auth_as(user)
 
-      unread_message = create(:message, chat: chat)
-      create(:message, chat: chat)
+      unread_message = create(:message, chat: chat, user: user)
+      create(:message, chat: chat, user: user)
 
       user.unread_messages << unread_message
 

@@ -21,15 +21,14 @@ class Course < ApplicationRecord
 
   has_many :tags, as: :taggable, dependent: :destroy
 
-  scope :public_and_published, lambda {
+  scope :public_and_published, (lambda {
     where(public: true, published: true)
-  }
+  })
 
   validates :title, presence: true, length: { minimum: 6, maximum: 50 }
   validates :description, presence: true, length: { minimum: 6, maximum: 255 }
   validates :public, inclusion: { in: [true, false] }
   validates :theme, format: { with: /\A#.{6}\z/, message: 'color is invalid' }, allow_blank: true
-  validates :tags, length: { maximum: 75 }, allow_blank: true
 
   after_save :clean_old_slug_cache, :clean_recent_courses_cache
 
@@ -37,9 +36,9 @@ class Course < ApplicationRecord
 
   def search_data
     {
-        title: title,
-        description: description,
-        tags: tags
+      title:       title,
+      description: description,
+      tags:        tags
     }
   end
 
@@ -49,17 +48,18 @@ class Course < ApplicationRecord
   # @param [Array] course_tags
   # @return [boolean]
   def save_with_tags(params, course_tags = [])
-    # build tags collection
-    tags_list = tags.build(course_tags)
-
-    # validate tags collection and return error if invalid
-    if tags_list.size > 7
-      errors.add(:tags, ': Too many tags')
-      return false
-    end
-
     # assign other model attributes
     assign_attributes(params)
+
+    # build tags collection
+    tags.build(course_tags)
+
+    # validate tags collection and return error if invalid
+    tags_max_count = 7
+    if tags.size > tags_max_count
+      errors.add(:tags, ": Too many tags. Max count - #{tags_max_count}")
+      return false
+    end
 
     # return false with errors if no valid?
     return false unless valid?

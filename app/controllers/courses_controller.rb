@@ -44,7 +44,7 @@ class CoursesController < ApplicationController
   end
 
   def create
-    course = current_user.courses.new(course_params)
+    course = Course.new(author: current_user)
     if course.save_with_tags(course_params, course_tags(params))
       flash[:super_success_notice] = 'Course has been created successfully'
       redirect_to course
@@ -53,8 +53,7 @@ class CoursesController < ApplicationController
     end
   end
 
-  def edit;
-  end
+  def edit; end
 
   def update
     if @course.save_with_tags(course_params, course_tags(params))
@@ -72,7 +71,7 @@ class CoursesController < ApplicationController
 
   # update poster of the course
   def update_poster
-    unless params.fetch(:course, {}).fetch(:poster, false).present?
+    if params.fetch(:course, {}).fetch(:poster, false).blank?
       return fail_response(['File not found'], 422)
     end
 
@@ -122,11 +121,10 @@ class CoursesController < ApplicationController
   end
 
   def increase_tags_recommendation
-    return unless current_user.present?
+    return if current_user.blank?
     tags = @course.tags.pluck(:name)
     IncreaseTagsRecommendationJob.perform_later(tags, current_user.id)
   end
-
 
   def load_popular_tags
     RedisSingleton.instance.zrevrange('popular_tags', 0, 6)
