@@ -62,7 +62,7 @@ to create db, fill up and add indexes to elasticsearch service
 
 8. Run `docker-compose -f docker-compose.prod.yml up` to start your app
 
-9. Visit `http://your_machine_ip:3000` to check if application works
+9. Visit `http://your_machine_ip` to check if application works
 
 (to get `your_machine_ip` you can copy IPv4 of your droplet on Digitalocen or type `docker-machine ip teachbot`)
 

@@ -11,6 +11,8 @@ module Teachbot
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 5.1
 
+    config.action_cable.mount_path = '/websocket'
+
     config.autoload_paths << Rails.root.join('lib')
     config.eager_load_paths << Rails.root.join('lib') # it uses instead of autoload_paths in production
     config.cache_store = :file_store, Rails.root.join('tmp', 'cache', 'file_store')
