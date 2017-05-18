@@ -8,8 +8,7 @@
             </a>
             <div class="dropdown-menu dropdown-menu-right notifications_dropDown" id="notifications_app_dropDown"
                  v-static-dropdown>
-                <div class="triangle"></div>
-                <div class="list-group notifications_list">
+                <div class="list-group">
                     <notifications :notifications="notifications" :loaded_once="loaded_once"></notifications>
                     <button class="btn btn-outline-primary" id="notifications_app_load_button"
                             @click="loadNotifications(current_page + 1)"
@@ -117,26 +116,10 @@
     }
 
     .notifications_dropDown {
-        padding: 0;
-    }
-
-    .notifications_list {
         font-size: 14px;
         max-height: 500px;
         overflow: auto;
         width: 400px;
         padding: 0;
-    }
-
-    .triangle {
-        position: absolute;
-        top: -12px;
-        right: 2px;
-        z-index: 100;
-        width: 0;
-        height: 0;
-        border-style: solid;
-        border-width: 0 12.5px 15px 12.5px;
-        border-color: transparent transparent #ffffff transparent;
     }
 </style>

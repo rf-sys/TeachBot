@@ -12,6 +12,8 @@ module Teachbot
     config.load_defaults 5.1
 
     config.action_cable.mount_path = '/websocket'
+    config.action_cable.url = "#{ENV['APP_HOST']}/websocket"
+    config.action_cable.allowed_request_origins = [%r{\A#{ENV['APP_HOST']}.*}]
 
     config.autoload_paths << Rails.root.join('lib')
     config.eager_load_paths << Rails.root.join('lib') # it uses instead of autoload_paths in production
