@@ -29,6 +29,8 @@ services:
     build:
       context: .
       dockerfile: docker/nginx/Dockerfile
+    volumes:
+      - ./log:/usr/src/app/log
     links:
       - web
     ports:
