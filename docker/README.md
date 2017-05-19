@@ -21,7 +21,7 @@ to create db, fill up and add indexes to elasticsearch service
 
 5. Run `docker-compose up` to start your app
 
-6. Visit `http://0.0.0.0:3000` or `http://localhost:3000` to check if application works
+6. Visit `http://0.0.0.0` to check if application works
 
 ### Production:
 
@@ -36,7 +36,7 @@ to create db, fill up and add indexes to elasticsearch service
 
 5. Run `docker-compose -f docker-compose.prod.yml up` to start your app
 
-6. Visit `http://0.0.0.0:3000` or `http://localhost:3000` to check if application works
+6. Visit `http://0.0.0.0` to check if application works
 
 ### Deploy on Digitalocean
 
