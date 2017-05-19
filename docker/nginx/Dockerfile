@@ -7,9 +7,6 @@ WORKDIR /usr/src/app
 # create log directory
 RUN mkdir log
  
-# copy over static assets
-COPY public public/
- 
 # Copy Nginx config template
 COPY config/nginx.conf /etc/nginx/conf.d/default.conf
  
