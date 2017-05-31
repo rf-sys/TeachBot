@@ -50,4 +50,7 @@ cache
 /.env.production
 /.env.test
 /public/packs
-/node_modules
+
+/config/client-secret.json
+/config/configmap.txt
+/secrets.tar

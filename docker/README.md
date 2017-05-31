@@ -38,7 +38,7 @@ to create db, fill up and add indexes to elasticsearch service
 
 6. Visit `http://0.0.0.0` to check if application works
 
-### Deploy on Digitalocean
+### Deploy on DigitalOcean
 
 1. Rename `.env.production.sample` into `.env.production`
 
