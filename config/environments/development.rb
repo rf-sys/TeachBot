@@ -16,7 +16,7 @@ Rails.application.configure do
   config.consider_all_requests_local = true
 
   # Enable/disable caching. By default caching is disabled.
-  if Rails.root.join('tmp/caching-dev.txt').exist?
+  if Rails.root.join('tmp', 'caching-dev.txt').exist?
     config.action_controller.perform_caching = true
     # config.cache_store = :memory_store
     config.public_file_server.headers = {
@@ -54,29 +54,18 @@ Rails.application.configure do
   # routes, locales, etc. This feature depends on the listen gem.
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
-  config.action_mailer.default_url_options = {host: 'localhost:3000'}
+  config.action_mailer.default_url_options = { host: '0.0.0.0:3000' }
   config.action_mailer.delivery_method = :smtp
 
   config.development_host = 'http://localhost:3000/'
 
-=begin
   config.action_mailer.smtp_settings = {
-      :user_name => ENV['SENDGRID_USERNAME'],
-      :password => ENV['SENDGRID_PASSWORD'],
-      :domain => 'localhost:3000',
-      :address => 'smtp.sendgrid.net',
-      :port => 587,
-      :authentication => :plain,
-      :enable_starttls_auto => true
-  }
-=end
-  config.action_mailer.smtp_settings = {
-      :user_name => ENV['MAILTRAP_USERNAME'],
-      :password => ENV['MAILTRAP_PASSWORD'],
-      :address => 'mailtrap.io',
-      :domain => 'mailtrap.io',
-      :port => '2525',
-      :authentication => :cram_md5
+    user_name:      ENV['MAILTRAP_USERNAME'],
+    password:       ENV['MAILTRAP_PASSWORD'],
+    address:        'mailtrap.io',
+    domain:         'mailtrap.io',
+    port:           '2525',
+    authentication: :cram_md5
   }
 
   # get rid of whitelist restrictions in debug console

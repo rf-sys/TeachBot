@@ -1,0 +1,50 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: redis
+spec:
+  template:
+    metadata:
+      name: redis
+      labels:
+        app: teachbot
+        sub: redis
+    spec:
+      containers:
+      # image's alpine version causes errors when Rails tries to use container
+        - image: redis:alpine
+          name: redis
+          ports:
+            - containerPort: 6379
+              name: redis
+          volumeMounts:
+            - name: redisdata
+              mountPath: /data
+              subPath: redisdata
+      volumes:
+        - name: redisdata
+          persistentVolumeClaim:
+            claimName: redis-pv-claim
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: redis-pv-claim
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+spec:
+  ports:
+    - port: 6379
+      targetPort: redis
+  selector:
+    app: teachbot
+    sub: redis

@@ -17,8 +17,8 @@ RUN bundle install
 COPY . .
 
 #install phantomjs (otherwise docker container does not see and install it after each command)
-RUN sh docker/install_phantomjs.sh
+RUN bash scripts/install_phantomjs.sh
 
 EXPOSE 8080
 
-CMD yarn && ./bin/webpack --watch --progress
+CMD yarn && ./bin/webpack-dev-server

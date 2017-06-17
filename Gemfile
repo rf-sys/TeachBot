@@ -28,6 +28,7 @@ gem 'redis', '~> 3.0'
 # Use ActiveModel has_secure_password
 gem 'bcrypt', '~> 3.1.7'
 
+# worker
 gem 'sidekiq'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
@@ -59,7 +60,6 @@ end
 group :test do
   # add test coverage support
   gem 'simplecov', require: false
-
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
@@ -69,9 +69,6 @@ gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 
 # react support
 gem 'react-rails'
-
-# handle .es6 files as es6 files and convert to es5
-gem 'sprockets-es6'
 
 # ENV support
 gem 'dotenv-rails', groups: %i[development test]
@@ -97,9 +94,6 @@ gem 'selectize-rails'
 # google captcha
 gem 'recaptcha'
 
-# mailer service (production)
-gem 'sendgrid-ruby'
-
 # pagination gem
 gem 'kaminari'
 
@@ -124,12 +118,17 @@ gem 'activerecord-import', '~> 0.17.1'
 # validate image files
 gem 'fastimage'
 
+# AWS support
 gem 'aws-sdk', '~> 2'
 
 # connect rails and ElasticSearch
+gem 'faraday_middleware-aws-signers-v4'
+
+# elasticsearch support
 gem 'searchkick'
 
+# webpack integration (Rails 5.1)
 gem 'webpacker'
 
-# specify active ruby version
+# specify current ruby version
 ruby '2.4.1'

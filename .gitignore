@@ -51,6 +51,12 @@ cache
 /.env.test
 /public/packs
 
-/config/client-secret.json
-/config/configmap.txt
 /secrets.tar
+
+# Ignore encrypted secrets key file.
+config/secrets.yml.key
+/client-secret.json
+/config/secrets-minikube.txt
+/config/secrets-production.txt
+/kubernetes/minikube/secrets-minikube.txt
+/kubernetes/production/secrets-production.txt

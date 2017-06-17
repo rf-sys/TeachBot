@@ -1,0 +1,176 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: web
+spec:
+  template:
+    metadata:
+      name: web
+      labels:
+        app: teachbot
+        sub: web
+    spec:
+      volumes:
+        - name: web-assets
+          emptyDir: {}
+        - name: web-sock
+          emptyDir: {}
+      containers:
+        - name: app
+          image: teachbot/teachbot_app
+          imagePullPolicy: Never
+          lifecycle:
+            postStart:
+              exec:
+                command: ["/bin/sh", "-c", "rails db:migrate"]
+          ports:
+            - name: web-server
+              containerPort: 8080
+          volumeMounts:
+            - name: web-assets
+              mountPath: /usr/share/app/assets
+            - name: web-sock
+              mountPath: /tmp
+          env:
+            - name: RAILS_ENV
+              valueFrom:
+                secretKeyRef:
+                  name: prod-secrets
+                  key: rails_env
+            - name: RAILS_LOG_TO_STDOUT
+              valueFrom:
+                secretKeyRef:
+                  name: prod-secrets
+                  key: rails_log_to_stdout
+            - name: SECRET_KEY_BASE
+              valueFrom:
+                secretKeyRef:
+                  name: prod-secrets
+                  key: secret_key_base
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: prod-secrets
+                  key: postgres_db
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: prod-secrets
+                  key: postgres_user
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: prod-secrets
+                  key: postgres_password
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: prod-secrets
+                  key: db_host
+            - name: REDIS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: prod-secrets
+                  key: redis_url
+            - name: ELASTICSEARCH_URL
+              valueFrom:
+                secretKeyRef:
+                  name: prod-secrets
+                  key: elasticsearch_url
+            - name: RECAPTCHA_PUBLIC_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: prod-secrets
+                  key: recaptcha_public_key
+            - name: RECAPTCHA_PRIVATE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: prod-secrets
+                  key: recaptcha_private_key
+            - name: GOOGLE_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: prod-secrets
+                  key: google_api_key
+            - name: FACEBOOK_APP_ID
+              valueFrom:
+                secretKeyRef:
+                  name: prod-secrets
+                  key: facebook_app_id
+            - name: FACEBOOK_APP_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: prod-secrets
+                  key: facebook_app_secret
+            - name: GITHUB_APP_ID
+              valueFrom:
+                secretKeyRef:
+                  name: prod-secrets
+                  key: github_app_id
+            - name: GITHUB_APP_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: prod-secrets
+                  key: github_app_secret
+            - name: ADMIN_ACCOUNT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: prod-secrets
+                  key: admin_account_password
+            - name: S3_BUCKET
+              valueFrom:
+                secretKeyRef:
+                  name: prod-secrets
+                  key: s3_bucket
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: prod-secrets
+                  key: aws_access_key_id
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: prod-secrets
+                  key: aws_secret_access_key
+            - name: SENDGRID_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: prod-secrets
+                  key: sendgrid_username
+            - name: SENDGRID_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: prod-secrets
+                  key: sendgrid_password
+            - name: APP_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: prod-secrets
+                  key: app_host
+
+        - name: nginx
+          image: teachbot/teachbot_nginx
+          imagePullPolicy: Never
+          ports:
+            - name: http-server
+              containerPort: 80
+          volumeMounts:
+            - name: web-assets
+              mountPath: /usr/share/nginx/html
+              readOnly: true
+            - name: web-sock
+              mountPath: /tmp
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web
+spec:
+  ports:
+    - name: http
+      port: 80
+      targetPort: http-server
+  selector:
+    app: teachbot
+    sub: web
+  type: LoadBalancer

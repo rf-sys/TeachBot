@@ -1,6 +1,0 @@
-# Base image:
-FROM nginx
-
-RUN mkdir /logs && touch logs/nginx-access.log && touch logs/nginx-errors.log
-
-COPY docker/nginx/nginx.kube.conf /etc/nginx/conf.d/default.conf

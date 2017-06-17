@@ -3,7 +3,7 @@ config =
   googleMaps:
     page: '#body_users_edit',
     trigger: 'googleMaps',
-    source: "https://maps.googleapis.com/maps/api/js?key=<%= Rails.application.config.api_keys[:google_api_key] %>&signed_in=true&libraries=places",
+    source: "https://maps.googleapis.com/maps/api/js?key=<%= ENV['GOOGLE_API_KEY'] %>&signed_in=true&libraries=places",
     loaded: false
 
 # helpers

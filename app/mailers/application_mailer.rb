@@ -1,4 +1,4 @@
 class ApplicationMailer < ActionMailer::Base
-  default from: 'teachbotmail@gmail.com'
+  default from: 'mail.teachbot.info'
   layout 'mailer'
 end

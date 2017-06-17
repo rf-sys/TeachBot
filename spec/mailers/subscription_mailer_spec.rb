@@ -11,7 +11,7 @@ RSpec.describe SubscriptionMailer, type: :mailer do
   it 'has valid content' do
     expect(mail.subject).to eq('New lesson has been created!')
     expect(mail.to).to eq([@lesson.course.author.email])
-    expect(mail.from).to eq(['teachbotmail@gmail.com'])
+    expect(mail.from).to eq(['mail.teachbot.info'])
     expect(mail.body.encoded).to match("Course \"#{@lesson.course.title}\" has published new lesson: \"#{@lesson.title}\"")
   end
 end

@@ -1,0 +1,39 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: redis
+spec:
+  template:
+    metadata:
+      name: redis
+      labels:
+        app: teachbot
+        sub: redis
+    spec:
+      containers:
+        - image: redis:alpine
+          name: redis
+          ports:
+            - containerPort: 6379
+              name: redis
+          volumeMounts:
+            - name: redis-storage
+              mountPath: /data
+              subPath: redisdata
+      volumes:
+        - name: redis-storage
+          gcePersistentDisk:
+            fsType: ext4
+            pdName: teachbot-staging-redis-disk
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+spec:
+  ports:
+    - port: 6379
+      targetPort: redis
+  selector:
+    app: teachbot
+    sub: redis

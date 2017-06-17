@@ -3,7 +3,7 @@ default: &default
   encoding: unicode
   pool: 5
   timeout: 5000
-  host: <%= ENV.fetch("DB_HOST") { "db" } %>
+  host: <%= ENV.fetch("DB_HOST") { "postgres" } %>
   username: <%= ENV['POSTGRES_USER'] %>
   password: <%= ENV['POSTGRES_PASSWORD'] %>
 

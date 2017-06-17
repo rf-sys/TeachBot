@@ -12,8 +12,8 @@ module Teachbot
     config.load_defaults 5.1
 
     config.action_cable.mount_path = '/websocket'
-    config.action_cable.url = "#{ENV['APP_HOST']}/websocket"
-    config.action_cable.allowed_request_origins = [%r{\A#{ENV['APP_HOST']}.*}]
+    config.action_cable.url = '/websocket'
+    config.action_cable.allowed_request_origins = [ %r{\Ahttps?:\/\/#{ENV['APP_HOST']}.*\z} ]
 
     config.autoload_paths << Rails.root.join('lib')
     config.eager_load_paths << Rails.root.join('lib') # it uses instead of autoload_paths in production
@@ -21,12 +21,8 @@ module Teachbot
     config.react.addons = true
     config.active_job.queue_adapter = :sidekiq
 
-    config.api_keys = {
-      google_api_key: 'AIzaSyAl3hIWaCvf2w4jFNa5lyRcfHggb7dcFvQ'
-    }
-
-    config.action_view.sanitized_allowed_tags = %w(b p i strong u s h1 h2 img a div hr code ul ol li blockquote)
-    config.action_view.sanitized_allowed_attributes = %w(src href class)
+    config.action_view.sanitized_allowed_tags = %w[b p i strong u s h1 h2 img a div hr code ul ol li blockquote]
+    config.action_view.sanitized_allowed_attributes = %w[src href class]
 
     config.application_version = '1.1'
 

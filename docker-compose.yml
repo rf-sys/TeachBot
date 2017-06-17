@@ -1,69 +1,50 @@
-# docker-compose file for development environment
 version: '2'
 services:
-  elasticsearch:
-    image: elasticsearch
-    env_file: .env.development
-    environment:
-    # it helps us run elasticsearch on systems with no significant resources
-      ES_JAVA_OPTS: -Xms1g -Xmx1g # by default - 10g
-    ports:
-      - "9200:9200"
-      - "9300:9300"
-
-  db:
-    image: postgres
-    env_file: .env.development
-    ports:
-      - "5432:5432"
-
-  redis:
-    image: redis
-    command: redis-server
-    env_file: .env.development
-    ports:
-      - '6379:6379'
-
   nginx:
-    restart: always
     build:
       context: .
       dockerfile: docker/nginx/Dockerfile
     volumes:
-      - ./log:/usr/src/app/log
-    links:
-      - web
+      - ./public:/usr/share/nginx/html
+      - ./logs:/logs
+      - /tmp:/tmp
     ports:
       - "80:80"
 
-  web:
+  app:
     build:
       context: .
       dockerfile: docker/web/Dockerfile
     env_file: .env.development
     volumes:
       - .:/usr/src/app
+      - /tmp:/tmp
     ports:
       - "3000:3000"
     depends_on:
-      - db
-      - redis
-      - sidekiq
-      - elasticsearch
+      - nginx
       - webpacker
+      - postgres
+      - redis
+      - worker
     stdin_open: true
     tty: true
 
-  sidekiq:
-    build:
-      context: .
-      dockerfile: docker/sidekiq/Dockerfile
-    volumes:
-      - .:/usr/src/app
+  postgres:
+    image: postgres:alpine
     env_file: .env.development
-    depends_on:
-      - db
-      - redis
+    ports:
+      - "5432:5432"
+    volumes:
+      - /var/lib/postgres/data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:alpine
+    command: redis-server
+    ports:
+      - '6379:6379'
+    volumes:
+      - /var/lib/redis/data:/data
 
   webpacker:
     build:
@@ -73,3 +54,14 @@ services:
       - .:/usr/src/app
     ports:
       - "8080:8080"
+
+  worker:
+    build:
+      context: .
+      dockerfile: docker/worker/Dockerfile
+    volumes:
+      - .:/usr/src/app
+    env_file: .env.development
+    depends_on:
+      - postgres
+      - redis

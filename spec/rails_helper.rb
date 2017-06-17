@@ -8,9 +8,6 @@ require 'rspec/rails'
 require 'helpers'
 # Add additional requires below this line. Rails is not loaded until this point!
 
-# set test env variables
-#Dotenv.overload('.env.test')
-
 # create tmp dir if no presented
 tmp_dir = Rails.root.join('spec', 'tmp')
 FileUtils.mkdir_p tmp_dir unless File.directory?(tmp_dir)

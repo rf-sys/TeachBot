@@ -1,0 +1,59 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: postgres
+spec:
+  template:
+    metadata:
+      name: postgres
+      labels:
+        app: teachbot
+        sub: postgres
+    spec:
+      containers:
+        - image: postgres:alpine
+          name: postgres
+          env:
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: prod-secrets
+                  key: postgres_db
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: prod-secrets
+                  key: postgres_user
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: prod-secrets
+                  key: postgres_password
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: prod-secrets
+                  key: db_host
+          ports:
+            - containerPort: 5432
+              name: postgres
+          volumeMounts:
+            - name: postgres-storage
+              mountPath: /var/lib/postgresql/data
+              subPath: pgdata
+      volumes:
+        - name: postgres-storage
+          gcePersistentDisk:
+            fsType: ext4
+            pdName: teachbot-staging-postgres-disk
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+spec:
+  ports:
+    - port: 5432
+  selector:
+    app: teachbot
+    sub: postgres

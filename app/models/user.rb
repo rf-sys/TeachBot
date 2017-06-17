@@ -3,13 +3,11 @@ class User < ApplicationRecord
   friendly_id :username, use: :slugged
   searchkick batch_size: 5
   require 'validators/EmailValidator'
-  require 'sendgrid-ruby'
-  include SendGrid
+
   include BCrypt
   # to get 'authenticate method' and 'password='.
   # 'password=' generates password_digest
   include ActiveModel::SecurePassword::InstanceMethodsOnActivation
-
   include Roles
 
   has_one :profile, dependent: :destroy, inverse_of: :user
