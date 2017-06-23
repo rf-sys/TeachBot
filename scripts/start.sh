@@ -18,4 +18,4 @@ if [[ $RAILS_ENV == "production" ]]; then
 fi
 
 # run puma web-server
-bundle exec puma -C config/puma.rb
+bundle exec rails server
