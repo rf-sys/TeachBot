@@ -5,6 +5,11 @@ if [[ -a /tmp/puma.pid ]]; then
   rm /tmp/puma.pid
 fi
 
+# delete .pid file if it is presented (from previous app boot)
+if [[ -a tmp/pids/server.pid ]]; then
+  rm -rf tmp/pids/server.pid
+fi
+
 # delete "puma.sock" file if it is presented (from previous app boot)
 if [[ -a /tmp/puma.sock ]]; then
   rm -rf /tmp/puma.sock

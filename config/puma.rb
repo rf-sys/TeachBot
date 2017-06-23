@@ -56,4 +56,3 @@ environment ENV.fetch("RAILS_ENV") { "development" }
 plugin :tmp_restart
 
 bind 'unix:///tmp/puma.sock'
-pidfile '/tmp/puma.pid'
