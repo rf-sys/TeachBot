@@ -1,18 +1,13 @@
 #!/bin/bash
 
-# delete "puma.pid" file if it is presented (from previous app boot)
-if [[ -a /tmp/puma.pid ]]; then
-  rm /tmp/puma.pid
-fi
-
 # delete .pid file if it is presented (from previous app boot)
 if [[ -a tmp/pids/server.pid ]]; then
-  rm -rf tmp/pids/server.pid
+  rm -f tmp/pids/server.pid
 fi
 
 # delete "puma.sock" file if it is presented (from previous app boot)
 if [[ -a /tmp/puma.sock ]]; then
-  rm -rf /tmp/puma.sock
+  rm -f /tmp/puma.sock
 fi
 
 # do all necessary actions to prepare app to production
