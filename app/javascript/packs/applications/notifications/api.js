@@ -1,9 +1,9 @@
-import {http} from './../../../lib/axios';
+import {http} from './../../lib/axios';
 
 const paths = {
-    ALL_NOTIFICATIONS: '/notifications?page=',
-    UNREAD_NOTIFICATIONS_COUNT: '/notifications/count',
-    CLEAR_UNREAD_NOTIFICATIONS_COUNT: '/notifications/mark_as_read'
+  ALL_NOTIFICATIONS: '/notifications?page=',
+  UNREAD_NOTIFICATIONS_COUNT: '/notifications/count',
+  CLEAR_UNREAD_NOTIFICATIONS_COUNT: '/notifications/mark_as_read'
 };
 
 /**
@@ -12,7 +12,7 @@ const paths = {
  * @return {Promise}
  */
 export function loadNotifications(page = 1) {
-    return http.get(paths.ALL_NOTIFICATIONS + page);
+  return http.get(paths.ALL_NOTIFICATIONS + page);
 }
 
 /**
@@ -20,7 +20,7 @@ export function loadNotifications(page = 1) {
  * @return {Promise}
  */
 export function loadUnreadNotificationsCount() {
-    return http.post(paths.UNREAD_NOTIFICATIONS_COUNT);
+  return http.post(paths.UNREAD_NOTIFICATIONS_COUNT);
 }
 
 /**
@@ -28,5 +28,5 @@ export function loadUnreadNotificationsCount() {
  * @return {Promise}
  */
 export function clearUnreadNotifications() {
-    return http.put(paths.CLEAR_UNREAD_NOTIFICATIONS_COUNT);
+  return http.put(paths.CLEAR_UNREAD_NOTIFICATIONS_COUNT);
 }
