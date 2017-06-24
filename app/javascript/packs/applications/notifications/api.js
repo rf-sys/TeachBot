@@ -1,4 +1,4 @@
-import {http} from './../../lib/axios';
+import {http} from './../../config';
 
 const paths = {
   ALL_NOTIFICATIONS: '/notifications?page=',

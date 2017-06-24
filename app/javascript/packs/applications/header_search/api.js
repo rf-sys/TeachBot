@@ -1,4 +1,4 @@
-import {http} from './../../lib/axios';
+import {http} from './../../config';
 
 const consts = {
   SEARCH_PATH: '/search'
