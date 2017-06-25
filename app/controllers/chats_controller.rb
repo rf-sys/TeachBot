@@ -1,9 +1,10 @@
 # represents page with user's chats and related logic
 # (like add participant or leave from the chat)
 class ChatsController < ApplicationController
-  include ChatsHelper, UsersHelper
+  include UsersHelper
+  include ChatsHelper
   before_action :authenticate_user!
-  before_action :set_chat, only: [:leave, :add_participant, :kick_participant]
+  before_action :set_chat, only: %i[leave add_participant kick_participant]
   after_action :delete_if_no_participants, only: [:leave]
 
   def index

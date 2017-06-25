@@ -15,11 +15,9 @@ class UserControllers::CoursesController < ApplicationController
     user = fetch_cache(User, params[:user_id])
     course = fetch_cache(Course, params[:id])
 
-    unless owner?(course)
-      return error_message(['Forbidden'], 403)
-    end
+    return error_message(['Forbidden'], 403) unless owner?(course)
 
     user.courses.destroy(course)
-    render json: {status: 'Ok'}
+    render json: { status: 'Ok' }
   end
 end

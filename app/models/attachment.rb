@@ -7,7 +7,7 @@ class Attachment < ApplicationRecord
 
   validates :url, presence: true
   validates :type, presence: true, inclusion: {
-    in:      %w(image link),
+    in:      %w[image link],
     message: '%{value} is not a valid attachment type'
   }
 

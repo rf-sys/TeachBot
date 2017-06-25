@@ -4,7 +4,7 @@ module Services
     class Generator
       def initialize(url)
         @url = url
-        @available_image_formats = %w(image/jpeg image/png image/bmp)
+        @available_image_formats = %w[image/jpeg image/png image/bmp]
       end
 
       # returns attachment data

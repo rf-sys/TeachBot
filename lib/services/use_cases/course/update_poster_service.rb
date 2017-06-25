@@ -23,9 +23,9 @@ module Services
             if uploader.has_valid_file? && uploader.store
               url = uploader.aws_url
               @course_repository.update_poster_attribute(course, url)
-              @listener.render :json => {
-                  :message => 'Poster has been created successfully',
-                  :url => url
+              @listener.render json: {
+                message: 'Poster has been created successfully',
+                url:     url
               }, status: :ok
             else
               @listener.error_message([uploader.error], 422)
@@ -36,4 +36,3 @@ module Services
     end
   end
 end
-

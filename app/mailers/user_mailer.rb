@@ -1,5 +1,4 @@
 class UserMailer < ApplicationMailer
-
   def account_activation(user_id, token)
     @user ||= User.find_by(id: user_id)
 

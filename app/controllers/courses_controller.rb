@@ -3,17 +3,16 @@ class CoursesController < ApplicationController
   include Services::UseCases::Course::UpdatePosterService
   include CoursesHelper
 
-  before_action :authenticate_user!, except: [:index, :show]
-  before_action :require_teacher, except: [:index, :show]
-  before_action :set_course, except: [:index, :new, :create]
-  before_action :require_course_owner, except: [:index, :show, :new, :create]
+  before_action :authenticate_user!, except: %i[index show]
+  before_action :require_teacher, except: %i[index show]
+  before_action :set_course, except: %i[index new create]
+  before_action :require_course_owner, except: %i[index show new create]
 
   # show
   after_action :mark_visit, only: [:show]
   after_action :add_view, only: [:show]
   after_action :increase_tags_popularity, only: [:show]
   after_action :increase_tags_recommendation, only: [:show]
-
 
   def index
     page = params[:page] || 1

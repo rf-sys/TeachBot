@@ -4,7 +4,7 @@ class GenerateRecommendedCoursesJob < ApplicationJob
   def perform(user_id)
     user = User.find_by(id: user_id)
 
-    return unless user.present?
+    return if user.blank?
 
     redis = RedisSingleton.instance
     popular_tags_key = RedisGlobals.user_popular_tags(user.id)

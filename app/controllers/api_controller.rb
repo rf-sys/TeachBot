@@ -28,7 +28,6 @@ class ApiController < ApplicationController
     user = User.find(decoded_jwt_token['sub'])
 
     return error_message(['Unauthorized'], 401) unless user
-
   rescue StandardError
     return error_message(['Unauthorized'], 401)
   end
@@ -45,7 +44,7 @@ class ApiController < ApplicationController
   end
 
   def jwt_token
-    return unless request.headers['Authorization'].present?
+    return if request.headers['Authorization'].blank?
     request.headers['Authorization'].split(' ').last
   end
 

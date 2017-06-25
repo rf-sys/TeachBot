@@ -10,7 +10,6 @@ module SessionsHelper
     redirect_to session.delete(:prev_url) || root_url
   end
 
-
   # Remembers a user in a persistent session and save remember_token in DB
   def remember(user)
     user.remember # message token and save its hash in the DB

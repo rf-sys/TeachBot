@@ -5,8 +5,8 @@ class NewLessonNotificationJob < ApplicationJob
     course ||= Course.find_by(id: course_id)
     lesson ||= Lesson.find_by(id: lesson_id)
 
-    return unless course.present?
-    return unless lesson.present?
+    return if course.blank?
+    return if lesson.blank?
 
     @subscribers = User.course_subscribers(course)
     notifications = create_notifications(@subscribers, course, lesson)
@@ -31,9 +31,9 @@ class NewLessonNotificationJob < ApplicationJob
 
   def notification_template(course, lesson)
     Notification.generate(
-        "New lesson: #{lesson.title}",
-        "New lesson of the course \"#{course.title}\" has been created",
-        "/courses/#{course.friendly_id}/lessons/#{lesson.friendly_id}"
+      "New lesson: #{lesson.title}",
+      "New lesson of the course \"#{course.title}\" has been created",
+      "/courses/#{course.friendly_id}/lessons/#{lesson.friendly_id}"
     )
   end
 

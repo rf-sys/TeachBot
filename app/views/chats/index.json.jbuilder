@@ -12,5 +12,5 @@ json.array! @chats do |chat|
     end
   end
 
-  json.unread_messages_count current_user.unread_messages.where(:messages => {chat_id: chat.id}).count
+  json.unread_messages_count current_user.unread_messages.where(messages: { chat_id: chat.id }).count
 end

@@ -5,8 +5,8 @@ class NotificationJob < ApplicationJob
     recipient ||= User.find_by(id: recipient_id)
     notification ||= Notification.find_by(id: notification_id)
 
-    return unless recipient.present?
-    return unless notification.present?
+    return if recipient.blank?
+    return if notification.blank?
 
     NotificationsChannel.broadcast_notification_to(recipient, notification)
   end

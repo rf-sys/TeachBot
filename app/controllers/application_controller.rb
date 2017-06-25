@@ -22,20 +22,22 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  # require auth user
   def authenticate_user!
     return if current_user.present?
     respond_to do |format|
-      format.any(:js, :json) { need_login_error_message }
+      format.any(:js, :json) { error_message(['You need login to go there'], 403) }
       format.html do
         session[:prev_url] = request.fullpath
-        flash[:danger_notice] = 'You need login to go there'
+        flash[:danger_notice] = 'You need to login to go there'
         redirect_to login_url
       end
     end
   end
 
+  # check if user is guest (not auth)
   def require_guest
-    return unless current_user.present?
+    return if current_user.blank?
     flash[:danger_notice] = 'Access denied for authorized user'
     redirect_to root_url
   end
@@ -45,20 +47,28 @@ class ApplicationController < ActionController::Base
     fail_response(['Access denied'], 403)
   end
 
+  # check if passed user equals current user
+  # @param [User] user
   def current_user?(user)
     current_user.try(:id) == user.id
   end
 
-  def owner?(target, key = 'author_id')
-    current_user.id == target.send(key)
+  # check if current user is "creator" of the resource
+  # @param [ActiveRecord] resource
+  # @param [String] key
+  def owner?(resource, key = 'author_id')
+    current_user.id == resource.send(key)
   end
 
+  # check if auth user is a teacher
   def require_teacher
     return if current_user.role? :teacher
     fail_response(['You are not a teacher'], 403)
   end
 
   # mime based error response
+  # @param [Object] errors
+  # @param [Object] status
   def fail_response(errors, status)
     respond_to do |format|
       # we should avoid "any(:js, :json)" if we want to get
@@ -76,6 +86,8 @@ class ApplicationController < ActionController::Base
   end
 
   # json format error response
+  # @param [Array] errors - array of errors
+  # @param [Integer] status - http code of error
   def error_message(errors, status)
     render json: { errors: errors }, status: status
   end
@@ -89,9 +101,5 @@ class ApplicationController < ActionController::Base
     else
       cookies.delete :live_user_id
     end
-  end
-
-  def need_login_error_message
-    error_message(['You need login to go there'], 403)
   end
 end

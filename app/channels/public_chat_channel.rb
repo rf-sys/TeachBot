@@ -1,5 +1,5 @@
 class PublicChatChannel < ApplicationCable::Channel
-  PUBLIC_CHAT_CHANNEL ||= 'public_chat'
+  PUBLIC_CHAT_CHANNEL ||= 'public_chat'.freeze
 
   def subscribed
     stream_from PUBLIC_CHAT_CHANNEL
@@ -46,12 +46,12 @@ class PublicChatChannel < ApplicationCable::Channel
     # @param [Message] message
     def public_chat_message(message)
       {
-          message: {
-              id: message.id,
-              text: message.text,
-              created_at: message.created_at,
-              user: message.user.attributes.slice('id', 'username', 'avatar', 'slug')
-          }
+        message: {
+          id:         message.id,
+          text:       message.text,
+          created_at: message.created_at,
+          user:       message.user.attributes.slice('id', 'username', 'avatar', 'slug')
+        }
       }
     end
   end

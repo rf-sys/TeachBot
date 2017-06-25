@@ -14,16 +14,13 @@ module TeachBot
         send("#{@request[:command]}_command")
       else
         @status = 404
-        {command: @request[:command], response: 'Command not found'}
+        { command: @request[:command], response: 'Command not found' }
       end
     end
 
-
     # available commands
     def help_command
-      {command: 'Get help', response: 'Help me!!!1111'}
+      { command: 'Get help', response: 'Help me!!!1111' }
     end
-
-
   end
 end

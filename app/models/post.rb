@@ -14,6 +14,6 @@ class Post < ApplicationRecord
   private
 
   def text_sanitizer
-    ActionController::Base.helpers.sanitize(text, tags: %w(a), attributes: %w(href))
+    ActionController::Base.helpers.sanitize(text, tags: %w[a], attributes: %w[href])
   end
 end

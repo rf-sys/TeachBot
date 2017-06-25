@@ -14,7 +14,6 @@ module Services
       def too_many_attempts?
         return true if request_locker_instance.present?
 
-
         add_request_attempt
         false
       end

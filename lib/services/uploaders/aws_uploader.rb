@@ -1,7 +1,6 @@
 require_dependency 'services/uploaders/base_uploader'
 
 class AwsUploader < BaseUploader
-
   # is used outside to set reference to the file on Aws
   # @return [String]
   def aws_url

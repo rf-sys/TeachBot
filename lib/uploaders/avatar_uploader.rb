@@ -1,7 +1,6 @@
 require_dependency 'services/uploaders/aws_uploader'
 
 class AvatarUploader < AwsUploader
-
   def extension
     'jpg'
   end
@@ -11,7 +10,7 @@ class AvatarUploader < AwsUploader
   end
 
   def available_formats
-    %w(png jpg jpeg bmp gif)
+    %w[png jpg jpeg bmp gif]
   end
 
   def max_size

@@ -6,7 +6,7 @@ class IncreaseTagsRecommendationJob < ApplicationJob
 
     user = User.find_by(id: user_id)
 
-    return unless user.present?
+    return if user.blank?
 
     tags_names.uniq!
 

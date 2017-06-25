@@ -37,7 +37,7 @@ class CourseControllers::ParticipantsController < ApplicationController
 
   def require_owner
     unless owner?(@course)
-      render :json => {status: 'Access denied'}, status: :forbidden
+      render json: { status: 'Access denied' }, status: :forbidden
     end
   end
 end

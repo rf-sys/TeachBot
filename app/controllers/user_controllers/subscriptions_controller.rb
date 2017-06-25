@@ -8,9 +8,9 @@ class UserControllers::SubscriptionsController < ApplicationController
     respond_to do |format|
       format.any(:js, :json) do
         render json: {
-            subscriptions: subscriptions,
-            current_page: params[:page].to_i,
-            total_pages: subscriptions.total_pages
+          subscriptions: subscriptions,
+          current_page:  params[:page].to_i,
+          total_pages:   subscriptions.total_pages
         }
       end
       format.html
@@ -23,7 +23,7 @@ class UserControllers::SubscriptionsController < ApplicationController
 
     course = fetch_cache(Course, params[:id])
     @user.subscriptions_to_courses.destroy(course)
-    render json: {status: 'Ok'}
+    render json: { status: 'Ok' }
   end
 
   private

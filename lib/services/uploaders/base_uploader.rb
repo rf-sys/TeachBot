@@ -22,7 +22,7 @@ class BaseUploader
 
   # how we store our file
   def store
-   # implements by children
+    # implements by children
   end
 
   # accepted file formats
@@ -64,9 +64,7 @@ class BaseUploader
   def check_formats
     accepted_formats = available_formats
 
-    unless accepted_formats.include? extension
-      raise 'File has no valid type'
-    end
+    raise 'File has no valid type' unless accepted_formats.include? extension
   end
 
   def check_size

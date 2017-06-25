@@ -15,7 +15,7 @@ module Services
 
           # @param [Integer] user_id
           def assign_recipient(user_id)
-            @recipient = @user_repository.find_by_id(user_id)
+            @recipient = @user_repository.find(user_id)
           end
 
           # @param [User] auth_user
@@ -47,7 +47,7 @@ module Services
             else
               @message_repository.save_with_unread_users(@message, @chat)
               @listener.send_message(@chat, @message)
-              @listener.render json: {response: @message, type: :new_message}
+              @listener.render json: { response: @message, type: :new_message }
             end
           end
         end

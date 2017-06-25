@@ -5,7 +5,7 @@ class QueryMaster
 
     # defaults
     @params = []
-    @actions = [:find, :order]
+    @actions = %i[find order]
   end
 
   def query(request)

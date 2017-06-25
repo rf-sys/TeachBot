@@ -2,9 +2,9 @@
 class UsersController < ApplicationController
   include Services::UseCases::User::UpdateUserService
   include UsersHelper
-  before_action :require_guest, only: [:new, :create]
-  before_action :authenticate_user!, :profile_owner, only: [:edit, :update, :destroy]
-  before_action :set_user, except: [:new, :create]
+  before_action :require_guest, only: %i[new create]
+  before_action :authenticate_user!, :profile_owner, only: %i[edit update destroy]
+  before_action :set_user, except: %i[new create]
 
   def show; end
 
@@ -57,7 +57,7 @@ class UsersController < ApplicationController
   end
 
   def profile_attributes
-    [:facebook, :twitter, :website, :location, :about, :id]
+    %i[facebook twitter website location about id]
   end
 
   def activate_account_message(email)

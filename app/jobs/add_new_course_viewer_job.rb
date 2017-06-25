@@ -7,7 +7,7 @@ class AddNewCourseViewerJob < ApplicationJob
   def perform(course_id)
     course ||= Course.find_by(id: course_id)
 
-    return unless course.present?
+    return if course.blank?
 
     views = course.views
 

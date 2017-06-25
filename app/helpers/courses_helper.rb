@@ -36,10 +36,9 @@ module CoursesHelper
     @course.participants.include?(auth_user)
   end
 
-
   def mark_recent_visit(ip, course_id)
     RedisSingleton.instance.set("#{ip}/courses/#{course_id}/visited",
-                          Time.now.to_i, ex: 24.hours)
+                                Time.now.to_i, ex: 24.hours)
     true
   end
 

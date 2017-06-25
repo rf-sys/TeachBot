@@ -21,12 +21,8 @@ class PostsController < ApplicationController
   private
 
   def post_params
-    params.require(:post).permit(:text, attachments_attributes: [
-                                   :title, :image, :type, :url
+    params.require(:post).permit(:text, attachments_attributes: %i[
+                                   title image type url
                                  ])
-  end
-
-  def author(post)
-    current_user.id == post.user_id
   end
 end

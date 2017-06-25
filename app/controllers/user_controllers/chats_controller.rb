@@ -1,4 +1,3 @@
 class UserControllers::ChatsController < ApplicationController
-  def index
-  end
+  def index; end
 end

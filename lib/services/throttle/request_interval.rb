@@ -19,7 +19,7 @@ module Services
       end
 
       def redis_key
-        RedisGlobals.throttle_request_interval("#{@action}", @ip)
+        RedisGlobals.throttle_request_interval(@action.to_s, @ip)
       end
 
       def create_interval

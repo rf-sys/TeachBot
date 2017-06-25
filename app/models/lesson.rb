@@ -18,9 +18,9 @@ class Lesson < ApplicationRecord
 
   def search_data
     {
-        title: title,
-        description: description,
-        content: content
+      title:       title,
+      description: description,
+      content:     content
     }
   end
 

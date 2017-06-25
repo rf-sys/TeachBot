@@ -1,6 +1,7 @@
 # Be sure to restart your server when you modify this file. Action Cable runs in a loop that does not support auto reloading.
 class ChatChannel < ApplicationCable::Channel
-  include CustomHelper::Cache, ChatsHelper
+  include ChatsHelper
+  include CustomHelper::Cache
 
   def subscribed
     stream_from "user_#{current_user.id}_chats"
@@ -47,14 +48,14 @@ class ChatChannel < ApplicationCable::Channel
   # template for private messages
   def self.chat_message(message)
     {
-        message: {
-            id: message.id,
-            text: message.text,
-            chat_id: message.chat_id,
-            created_at: message.created_at,
-            user: message.user.attributes.slice('id', 'username', 'avatar', 'slug'),
-            read: false
-        }
+      message: {
+        id:         message.id,
+        text:       message.text,
+        chat_id:    message.chat_id,
+        created_at: message.created_at,
+        user:       message.user.attributes.slice('id', 'username', 'avatar', 'slug'),
+        read:       false
+      }
     }
   end
 end

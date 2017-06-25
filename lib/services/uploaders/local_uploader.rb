@@ -1,7 +1,6 @@
 require_dependency 'services/uploaders/base_uploader'
 
 class LocalUploader < BaseUploader
-
   # define the dir where need to store file
   # @return [String]
   def file_path

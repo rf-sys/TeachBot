@@ -10,7 +10,7 @@ module ApplicationCable
 
     def find_verified_user
       if cookies.signed[:live_user_id].present?
-        if (current_user = User.select(:id, :username, :avatar, :slug).find_by_id(cookies.signed[:live_user_id]))
+        if (current_user = User.select(:id, :username, :avatar, :slug).find_by(id: cookies.signed[:live_user_id]))
           current_user
         else
           reject_unauthorized_connection

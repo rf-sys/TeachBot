@@ -42,7 +42,7 @@ module Services
           src = normalize_src_attr(image)
           next unless valid_image?(src)
           image_url = src
-          break unless image_url.blank?
+          break if image_url.present?
         end
 
         image_url
@@ -53,7 +53,7 @@ module Services
       def valid_image?(src)
         image = FastImage.new(src)
         return false unless image.type
-        return false unless %w(jpg png jpeg svg).include?(image.type.to_s)
+        return false unless %w[jpg png jpeg svg].include?(image.type.to_s)
         return false if image.size[0] < 100 || image.size[1] < 100
         true
       end

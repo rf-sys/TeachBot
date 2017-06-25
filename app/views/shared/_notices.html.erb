@@ -1,11 +1,11 @@
 <% if flash[:success_notice] %>
-    <%= react_component('RightBottomNotice', {message: flash[:success_notice], type: 'success'}) %>
+  <div id="left_top_notification_app" data-message="<%= flash[:success_notice] %>" data-type="success"></div>
 <% end %>
 
 <% if flash[:info_notice] %>
-    <%= react_component('RightBottomNotice', {message: flash[:info_notice], type: 'info'}) %>
+  <div id="left_top_notification_app" data-message="<%= flash[:info_notice] %>" data-type="info"></div>
 <% end %>
 
 <% if flash[:danger_notice] %>
-    <%= react_component('RightBottomNotice', {message: flash[:danger_notice], type: 'danger'}) %>
+  <div id="left_top_notification_app" data-message="<%= flash[:danger_notice] %>" data-type="danger"></div>
 <% end %>

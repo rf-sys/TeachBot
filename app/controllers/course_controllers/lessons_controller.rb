@@ -5,7 +5,7 @@ module CourseControllers
     before_action :authenticate_user!, except: [:show]
     before_action :set_course
     before_action :require_course_author, except: [:show]
-    before_action :set_lesson, only: [:edit, :update, :destroy]
+    before_action :set_lesson, only: %i[edit update destroy]
 
     def show
       unless access_to_course?(@course, current_user)

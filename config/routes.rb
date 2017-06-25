@@ -24,23 +24,23 @@ Rails.application.routes.draw do
 
   # resources
 
-  resources :account_activations, except: [:destroy, :show, :update]
+  resources :account_activations, except: %i[destroy show update]
 
   resources :users do
-    resources :courses, only: [:index, :destroy], controller: 'user_controllers/courses' do
+    resources :courses, only: %i[index destroy], controller: 'user_controllers/courses' do
       collection do
         get 'subscriptions'
         get 'all', action: 'courses'
       end
     end
     resources :posts, only: [:index], controller: 'user_controllers/posts'
-    resources :subscriptions, only: [:index, :destroy], controller: 'user_controllers/subscriptions'
+    resources :subscriptions, only: %i[index destroy], controller: 'user_controllers/subscriptions'
   end
 
   resources :courses do
     resources :lessons, except: [:index], controller: 'course_controllers/lessons'
-    #resources :subscribers, only: [:index, :create, :destroy]
-    resources :participants, only: [:index, :create, :destroy], controller: 'course_controllers/participants'
+    # resources :subscribers, only: [:index, :create, :destroy]
+    resources :participants, only: %i[index create destroy], controller: 'course_controllers/participants'
 
     member do
       patch 'poster', action: 'update_poster'
@@ -48,13 +48,13 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :subscriptions, only: [:create, :destroy]
+  resources :subscriptions, only: %i[create destroy]
 
   resources :rss, only: [:index]
 
   resources :account_activations, only: [:edit]
 
-  resources :posts, only: [:create, :destroy] do
+  resources :posts, only: %i[create destroy] do
     collection do
       post 'attachment'
     end
@@ -72,7 +72,7 @@ Rails.application.routes.draw do
   end
 
   resources :chats do
-    resources :messages, only: [:index, :create], controller: 'chat_controllers/messages'
+    resources :messages, only: %i[index create], controller: 'chat_controllers/messages'
     member do
       delete 'leave'
       post 'add_participant'
@@ -81,7 +81,7 @@ Rails.application.routes.draw do
   end
 
   resource :public_chat, only: [:show], controller: :public_chat do
-    resources :messages, only: [:index, :create], controller: 'public_chat_controllers/messages'
+    resources :messages, only: %i[index create], controller: 'public_chat_controllers/messages'
   end
 
   resources :notifications, only: %i[index destroy] do
@@ -114,5 +114,4 @@ Rails.application.routes.draw do
   mount ActionCable.server => '/cable'
 
   mount Sidekiq::Web => '/sidekiq', constraints: AdminConstraint.new
-
 end

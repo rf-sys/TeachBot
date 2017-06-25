@@ -18,13 +18,13 @@ namespace :database do
   end
 
   task fill_up_users_with_data: :environment do
-    100.times { |i|
+    100.times do |i|
       User.create(
-          username: "devusername-#{i}",
-          email: "devemail-#{i}@mail.ru",
-          password: 'password',
-          activated: false,
+        username:  "devusername-#{i}",
+        email:     "devemail-#{i}@mail.ru",
+        password:  'password',
+        activated: false
       )
-    }
+    end
   end
 end

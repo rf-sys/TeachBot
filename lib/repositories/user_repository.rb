@@ -8,8 +8,8 @@ module Repositories
       user.update(params)
     end
 
-    def find_by_id(id)
-      User.find_by_id(id)
+    def find(id)
+      User.find_by(id: id)
     end
   end
 end
