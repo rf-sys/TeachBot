@@ -7,7 +7,7 @@ class MiniNoticeVueappTest < ApplicationSystemTestCase
     # redirects us to login page as we no auth
     assert_text "Sign in"
     assert_text "You need to login"
-    sleep(5)
+    sleep(4)
     assert_no_text "You need to login"
   end
 end
