@@ -6,4 +6,4 @@ polyfill();
 // global packs
 require('./applications/header_search');
 require('./applications/notifications');
-require('./applications/left_top_notice');
+require('./applications/mini_notice');

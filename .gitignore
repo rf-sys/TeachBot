@@ -60,3 +60,5 @@ config/secrets.yml.key
 /config/secrets-production.txt
 /kubernetes/minikube/secrets-minikube.txt
 /kubernetes/production/secrets-production.txt
+/public/packs-test/
+/scripts/files/last_minikube_commit_id.txt

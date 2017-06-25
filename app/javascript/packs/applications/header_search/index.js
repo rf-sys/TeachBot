@@ -4,7 +4,7 @@ import TurbolinksAdapter from 'vue-turbolinks';
 
 document.addEventListener("turbolinks:load", () => {
     new Vue({
-        el: '#header_search_app',
+        el: '#header_search_vueapp',
         render: h => h(App),
         mixins: [TurbolinksAdapter]
     });

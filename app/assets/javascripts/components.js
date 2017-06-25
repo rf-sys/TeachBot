@@ -1,12 +1,15 @@
 // require each components separately to know which of them has been rewritten and which are not yet.
 
+// define react addons
+window.ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
+
 //= require_tree ./components/Attachments
 //= require_tree ./components/Blocks
 //= require_tree ./components/Chat
 //= require_tree ./components/ChatParticipantsEditor
 //= require_tree ./components/Chats
 //= require_tree ./components/CourseParticipantsBlock
-//= require_tree ./components/global
+// require_tree ./components/global - rewritten
 // require_tree ./components/GlobalSearch - rewritten
 // require_tree ./components/Notifications - rewritten
 //= require_tree ./components/Paginator

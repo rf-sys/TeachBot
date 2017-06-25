@@ -3,9 +3,9 @@ import TurbolinksAdapter from 'vue-turbolinks';
 import App from './components/app.vue'
 
 document.addEventListener("turbolinks:load", () => {
-    if (document.getElementById('notifications_app')) {
+    if (document.getElementById('notifications_vueapp')) {
         new Vue({
-            el: '#notifications_app',
+            el: '#notifications_vueapp',
             render: h => h(App),
             mixins: [TurbolinksAdapter],
         })
