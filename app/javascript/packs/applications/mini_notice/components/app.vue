@@ -32,7 +32,9 @@
 
     watch: {
       show: function () {
-        setTimeout(() => this.show = false, 4000);
+        if (this.show === true) {
+          setTimeout(() => this.show = false, 4000);
+        }
       }
     },
 

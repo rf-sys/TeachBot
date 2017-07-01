@@ -11,4 +11,9 @@ COPY Gemfile* ./
 RUN bundle install
 COPY . .
 
+# set docker user as owner of the files
+RUN useradd -ms /bin/bash docker
+RUN chown -R $USER:docker .
+USER docker
+
 CMD bundle exec sidekiq -C config/sidekiq.yml

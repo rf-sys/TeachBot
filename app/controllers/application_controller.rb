@@ -1,30 +1,34 @@
 # Common controller
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
+
   include SessionsHelper
   include CustomHelper::Cache
+
   helper_method :current_user, :current_user?
 
   after_action :check_live_id
 
   # if no session[:user_id] - check cookie and
   # log_in user with its value (id of the user)
-  # @return [User]
   def current_user
-    if (user_id = session[:user_id])
-      @current_user ||= fetch_cache(User, user_id)
-    elsif (user_id = cookies.signed[:user_id])
-      user = fetch_cache(User, user_id)
-      if user && user.authenticated?(:remember, cookies[:remember_token])
-        log_in user
-        @current_user ||= user
-      end
+    return @current_user if @current_user.present?
+
+    if (user = user_with_session)
+      return @current_user ||= user
     end
+
+    if (user = user_with_cookie)
+      log_in user
+      return @current_user ||= user
+    end
+
+    nil
   end
 
   # require auth user
   def authenticate_user!
-    return if current_user.present?
+    return if logged_in?
     respond_to do |format|
       format.any(:js, :json) { error_message(['You need login to go there'], 403) }
       format.html do
@@ -37,7 +41,7 @@ class ApplicationController < ActionController::Base
 
   # check if user is guest (not auth)
   def require_guest
-    return if current_user.blank?
+    return unless logged_in?
     flash[:danger_notice] = 'Access denied for authorized user'
     redirect_to root_url
   end
@@ -96,7 +100,7 @@ class ApplicationController < ActionController::Base
 
   # set cookie for action cable authentication
   def check_live_id
-    if current_user.present?
+    if logged_in?
       cookies.signed[:live_user_id] ||= @current_user.id
     else
       cookies.delete :live_user_id

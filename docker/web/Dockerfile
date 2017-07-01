@@ -19,6 +19,11 @@ COPY . .
 #install phantomjs (otherwise docker container doesn't see and install it after each command)
 RUN bash scripts/install_phantomjs.sh
 
+# set docker user as owner of the files
+RUN useradd -ms /bin/bash docker
+RUN chown -R $USER:docker .
+USER docker
+
 EXPOSE 3000
 
 CMD bash scripts/start.sh

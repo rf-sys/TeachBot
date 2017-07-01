@@ -1,5 +1,5 @@
 <td>
-  <% if current_user %>
+  <% if logged_in? %>
     <%= react_component('SubscribeToCourseBtn', {
         course_id: @course.id,
         subscribed: current_user.subscriptions_to_courses.include?(@course)

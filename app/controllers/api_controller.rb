@@ -21,7 +21,7 @@ class ApiController < ApplicationController
 
   # authenticate jwt token
   def authenticate_jwt
-    return true if current_user
+    return true if logged_in?
 
     return error_message(['Unauthorized'], 401) unless sub_present?
 

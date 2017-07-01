@@ -40,4 +40,4 @@ deploy:
     script: ./scripts/deploy-staging.sh
     skip_cleanup: true
     on:
-      branch: kubernetes-tests
+      branch: temporary-stopped # we don't need to use gcloud at the point.

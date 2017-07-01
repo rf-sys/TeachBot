@@ -23,7 +23,7 @@ class CoursesController < ApplicationController
 
     @popular_tags = load_popular_tags
 
-    @recommendations = load_recommendations if current_user.present?
+    @recommendations = load_recommendations if logged_in?
 
     respond_to do |format|
       format.json { render json: @courses }
@@ -120,7 +120,7 @@ class CoursesController < ApplicationController
   end
 
   def increase_tags_recommendation
-    return if current_user.blank?
+    return unless logged_in?
     tags = @course.tags.pluck(:name)
     IncreaseTagsRecommendationJob.perform_later(tags, current_user.id)
   end
