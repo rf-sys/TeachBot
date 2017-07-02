@@ -16,6 +16,7 @@ before_install:
   - tar -xvf secrets.tar
 
 before_script:
+  - chown -R $USER:$USER .
   - docker-compose --version
   - docker-compose -f docker-compose.travis.yml build
 
