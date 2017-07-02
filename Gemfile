@@ -130,5 +130,6 @@ gem 'searchkick'
 # webpack integration (Rails 5.1)
 gem 'webpacker'
 
+gem 'cancancan', '~> 1.10'
 # specify current ruby version
 ruby '2.4.1'
