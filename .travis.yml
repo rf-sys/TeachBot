@@ -16,7 +16,7 @@ before_install:
   - tar -xvf secrets.tar
 
 before_script:
-  - chmod -R ugo+x .
+  - chmod -R 777 .
   - docker-compose --version
   - docker-compose -f docker-compose.travis.yml build
 
