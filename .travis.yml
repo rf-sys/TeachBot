@@ -20,6 +20,7 @@ before_script:
   - docker-compose -f docker-compose.travis.yml build
 
 script:
+  - chmod -R ugo+x .
   - docker-compose -f docker-compose.travis.yml run app sh scripts/init_app.sh
   - docker-compose -f docker-compose.travis.yml up -d
   - docker-compose -f docker-compose.travis.yml run app rspec
